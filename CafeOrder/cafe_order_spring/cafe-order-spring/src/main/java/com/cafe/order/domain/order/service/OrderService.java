@@ -10,30 +10,30 @@ import com.cafe.order.domain.store.dto.Store;
 import com.cafe.order.domain.store.service.StoreService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class OrderService {
 
-//    private final JpaOrderRepository salesRepository;
-//    private final SqlOrderRepository salesRepository;
-    private final InMemoryOrderRepository salesRepository;
+    private final JpaOrderRepository orderRepository;
+//    private final SqlOrderRepository orderRepository;
+//    private final InMemoryOrderRepository orderRepository;
 
     private final StoreService storeService;
 
-
-    public OrderService(InMemoryOrderRepository salesRepository, StoreService storeService) {
-        this.salesRepository = salesRepository;
+    public OrderService(JpaOrderRepository orderRepository, StoreService storeService) {
+        this.orderRepository = orderRepository;
         this.storeService = storeService;
     }
 
+
+    /**
+     * 관리자용
+     */
     // READ : 전체 지점별 매출 조회
     public List<SalesDto> getSalesByStore() {
         // 1. COMPLETE된 주문만 가져오기
-        List<Order> orders = salesRepository.findByStatus(OrderStatus.COMPLETED);
+        List<Order> orders = orderRepository.findByStatus(OrderStatus.COMPLETED);
 
         // 2. storeId별 그룹핑 + 집계
         Map<Integer, SalesData> salesMap = new HashMap<>();
@@ -64,9 +64,9 @@ public class OrderService {
 
             // DTO 생성
             result.add(new SalesDto(
-                store.getName(), // 지점명
-                data.orderCount, //주문수
-                data.totalSales // 총매출
+                    store.getName(), // 지점명
+                    data.orderCount, //주문수
+                    data.totalSales // 총매출
             ));
         }
 
@@ -74,6 +74,59 @@ public class OrderService {
 
     }
 
+
+    /**
+     * 판매자용
+     */
+    // READ : 특정 지점 주문 목록 조회
+    public List<Order> findByStoreId(Integer storeId) {
+        return orderRepository.findByStoreId(storeId);
+    }
+
+    // READ : 특정 지점 주문 목록 조회 (COMPLETED 제외)
+    public List<Order> findActiveOrderByStoreId(Integer storeId) {
+        List<Order> allOrders = orderRepository.findByStoreId(storeId);
+
+        // COMPLETED 제외
+        List<Order> activeOrders = new ArrayList<>();
+        for (Order order : allOrders) {
+            if (!(order.getStatus() == OrderStatus.COMPLETED)) {
+                activeOrders.add(order);
+            }
+        }
+
+        // Lazy Loading 강제 실행
+        for (Order order : activeOrders) {
+            if (order.getItems() != null) {
+                order.getItems().size();
+            }
+        }
+
+        return activeOrders;
+    }
+
+
+    // READ : 주문 상세 조회 (OrderItem 포함)
+    public Order findById(UUID orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
+
+        // Lazy Loading 강제 실행 (items 사용)
+        if (order.getItems() != null) {
+            order.getItems().size(); // items를 미리 로드
+        }
+
+        return order;
+    }
+
+    // UPDATE : 주문 상태 변경
+    public Order updateStatus(UUID orderId, OrderStatus newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
+
+        order.setStatus(newStatus);
+        return orderRepository.save(order);
+    }
 
 
 }
