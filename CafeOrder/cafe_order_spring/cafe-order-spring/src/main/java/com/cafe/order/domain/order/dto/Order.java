@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -39,6 +41,11 @@ public class Order {
     @Column(name = "waiting_number")
     private Integer waitingNumber;
 
+    // OrderItem과의 관계 (1:N)
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", referencedColumnName = "order_id")
+    private List<OrderItem> items = new ArrayList<>();
+
     // 신규 주문 생성자
     public Order(String customerId, Integer storeId, Integer totalPrice, OrderStatus status) {
         this.orderId = UUID.randomUUID();
@@ -58,5 +65,25 @@ public class Order {
         this.totalPrice = totalPrice;
         this.status = status;
         this.waitingNumber = waitingNumber;
+    }
+
+    // 편의 메서드 : 메뉴 요약 (아메리카노 외 1건)
+    public String getMenuSummary() {
+        if (items == null || items.isEmpty()) {
+            return "메뉴없음";
+        }
+        String firstMenu = items.get(0).getMenuName();
+        int otherCount = items.size() - 1;
+        return otherCount > 0 ? firstMenu + " 외" + otherCount + "건" : firstMenu;
+    }
+
+    // 편의 메서드 : 총 수량
+    public int getTotalQuantity() {
+        if (items == null) {
+            return 0;
+        }
+        return items.stream()
+                .mapToInt(OrderItem::getQuantity)
+                .sum();
     }
 }

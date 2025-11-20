@@ -1,0 +1,82 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 상세</title>
+</head>
+<body>
+    <h1>주문 상세 정보</h1>
+
+    <!-- 주문 기본 정보-->
+    <div>
+        <p>대기번호: <span th:text="${order.waitingNumber}"></span></p>
+        <p>고객 ID: <span th:text="${order.customerId}"></span></p>
+        <p>주문 상태: <span th:text="${order.status + '[' + order.status.displayName + ']'}"></span></p>
+        <p>주문 시간: <span th:text="${#temporals.format(order.orderTime, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
+        <p>총 결제 금액: <span th:text="${order.totalPrice}"></span></p>
+    </div>
+
+    <!-- 주문 메뉴 상세 테이블 -->
+    <h2>주문 메뉴 상세</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>메뉴명</th>
+                <th>온도</th>
+                <th>컵</th>
+                <th>옵션</th>
+                <th>수량</th>
+                <th>가격</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="item : ${order.items}">
+                <td th:text="${item.menuName}"></td>
+                <td th:text="${item.temperature}"></td>
+                <td th:text="${item.cupType}"></td>
+                <td th:text="${item.options}"></td>
+                <td th:text="${item.quantity}"></td>
+                <td th:text="${item.finalPrice + '원'}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 상태 변경 버튼 (현재 상태에 따라 다음 단계만 표시) -->
+    <div>
+        <h3>주문 상태 변경</h3>
+
+        <form th:if="${order.status.name() == 'ORDER_PLACED'}"
+            method="post" th:action="@{/seller/orders/{id}/status(id=${order.orderId})}"
+            style="display: inline">
+            <input type="hidden" name="status" value="PREPARING">
+            <button type="submit">준비 시작</button>
+        </form>
+
+        <form th:if="${order.status.name() == 'PREPARING'}"
+              method="post" th:action="@{/seller/orders/{id}/status(id=${order.orderId})}"
+              style="display: inline">
+            <input type="hidden" name="status" value="READY">
+            <button type="submit">준비 완료</button>
+        </form>
+
+        <form th:if="${order.status.name() == 'READY'}"
+              method="post" th:action="@{/seller/orders/{id}/status(id=${order.orderId})}"
+              style="display: inline">
+            <input type="hidden" name="status" value="COMPLETED">
+            <button type="submit">픽업 완료</button>
+        </form>
+
+        <p th:if="${order.status.name() == 'COMPLETED'}" style="color: green">
+            이미 완료된 주문입니다.
+        </p>
+
+    </div>
+
+    <div>
+        <a href="/seller/orders">목록으로</a>
+    </div>
+
+
+
+</body>
+</html>

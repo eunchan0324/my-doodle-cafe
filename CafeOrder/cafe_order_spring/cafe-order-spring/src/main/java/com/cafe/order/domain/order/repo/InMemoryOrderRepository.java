@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Repository
+//@Repository
 public class InMemoryOrderRepository {
 
     private final List<Order> orders;

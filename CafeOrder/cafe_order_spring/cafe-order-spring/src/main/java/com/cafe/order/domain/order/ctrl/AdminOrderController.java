@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin/orders")
-public class OrderController {
+public class AdminOrderController {
 
     private final OrderService orderService;
 
-    public OrderController(OrderService orderService) {
+    public AdminOrderController(OrderService orderService) {
         this.orderService = orderService;
     }
 
@@ -22,6 +22,8 @@ public class OrderController {
         model.addAttribute("sales", orderService.getSalesByStore());
         return "sales/list";
     }
+
+
 
 
 
