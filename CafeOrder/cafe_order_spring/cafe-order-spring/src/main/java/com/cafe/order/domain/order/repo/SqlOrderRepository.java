@@ -70,7 +70,7 @@ public class SqlOrderRepository {
             Order order = jdbcTemplate.queryForObject(orderSql, orderRowMapper(), orderIdBytes);
 
             // 2. OrderItem 조회
-            String itemSql = "SELECT id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price " +
+            String itemSql = "SELECT id, order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price " +
                     "FROM order_items WHERE order_id = ?";
 
             List<OrderItem> items = jdbcTemplate.query(itemSql, orderItemRowMapper(), orderIdBytes);
@@ -137,6 +137,9 @@ public class SqlOrderRepository {
             OrderItem item = new OrderItem();
 
             item.setId(rs.getInt("id")); // 수정, 삭제 대비
+
+            byte[] orderIdByte = rs.getBytes("order_id");
+            item.setOrderId(convertBytesToUUID(orderIdByte));
 
             byte[] menuIdByte = rs.getBytes("menu_id");
             item.setMenuId(convertBytesToUUID(menuIdByte));
