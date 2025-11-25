@@ -27,7 +27,8 @@ public class StoreMenu {
     @Column(name = "is_available", nullable = false)
     private Boolean isAvailable = true; // 판매 가능 여부 (재고 관리)
 
-    @Column(name = "is_recommended")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "recommend_type", length = 20)
     private RecommendType recommendType; // 지점별 추천 여부, null = 추천 아님
 
     public StoreMenu(Integer storeId, UUID menuId) {

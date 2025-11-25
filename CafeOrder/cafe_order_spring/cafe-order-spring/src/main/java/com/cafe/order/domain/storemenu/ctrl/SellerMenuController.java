@@ -2,6 +2,8 @@ package com.cafe.order.domain.storemenu.ctrl;
 
 import com.cafe.order.domain.menu.dto.Menu;
 import com.cafe.order.domain.menu.service.MenuService;
+import com.cafe.order.domain.store.dto.Store;
+import com.cafe.order.domain.store.service.StoreService;
 import com.cafe.order.domain.storemenu.dto.StoreMenu;
 import com.cafe.order.domain.storemenu.service.StoreMenuService;
 import org.springframework.stereotype.Controller;
@@ -20,10 +22,12 @@ public class SellerMenuController {
 
     private final StoreMenuService storeMenuService;
     private final MenuService menuService;
+    private final StoreService storeService;
 
-    public SellerMenuController(StoreMenuService storeMenuService, MenuService menuService) {
+    public SellerMenuController(StoreMenuService storeMenuService, MenuService menuService, StoreService storeService) {
         this.storeMenuService = storeMenuService;
         this.menuService = menuService;
+        this.storeService = storeService;
     }
 
     /**
@@ -36,6 +40,9 @@ public class SellerMenuController {
         // TODO : 실제로는 로그인한 판매자의 storeId 가져오기
         Integer storeId = 1; // 임시로 강남점(1)
 
+        // store 찾기
+        Store store = storeService.findById(storeId);
+
         // 전체 메뉴 목록
         List<Menu> allMenus = menuService.findAll();
 
@@ -45,9 +52,9 @@ public class SellerMenuController {
                 .map(StoreMenu::getMenuId)
                 .collect(Collectors.toSet());
 
+        model.addAttribute("store", store);
         model.addAttribute("allMenus", allMenus);
         model.addAttribute("sellingMenuIds", sellingMenuIds);
-        model.addAttribute("storeId", storeId);
 
         return "seller/menu/manage";
     }
