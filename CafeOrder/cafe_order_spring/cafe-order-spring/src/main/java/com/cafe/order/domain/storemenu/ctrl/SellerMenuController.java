@@ -27,7 +27,7 @@ public class SellerMenuController {
     }
 
     /**
-     * 판매 메뉴 관리 페이지
+     * READ : 판매 메뉴 관리 페이지
      * - 전체 메뉴 목록 표시
      * - 현재 판매중인 메뉴는 체크박스 선택됨
      */
