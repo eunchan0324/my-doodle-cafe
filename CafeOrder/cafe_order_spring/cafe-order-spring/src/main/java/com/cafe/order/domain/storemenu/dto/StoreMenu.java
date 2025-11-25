@@ -28,12 +28,12 @@ public class StoreMenu {
     private Boolean isAvailable = true; // 판매 가능 여부 (재고 관리)
 
     @Column(name = "is_recommended")
-    private Boolean isRecommended = false; // 지점별 추천 여부
+    private RecommendType recommendType; // 지점별 추천 여부, null = 추천 아님
 
     public StoreMenu(Integer storeId, UUID menuId) {
         this.storeId = storeId;
         this.menuId = menuId;
         this.isAvailable = true;
-        this.isRecommended = false;
+        this.recommendType = null; // 기본은 추천 x
     }
 }
