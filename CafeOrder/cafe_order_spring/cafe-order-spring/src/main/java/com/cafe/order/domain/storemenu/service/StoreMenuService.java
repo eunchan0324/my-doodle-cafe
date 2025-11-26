@@ -5,6 +5,7 @@ import com.cafe.order.domain.menu.service.MenuService;
 import com.cafe.order.domain.storemenu.dto.MenuWithAvailability;
 import com.cafe.order.domain.storemenu.dto.StoreMenu;
 import com.cafe.order.domain.storemenu.repo.JpaStoreMenuRepository;
+import com.cafe.order.domain.storemenu.repo.SqlStoreMenuRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,12 +15,13 @@ import java.util.stream.Collectors;
 @Service
 public class StoreMenuService {
 
-    private final JpaStoreMenuRepository storeMenuRepository;
+//    private final JpaStoreMenuRepository storeMenuRepository;
+    private final SqlStoreMenuRepository storeMenuRepository;
 
 
     private final MenuService menuService;
 
-    public StoreMenuService(JpaStoreMenuRepository storeMenuRepository, MenuService menuService) {
+    public StoreMenuService(SqlStoreMenuRepository storeMenuRepository, MenuService menuService) {
         this.storeMenuRepository = storeMenuRepository;
         this.menuService = menuService;
     }
@@ -41,7 +43,6 @@ public class StoreMenuService {
                 })
                 .collect(Collectors.toList());
     }
-
 
 
     /**
@@ -68,7 +69,7 @@ public class StoreMenuService {
         if (menuIds != null && !menuIds.isEmpty()) {
             for (UUID menuId : menuIds) {
                 StoreMenu newStoreMenu = new StoreMenu(storeId, menuId);
-                storeMenuRepository.save(newStoreMenu); // JPA용
+                storeMenuRepository.save(newStoreMenu);
             }
         }
     }
