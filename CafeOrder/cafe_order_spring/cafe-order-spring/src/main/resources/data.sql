@@ -170,6 +170,6 @@ SELECT 1, id, true, 'NEW'
 FROM menus WHERE name = '카페라떼' LIMIT 1;
 
 INSERT INTO store_menus (store_id, menu_id, is_available, recommend_type)
-SELECT 1, id, true, NULL
+SELECT 1, id, true, 'NONE'
 FROM menus WHERE name = '카푸치노' LIMIT 1;
 
