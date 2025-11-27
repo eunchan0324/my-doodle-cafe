@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
 @Service
 public class StoreMenuService {
 
-        private final JpaStoreMenuRepository storeMenuRepository;
-//    private final SqlStoreMenuRepository storeMenuRepository;
+//        private final JpaStoreMenuRepository storeMenuRepository;
+    private final SqlStoreMenuRepository storeMenuRepository;
 //    private final InMemoryStoreMenuRepository storeMenuRepository;
 
     private final MenuService menuService;
 
-    public StoreMenuService(JpaStoreMenuRepository storeMenuRepository, MenuService menuService) {
+    public StoreMenuService(SqlStoreMenuRepository storeMenuRepository, MenuService menuService) {
         this.storeMenuRepository = storeMenuRepository;
         this.menuService = menuService;
     }

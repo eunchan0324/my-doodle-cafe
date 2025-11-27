@@ -5,13 +5,14 @@ import com.cafe.order.domain.storemenu.dto.StoreMenu;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import com.cafe.order.domain.storemenu.dto.StoreMenuRowMapper;
 
 import java.util.List;
 
 import static com.cafe.order.common.util.UUIDUtils.convertBytesToUUID;
 import static com.cafe.order.common.util.UUIDUtils.convertUUIDToBytes;
 
-//@Repository
+@Repository
 public class SqlStoreMenuRepository {
 
     private final JdbcTemplate jdbcTemplate;
@@ -41,7 +42,7 @@ public class SqlStoreMenuRepository {
     public List<StoreMenu> findByStoreId(Integer storeId) {
         String sql = "SELECT id, store_id, menu_id, is_available, recommend_type FROM store_menus WHERE store_id = ?";
 
-        return jdbcTemplate.query(sql, storeMenuRowMapper(), storeId);
+        return jdbcTemplate.query(sql, new StoreMenuRowMapper(), storeId);
     }
 
     /**
@@ -51,36 +52,6 @@ public class SqlStoreMenuRepository {
         String sql = "DELETE FROM store_menus WHERE id = ?";
         jdbcTemplate.update(sql, id);
 
-    }
-
-
-
-
-    /**
-     * RowMapper : ResultSet -> StoreMenu 변환
-     */
-    private RowMapper<StoreMenu> storeMenuRowMapper() {
-        return (rs, rowNum) -> {
-            StoreMenu storeMenu = new StoreMenu();
-            storeMenu.setId(rs.getInt("id"));
-            storeMenu.setStoreId(rs.getInt("store_id"));
-
-            // UUID 변환
-            byte[] menuIdBytes = rs.getBytes("menu_id");
-            storeMenu.setMenuId(convertBytesToUUID(menuIdBytes));
-
-            storeMenu.setIsAvailable(rs.getBoolean("is_available"));
-
-            // Enum 변환 (NUll체크)
-            String recommendTypeStr = rs.getString("recommend_type");
-            if (recommendTypeStr != null) {
-                storeMenu.setRecommendType(RecommendType.valueOf(recommendTypeStr));
-            } else {
-                storeMenu.setRecommendType(null);
-            }
-
-            return storeMenu;
-        };
     }
 
 

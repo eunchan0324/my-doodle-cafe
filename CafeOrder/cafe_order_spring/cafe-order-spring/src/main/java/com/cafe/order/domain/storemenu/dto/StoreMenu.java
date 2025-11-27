@@ -1,17 +1,21 @@
 package com.cafe.order.domain.storemenu.dto;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.jdbc.core.RowMapper;
 
 import java.util.UUID;
+
+import static com.cafe.order.common.util.UUIDUtils.convertBytesToUUID;
 
 @Entity
 @Table(name = "store_menus")
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StoreMenu {
 
     @Id
@@ -28,13 +32,15 @@ public class StoreMenu {
     private Boolean isAvailable = true; // 판매 가능 여부 (재고 관리)
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "recommend_type", length = 20)
-    private RecommendType recommendType; // 지점별 추천 여부, null = 추천 아님
+    @Column(name = "recommend_type", length = 20, nullable = false)
+    private RecommendType recommendType = RecommendType.NONE; // 지점별 추천 여부, 기본값 지정
 
     public StoreMenu(Integer storeId, UUID menuId) {
         this.storeId = storeId;
         this.menuId = menuId;
         this.isAvailable = true;
-        this.recommendType = null; // 기본은 추천 x
+        this.recommendType = RecommendType.NONE; // 기본값
     }
+
+
 }
