@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 //@Repository
@@ -21,15 +22,30 @@ public class InMemoryStoreMenuRepository {
         // 비어있음 - 판매자가 직접 추가할 것
     }
 
+    // 판매 메뉴 관리 + 추천 메뉴 관리
     /**
-     * CREATE : 판매 메뉴 추가
+     * CREATE/UPDATE : 판매 메뉴 추가/수정
+     * - ID가 없으면 INSERT
+     * - ID가 있으면 UPDATE
      */
     public StoreMenu save(StoreMenu storeMenu) {
-        storeMenu.setId(nextId++);
-        storeMenus.add(storeMenu);
+        if (storeMenu.getId() == null) {
+            // INSERT : 새 ID 할당 후 추가
+            storeMenu.setId(nextId++);
+            storeMenus.add(storeMenu);
+        } else {
+            // UPDATE : 기존 데이터 찾아서 수정
+            for (int i = 0; i < storeMenus.size(); i++) {
+                if (storeMenus.get(i).getId().equals(storeMenu.getId())) {
+                    storeMenus.set(i, storeMenu); // 교체
+                    break;
+                }
+            }
+        }
         return storeMenu;
     }
 
+    // 판매 메뉴 관리
     /**
      * READ : 지점의 판매 메뉴 조회
      */
@@ -48,6 +64,24 @@ public class InMemoryStoreMenuRepository {
      */
     public void deleteById(Integer id) {
         storeMenus.removeIf(sm -> sm.getId().equals(id));
+    }
+
+
+    // 추천 메뉴 관리
+    /**
+     * READ : storeId와 menuId로 StoreMenu 조회
+     *
+     * @param storeId
+     * @param menuId
+     * @return
+     */
+    public Optional<StoreMenu> findByStoreIdAndMenuId(Integer storeId, UUID menuId) {
+        for (StoreMenu sm : storeMenus) {
+            if (sm.getStoreId().equals(storeId) && sm.getMenuId().equals(menuId)) {
+                return Optional.of(sm);
+            }
+        }
+        return Optional.empty();
     }
 
 

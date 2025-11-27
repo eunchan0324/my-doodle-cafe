@@ -15,7 +15,7 @@ import java.util.UUID;
 import static com.cafe.order.common.util.UUIDUtils.convertBytesToUUID;
 import static com.cafe.order.common.util.UUIDUtils.convertUUIDToBytes;
 
-@Repository
+//@Repository
 public class SqlStoreMenuRepository {
 
     private final JdbcTemplate jdbcTemplate;

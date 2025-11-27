@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-//@Repository
+@Repository
 public interface JpaStoreMenuRepository extends JpaRepository<StoreMenu, Integer> {
 
 
