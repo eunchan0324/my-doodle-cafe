@@ -141,3 +141,35 @@ VALUES
     (X'550e8400e29b41d4a716446655440009',
      X'a0eebc99999b4d6eb3c9aa91c1e4e000',
      '아메리카노', 3000, 'ICE', '일회용컵', '기본', 2, 6000);
+
+
+
+-- ============================================
+-- store_menus 테이블 삭제 후 재생성
+-- ============================================
+DROP TABLE IF EXISTS store_menus;
+
+CREATE TABLE store_menus (
+                             id INT AUTO_INCREMENT PRIMARY KEY,
+                             store_id INT NOT NULL,
+                             menu_id BINARY(16) NOT NULL,
+                             is_available BOOLEAN DEFAULT TRUE NOT NULL,
+                             recommend_type VARCHAR(20),
+                             UNIQUE(store_id, menu_id)
+);
+
+-- ============================================
+-- store_menus 초기 데이터
+-- ============================================
+INSERT INTO store_menus (store_id, menu_id, is_available, recommend_type)
+SELECT 1, id, true, 'BEST'
+FROM menus WHERE name = '아메리카노' LIMIT 1;
+
+INSERT INTO store_menus (store_id, menu_id, is_available, recommend_type)
+SELECT 1, id, true, 'NEW'
+FROM menus WHERE name = '카페라떼' LIMIT 1;
+
+INSERT INTO store_menus (store_id, menu_id, is_available, recommend_type)
+SELECT 1, id, true, NULL
+FROM menus WHERE name = '카푸치노' LIMIT 1;
+
