@@ -2,17 +2,20 @@ package com.cafe.order.domain.storemenu.repo;
 
 import com.cafe.order.domain.storemenu.dto.RecommendType;
 import com.cafe.order.domain.storemenu.dto.StoreMenu;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import com.cafe.order.domain.storemenu.dto.StoreMenuRowMapper;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static com.cafe.order.common.util.UUIDUtils.convertBytesToUUID;
 import static com.cafe.order.common.util.UUIDUtils.convertUUIDToBytes;
 
-@Repository
+//@Repository
 public class SqlStoreMenuRepository {
 
     private final JdbcTemplate jdbcTemplate;
@@ -21,21 +24,47 @@ public class SqlStoreMenuRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    // 판매 메뉴 관리 + 추천 메뉴 관리
     /**
-     * CREATE : 판매 메뉴 추가
+     * CREATE/UPDATE : 판매 메뉴 추가/수정
+     * - ID가 없으면 INSERT
+     * - ID가 있으면 UPDATE
      */
     public StoreMenu save(StoreMenu storeMenu) {
-        String sql = "INSERT INTO store_menus (store_id, menu_id, is_available, recommend_type) VALUES (?, ?, ?, ?)";
-
         byte[] menuIdBytes = convertUUIDToBytes(storeMenu.getMenuId());
+        String recommendTypeStr = storeMenu.getRecommendType().name();
 
-        jdbcTemplate.update(sql, storeMenu.getStoreId(), menuIdBytes, storeMenu.getIsAvailable(),
-                storeMenu.getRecommendType() != null ? storeMenu.getRecommendType().name() : null);
+        if (storeMenu.getId() == null) {
+            // INSERT
+            String sql = "INSERT INTO store_menus (store_id, menu_id, is_available, recommend_type) " +
+                    "VALUES (?, ?, ?, ?)";
+
+            jdbcTemplate.update(sql,
+                    storeMenu.getStoreId(),
+                    menuIdBytes,
+                    storeMenu.getIsAvailable(),
+                    recommendTypeStr
+            );
+        } else {
+            // UPDATE
+            String sql = "UPDATE store_menus " +
+                    "SET store_id = ?, menu_id = ?, is_available = ?, recommend_type = ? " +
+                    "WHERE id = ?";
+
+            jdbcTemplate.update(sql,
+                    storeMenu.getStoreId(),
+                    menuIdBytes,
+                    storeMenu.getIsAvailable(),
+                    recommendTypeStr,
+                    storeMenu.getId());
+        }
 
         return storeMenu;
     }
 
 
+
+    // 판매 메뉴 관리
     /**
      * READ : 지점의 판매 메뉴 조회
      */
@@ -51,7 +80,27 @@ public class SqlStoreMenuRepository {
     public void deleteById(Integer id) {
         String sql = "DELETE FROM store_menus WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
 
+
+
+    // 추천 메뉴 관리
+    /**
+     * READ : storeId와 menuId로 StoreMenu 조회
+     *
+     * @return Optional<StoreMenu> (없으면 empty)
+     */
+    public Optional<StoreMenu> findByStoreIdAndMenuId(Integer storeId, UUID menuId) {
+        String sql = "SELECT id, store_id, menu_id, is_available, recommend_type FROM store_menus WHERE store_id = ? AND menu_id = ?";
+
+        byte[] menuIdByte = convertUUIDToBytes(menuId);
+
+        try {
+            StoreMenu storeMenu = jdbcTemplate.queryForObject(sql, new StoreMenuRowMapper(), storeId, menuIdByte);
+            return Optional.of(storeMenu);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
 

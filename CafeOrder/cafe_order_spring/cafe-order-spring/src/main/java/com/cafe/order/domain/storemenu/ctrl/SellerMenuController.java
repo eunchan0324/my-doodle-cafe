@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("seller/menus")
+@RequestMapping("/seller/menus")
 public class SellerMenuController {
 
     private final StoreMenuService storeMenuService;
