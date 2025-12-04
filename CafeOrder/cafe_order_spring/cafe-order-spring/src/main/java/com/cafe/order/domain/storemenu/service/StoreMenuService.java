@@ -1,16 +1,17 @@
 package com.cafe.order.domain.storemenu.service;
 
 import com.cafe.order.domain.menu.dto.Menu;
+import com.cafe.order.domain.menu.repo.JpaMenuRepository;
 import com.cafe.order.domain.menu.service.MenuService;
-import com.cafe.order.domain.storemenu.dto.MenuWithAvailability;
-import com.cafe.order.domain.storemenu.dto.MenuWithRecommendType;
-import com.cafe.order.domain.storemenu.dto.RecommendType;
-import com.cafe.order.domain.storemenu.dto.StoreMenu;
-import com.cafe.order.domain.storemenu.repo.InMemoryStoreMenuRepository;
+import com.cafe.order.domain.menustatus.entity.MenuStatus;
+import com.cafe.order.domain.menustatus.entity.MenuStatusId;
+import com.cafe.order.domain.menustatus.repo.JpaSellerStockRepository;
+import com.cafe.order.domain.menustatus.service.SellerStockService;
+import com.cafe.order.domain.storemenu.dto.*;
 import com.cafe.order.domain.storemenu.repo.JpaStoreMenuRepository;
-import com.cafe.order.domain.storemenu.repo.SqlStoreMenuRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -19,18 +20,25 @@ import java.util.stream.Collectors;
 @Service
 public class StoreMenuService {
 
-        private final JpaStoreMenuRepository storeMenuRepository;
+    private final JpaStoreMenuRepository storeMenuRepository;
 //    private final SqlStoreMenuRepository storeMenuRepository;
 //    private final InMemoryStoreMenuRepository storeMenuRepository;
 
     private final MenuService menuService;
+    private final JpaMenuRepository menuRepository;
+    private final SellerStockService sellerStockService;
+    private final JpaSellerStockRepository sellerStockRepository;
 
-    public StoreMenuService(JpaStoreMenuRepository storeMenuRepository, MenuService menuService) {
+    public StoreMenuService(JpaStoreMenuRepository storeMenuRepository, MenuService menuService, JpaMenuRepository menuRepository, SellerStockService sellerStockService, JpaSellerStockRepository sellerStockRepository) {
         this.storeMenuRepository = storeMenuRepository;
         this.menuService = menuService;
+        this.menuRepository = menuRepository;
+        this.sellerStockService = sellerStockService;
+        this.sellerStockRepository = sellerStockRepository;
     }
 
     // 판매자 판매 메뉴 관리 기능
+
     /**
      * READ : 지점의 판매 메뉴 조회 (Menu 정보 포함)
      */
@@ -57,6 +65,44 @@ public class StoreMenuService {
         return storeMenuRepository.findByStoreId(storeId);
     }
 
+    /**
+     * READ : 특정 지점에서 고객에세 보여줄 수 있는(판매 가능한) 메뉴 목록 조회
+     */
+    public List<CustomerMenuResponse> findSellableMenus(Integer storeId) {
+        List<CustomerMenuResponse> result = new ArrayList<>();
+
+        List<StoreMenu> storeMenus = storeMenuRepository.findByStoreId(storeId);
+
+        for (StoreMenu sm : storeMenus) {
+            if (!sm.getIsAvailable()) {
+                continue;
+            }
+
+            MenuStatusId msId = new MenuStatusId(storeId, sm.getMenuId());
+            MenuStatus ms = sellerStockRepository.findById(msId)
+                    .orElseThrow(() -> new IllegalStateException("MenuStatus not found for storeId=" + storeId + ", menuId=" + sm.getMenuId()));
+
+            if (!ms.isSellable()) {
+                continue;
+            }
+
+            Menu menu = menuRepository.findById(sm.getMenuId())
+                    .orElseThrow(() -> new IllegalStateException("Menu not found (menuId=" + sm.getMenuId() + ")"));
+
+
+            CustomerMenuResponse response = new CustomerMenuResponse(
+                    menu.getId(),
+                    menu.getName(),
+                    menu.getPrice(),
+                    ms.getMenu().getCategory(),
+                    ms.getStatus()
+            );
+
+            result.add(response);
+        }
+        return result;
+    }
+
 
     /**
      * UPDATE : 판매 메뉴 일괄 업데이트
@@ -81,6 +127,7 @@ public class StoreMenuService {
 
 
     // 판매자 메뉴 추천 기능
+
     /**
      * READ : 지점의 메뉴 + 추천 타입 조회
      */
@@ -131,7 +178,6 @@ public class StoreMenuService {
             }
         }
     }
-
 
 
     // TODO : 개별 메뉴 추가/삭제 (나중에 API에서 사용)

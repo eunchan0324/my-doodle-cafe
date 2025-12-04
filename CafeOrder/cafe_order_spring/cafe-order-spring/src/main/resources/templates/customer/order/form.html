@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>메뉴 주문</title>
+</head>
+<body>
+
+<h1 th:text="${store.name} + ' 메뉴 주문'"></h1>
+<hr>
+
+<form th:action="@{/customer/orders/new}" method="post">
+
+    <!-- storeId -->
+    <input type="hidden" name="storeId" th:value="${store.id}"/>
+
+    <!-- TODO : 로그인 로직 이후 value 변경 필요 -->
+    <!-- customerId -->
+    <input type="hidden" name="customerId" value="customer1"/>
+
+
+    <table border="1">
+        <thead>
+        <tr>
+            <th>메뉴명</th>
+            <th>가격</th>
+            <th>수량</th>
+            <th>온도</th>
+            <th>컵</th>
+            <th>옵션</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <!-- 판매 가능한 메뉴 반복  -->
+        <tr th:each="m : ${menus}">
+
+            <!-- menuId 리스트 -->
+            <input type="hidden" name="menuId"
+                   th:value="${m.menuId}"/>
+
+            <td th:text="${m.name}"></td>
+            <td th:text="${m.price}"></td>
+
+            <!-- quantity 리스트 -->
+            <td>
+                <input type="number" name="quantity"
+                       min="0" value="0"/>
+            </td>
+
+            <!-- temperature 리스트 -->
+            <td>
+                <select name="temperature">
+                    <option value="ICE">ICE</option>
+                    <option value="HOT">HOT</option>
+                </select>
+            </td>
+
+            <!-- cupType 리스트 -->
+            <td>
+                <select name="cupType">
+                    <option value="일회용컵">일회용컵</option>
+                    <option value="매장컵">매장컵</option>
+                    <option value="개인컵">개인컵</option>
+                </select>
+            </td>
+
+            <!-- options 리스트 -->
+            <td>
+                <input type="text" name="options"
+                       placeholder="예: 샷추가 / 선택안함"/>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+    <br>
+    <button type="submit">주문하기</button>
+
+</form>
+
+</body>
+</html>

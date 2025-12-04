@@ -275,7 +275,6 @@ public class OrderService {
         // 7. Order 엔티티 생성 -> 저장
         Order order = new Order(req.getCustomerId(), storeId, totalPrice, OrderStatus.ORDER_PLACED);
 
-        order.setItems(items); // Order에 items 리스트 세팅 (도메인 완정성)
         orderRepository.save(order);
 
         // 9. OrderItem 전체 저장
