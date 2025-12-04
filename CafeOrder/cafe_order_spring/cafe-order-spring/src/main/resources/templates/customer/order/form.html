@@ -6,17 +6,16 @@
 </head>
 <body>
 
-<h1 th:text="${store.name} + ' 메뉴 주문'"></h1>
+<h1 th:text="|${store.name} 메뉴 주문|"></h1>
 <hr>
 
-<form th:action="@{/customer/orders/new}" method="post">
+<!-- 장바구니 데이터를 담을 hidden input -->
+<form id="orderForm" th:action="@{/customer/orders/new}" method="post">
 
-    <!-- storeId -->
     <input type="hidden" name="storeId" th:value="${store.id}"/>
-
-    <!-- TODO : 로그인 로직 이후 수정 -->
     <input type="hidden" name="customerId" value="customer1"/>
 
+    <!-- 메뉴 목록 -->
     <table border="1">
         <thead>
         <tr>
@@ -26,26 +25,25 @@
             <th>온도</th>
             <th>컵</th>
             <th>샷 옵션</th>
+            <th>담기</th>
         </tr>
         </thead>
 
         <tbody>
         <tr th:each="m : ${menus}">
 
-            <!-- menuId -->
-            <input type="hidden" name="menuId" th:value="${m.menuId}"/>
-
             <td th:text="${m.name}"></td>
             <td th:text="${m.price}"></td>
 
-            <!-- quantity -->
+            <!-- 수량 -->
             <td>
-                <input type="number" name="quantity" min="0" value="0"/>
+                <input type="number" min="1" value="1"
+                       th:attr="id=${'qty_' + m.menuId}"/>
             </td>
 
-            <!-- Temperature -->
+            <!-- 온도 -->
             <td>
-                <select name="temperature">
+                <select th:attr="id=${'temp_' + m.menuId}">
                     <option th:each="t : ${T(com.cafe.order.domain.menu.dto.Temperature).values()}"
                             th:value="${t.name()}"
                             th:text="${t.displayName}">
@@ -53,42 +51,148 @@
                 </select>
             </td>
 
-            <!-- CupType -->
+            <!-- 컵 -->
             <td>
-                <select name="cupType">
+                <select th:attr="id=${'cup_' + m.menuId}">
                     <option th:each="c : ${T(com.cafe.order.domain.menu.dto.CupType).values()}"
                             th:value="${c.name()}"
-                            th:text="${c.displayName + (c.priceDelta != 0 ? ' (' + (c.priceDelta > 0 ? '+' : '') + c.priceDelta + '원)' : '')}">
+                            th:text="|${c.displayName}${c.priceDelta != 0 ? ' (+' + c.priceDelta + '원)' : ''}|">
                     </option>
                 </select>
             </td>
 
-            <!-- ShotOption -->
+            <!-- 샷 옵션 -->
             <td>
-                <!-- COFFEE 메뉴일 때만 select -->
-                <select name="options"
-                        th:if="${m.category.name() == 'COFFEE'}">
+                <!-- COFFEE -->
+                <select th:attr="id=${'shot_' + m.menuId}" th:if="${m.category.name() == 'COFFEE'}">
                     <option th:each="o : ${T(com.cafe.order.domain.menu.dto.ShotOption).values()}"
                             th:if="${o.name() != 'NONE'}"
                             th:value="${o.name()}"
-                            th:text="${o.displayName + (o.priceDelta > 0 ? ' (+' + o.priceDelta + '원)' : '')}">
+                            th:text="|${o.displayName}${o.priceDelta > 0 ? ' (+' + o.priceDelta + '원)' : ''}|">
                     </option>
                 </select>
-
-                <!-- COFFEE가 아닌 경우: NONE hidden -->
-                <input type="hidden" name="options" value="NONE"
-                       th:unless="${m.category.name() == 'COFFEE'}"/>
                 <span th:unless="${m.category.name() == 'COFFEE'}">해당 없음</span>
+                <input type="hidden" th:attr="id=${'shot_' + m.menuId}" value="NONE"
+                       th:unless="${m.category.name() == 'COFFEE'}"/>
+
+            </td>
+
+            <!-- 담기 버튼 -->
+            <td>
+                <button type="button"
+                        class="add-to-cart-btn"
+                        th:attr="data-menu-id=${m.menuId},
+                     data-name=${m.name},
+                     data-price=${m.price}">
+                    담기
+                </button>
             </td>
 
         </tr>
         </tbody>
     </table>
 
+    <br><hr>
+    <h2>장바구니</h2>
+
+    <table border="1" id="cartTable">
+        <thead>
+        <tr>
+            <th>메뉴명</th>
+            <th>수량</th>
+            <th>온도</th>
+            <th>컵</th>
+            <th>샷 옵션</th>
+            <th>전체 가격</th>
+        </tr>
+        </thead>
+        <tbody id="cartBody">
+        </tbody>
+    </table>
+
+    <!-- 실제 서버로 넘길 hidden inputs -->
+    <div id="hiddenInputs"></div>
+
     <br>
-    <button type="submit">주문하기</button>
+    <button type="submit">최종 주문하기</button>
+
+    <br>
+
+    <div>
+        <a href="/customer">구매자 메뉴로 돌아가기</a>
+    </div>
 
 </form>
+
+<script>
+    let cartIndex = 0;
+
+    // 버튼에 이벤트 연결
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.add-to-cart-btn').forEach(function (btn) {
+            const menuId = btn.getAttribute('data-menu-id');
+            const name = btn.getAttribute('data-name');
+            const price = parseInt(btn.getAttribute('data-price'), 10);
+
+            btn.addEventListener('click', function () {
+                addToCart(menuId, name, price);
+            });
+        });
+    });
+
+    function addToCart(menuId, name, basePrice) {
+
+        const qty = document.getElementById("qty_" + menuId).value;
+        const temp = document.getElementById("temp_" + menuId).value;
+        const cup = document.getElementById("cup_" + menuId).value;
+        const shot = document.getElementById("shot_" + menuId).value;
+
+        // 옵션 가격 계산 (서버 OptionPriceCalculator와 동일한 방식)
+        let finalPrice = basePrice * qty;
+
+        // CupType 가격
+        const cupDelta = {
+            DISPOSABLE: 0,
+            STORE: 0,
+            PERSONAL: -300
+        };
+        finalPrice += cupDelta[cup] * qty;
+
+        // ShotOption 가격
+        const shotDelta = {
+            BASIC: 0,
+            LIGTH: 0,
+            EXTRA: 500,
+            DECAFFEINATED: 1000,
+            NONE: 0
+        };
+        finalPrice += shotDelta[shot] * qty;
+
+        // 장바구니 행 추가
+        document.getElementById("cartBody").insertAdjacentHTML("beforeend", `
+            <tr>
+                <td>${name}</td>
+                <td>${qty}</td>
+                <td>${temp}</td>
+                <td>${cup}</td>
+                <td>${shot}</td>
+                <td>${finalPrice}</td>
+            </tr>
+        `);
+
+        // 서버로 보낼 hidden input 생성
+        const hiddenArea = document.getElementById("hiddenInputs");
+        hiddenArea.insertAdjacentHTML("beforeend", `
+            <input type="hidden" name="menuId" value="${menuId}">
+            <input type="hidden" name="quantity" value="${qty}">
+            <input type="hidden" name="temperature" value="${temp}">
+            <input type="hidden" name="cupType" value="${cup}">
+            <input type="hidden" name="options" value="${shot}">
+        `);
+
+        cartIndex++;
+    }
+</script>
 
 </body>
 </html>
