@@ -1,5 +1,8 @@
 package com.cafe.order.domain.order.repo;
 
+import com.cafe.order.domain.menu.dto.CupType;
+import com.cafe.order.domain.menu.dto.ShotOption;
+import com.cafe.order.domain.menu.dto.Temperature;
 import com.cafe.order.domain.order.dto.Order;
 import com.cafe.order.domain.order.dto.OrderItem;
 import com.cafe.order.domain.order.dto.OrderStatus;
@@ -45,121 +48,48 @@ public class InMemoryOrderRepository {
         UUID latteId = UUID.fromString("22222222-2222-2222-2222-222222222222");
         UUID cakeId = UUID.fromString("33333333-3333-3333-3333-333333333333");
 
-        // ===== 강남점 (storeId=1) =====
+        // ===== 강남점 =====
         orders.add(new Order(order1Id, "customer1", 1,
                 LocalDateTime.now().minusDays(2), 5000, OrderStatus.COMPLETED, 1));
         orderItems.add(new OrderItem(
-                order1Id, americanoId, "아메리카노", 4500, "ICE", "일회용컵", "샷추가", 1, 5000
+                order1Id, americanoId, "아메리카노", 4500,
+                Temperature.ICE, CupType.DISPOSABLE, ShotOption.EXTRA, 1, 5000
         ));
 
         orders.add(new Order(order2Id, "customer2", 1,
                 LocalDateTime.now().minusDays(2), 11000, OrderStatus.COMPLETED, 2));
         orderItems.add(new OrderItem(
-                order2Id, latteId, "카페라떼", 5000, "HOT", "매장컵", "없음", 1, 5000
+                order2Id, latteId, "카페라떼", 5000,
+                Temperature.HOT, CupType.STORE, ShotOption.NONE, 1, 5000
         ));
         orderItems.add(new OrderItem(
-                order2Id, americanoId, "아메리카노", 4500, "ICE", "일회용컵", "시럽추가", 1, 6000
+                order2Id, americanoId, "아메리카노", 4500,
+                Temperature.ICE, CupType.DISPOSABLE, ShotOption.NONE, 1, 6000
         ));
 
         orders.add(new Order(order3Id, "customer1", 1,
                 LocalDateTime.now().minusDays(1), 6500, OrderStatus.COMPLETED, 3));
         orderItems.add(new OrderItem(
-                order3Id, latteId, "카페라떼", 5000, "HOT", "개인컵", "샷추가", 1, 6500
+                order3Id, latteId, "카페라떼", 5000,
+                Temperature.HOT, CupType.PERSONAL, ShotOption.EXTRA, 1, 6500
         ));
 
         orders.add(new Order(order4Id, "customer2", 1,
                 LocalDateTime.now(), 4500, OrderStatus.PREPARING, 4));
         orderItems.add(new OrderItem(
-                order4Id, americanoId, "아메리카노", 4500, "HOT", "매장컵", "없음", 1, 4500
+                order4Id, americanoId, "아메리카노", 4500,
+                Temperature.HOT, CupType.STORE, ShotOption.NONE, 1, 4500
         ));
 
-        // ===== 홍대점 (storeId=2) =====
+        // ===== 홍대점 =====
         orders.add(new Order(order5Id, "customer1", 2,
                 LocalDateTime.now().minusDays(3), 10000, OrderStatus.COMPLETED, 1));
         orderItems.add(new OrderItem(
-                order5Id, latteId, "카페라떼", 5000, "ICE", "일회용컵", "없음", 2, 10000
+                order5Id, latteId, "카페라떼", 5000,
+                Temperature.ICE, CupType.DISPOSABLE, ShotOption.NONE, 2, 10000
         ));
 
-        orders.add(new Order(order6Id, "customer2", 2,
-                LocalDateTime.now().minusDays(1), 12000, OrderStatus.COMPLETED, 2));
-        orderItems.add(new OrderItem(
-                order6Id, americanoId, "아메리카노", 4500, "HOT", "매장컵", "없음", 1, 4500
-        ));
-        orderItems.add(new OrderItem(
-                order6Id, cakeId, "초코케이크", 7500, null, null, "없음", 1, 7500
-        ));
 
-        orders.add(new Order(order7Id, "customer1", 2,
-                LocalDateTime.now(), 5500, OrderStatus.READY, 3));
-        orderItems.add(new OrderItem(
-                order7Id, americanoId, "아메리카노", 4500, "ICE", "일회용컵", "얼음많이", 1, 5500
-        ));
-
-        // ===== 신촌점 (storeId=3) =====
-        orders.add(new Order(order8Id, "customer2", 3,
-                LocalDateTime.now().minusDays(4), 15000, OrderStatus.COMPLETED, 1));
-        orderItems.add(new OrderItem(
-                order8Id, latteId, "카페라떼", 5000, "HOT", "매장컵", "샷추가", 2, 11000
-        ));
-        orderItems.add(new OrderItem(
-                order8Id, americanoId, "아메리카노", 4500, "ICE", "일회용컵", "없음", 1, 4000
-        ));
-
-        orders.add(new Order(order9Id, "customer1", 3,
-                LocalDateTime.now().minusDays(2), 6000, OrderStatus.COMPLETED, 2));
-        orderItems.add(new OrderItem(
-                order9Id, latteId, "카페라떼", 5000, "ICE", "개인컵", "시럽추가", 1, 6000
-        ));
-
-        orders.add(new Order(order10Id, "customer2", 3,
-                LocalDateTime.now().minusDays(1), 12000, OrderStatus.COMPLETED, 3));
-        orderItems.add(new OrderItem(
-                order10Id, cakeId, "초코케이크", 7500, null, null, "없음", 1, 7500
-        ));
-        orderItems.add(new OrderItem(
-                order10Id, americanoId, "아메리카노", 4500, "HOT", "매장컵", "없음", 1, 4500
-        ));
-
-        // ===== 잠실점 (storeId=4) =====
-        orders.add(new Order(order11Id, "customer1", 4,
-                LocalDateTime.now().minusDays(1), 11500, OrderStatus.COMPLETED, 1));
-        orderItems.add(new OrderItem(
-                order11Id, latteId, "카페라떼", 5000, "HOT", "일회용컵", "샷추가", 1, 6500
-        ));
-        orderItems.add(new OrderItem(
-                order11Id, americanoId, "아메리카노", 4500, "ICE", "일회용컵", "얼음적게", 1, 5000
-        ));
-
-        orders.add(new Order(order12Id, "customer2", 4,
-                LocalDateTime.now(), 5000, OrderStatus.ORDER_PLACED, 2));
-        orderItems.add(new OrderItem(
-                order12Id, latteId, "카페라떼", 5000, "HOT", "매장컵", "없음", 1, 5000
-        ));
-
-        // ===== 판교점 (storeId=5) =====
-        orders.add(new Order(order13Id, "customer1", 5,
-                LocalDateTime.now().minusDays(5), 16000, OrderStatus.COMPLETED, 1));
-        orderItems.add(new OrderItem(
-                order13Id, latteId, "카페라떼", 5000, "ICE", "일회용컵", "샷추가", 2, 11000
-        ));
-        orderItems.add(new OrderItem(
-                order13Id, americanoId, "아메리카노", 4500, "HOT", "매장컵", "없음", 1, 5000
-        ));
-
-        orders.add(new Order(order14Id, "customer2", 5,
-                LocalDateTime.now().minusDays(3), 19500, OrderStatus.COMPLETED, 2));
-        orderItems.add(new OrderItem(
-                order14Id, cakeId, "초코케이크", 7500, null, null, "없음", 2, 15000
-        ));
-        orderItems.add(new OrderItem(
-                order14Id, americanoId, "아메리카노", 4500, "ICE", "일회용컵", "없음", 1, 4500
-        ));
-
-        orders.add(new Order(order15Id, "customer1", 5,
-                LocalDateTime.now().minusDays(1), 6500, OrderStatus.COMPLETED, 3));
-        orderItems.add(new OrderItem(
-                order15Id, latteId, "카페라떼", 5000, "HOT", "개인컵", "샷추가", 1, 6500
-        ));
     }
 
 

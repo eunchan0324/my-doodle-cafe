@@ -14,10 +14,8 @@
     <!-- storeId -->
     <input type="hidden" name="storeId" th:value="${store.id}"/>
 
-    <!-- TODO : 로그인 로직 이후 value 변경 필요 -->
-    <!-- customerId -->
+    <!-- TODO : 로그인 로직 이후 수정 -->
     <input type="hidden" name="customerId" value="customer1"/>
-
 
     <table border="1">
         <thead>
@@ -27,48 +25,60 @@
             <th>수량</th>
             <th>온도</th>
             <th>컵</th>
-            <th>옵션</th>
+            <th>샷 옵션</th>
         </tr>
         </thead>
 
         <tbody>
-        <!-- 판매 가능한 메뉴 반복  -->
         <tr th:each="m : ${menus}">
 
-            <!-- menuId 리스트 -->
-            <input type="hidden" name="menuId"
-                   th:value="${m.menuId}"/>
+            <!-- menuId -->
+            <input type="hidden" name="menuId" th:value="${m.menuId}"/>
 
             <td th:text="${m.name}"></td>
             <td th:text="${m.price}"></td>
 
-            <!-- quantity 리스트 -->
+            <!-- quantity -->
             <td>
-                <input type="number" name="quantity"
-                       min="0" value="0"/>
+                <input type="number" name="quantity" min="0" value="0"/>
             </td>
 
-            <!-- temperature 리스트 -->
+            <!-- Temperature -->
             <td>
                 <select name="temperature">
-                    <option value="ICE">ICE</option>
-                    <option value="HOT">HOT</option>
+                    <option th:each="t : ${T(com.cafe.order.domain.menu.dto.Temperature).values()}"
+                            th:value="${t.name()}"
+                            th:text="${t.displayName}">
+                    </option>
                 </select>
             </td>
 
-            <!-- cupType 리스트 -->
+            <!-- CupType -->
             <td>
                 <select name="cupType">
-                    <option value="일회용컵">일회용컵</option>
-                    <option value="매장컵">매장컵</option>
-                    <option value="개인컵">개인컵</option>
+                    <option th:each="c : ${T(com.cafe.order.domain.menu.dto.CupType).values()}"
+                            th:value="${c.name()}"
+                            th:text="${c.displayName + (c.priceDelta != 0 ? ' (' + (c.priceDelta > 0 ? '+' : '') + c.priceDelta + '원)' : '')}">
+                    </option>
                 </select>
             </td>
 
-            <!-- options 리스트 -->
+            <!-- ShotOption -->
             <td>
-                <input type="text" name="options"
-                       placeholder="예: 샷추가 / 선택안함"/>
+                <!-- COFFEE 메뉴일 때만 select -->
+                <select name="options"
+                        th:if="${m.category.name() == 'COFFEE'}">
+                    <option th:each="o : ${T(com.cafe.order.domain.menu.dto.ShotOption).values()}"
+                            th:if="${o.name() != 'NONE'}"
+                            th:value="${o.name()}"
+                            th:text="${o.displayName + (o.priceDelta > 0 ? ' (+' + o.priceDelta + '원)' : '')}">
+                    </option>
+                </select>
+
+                <!-- COFFEE가 아닌 경우: NONE hidden -->
+                <input type="hidden" name="options" value="NONE"
+                       th:unless="${m.category.name() == 'COFFEE'}"/>
+                <span th:unless="${m.category.name() == 'COFFEE'}">해당 없음</span>
             </td>
 
         </tr>

@@ -1,5 +1,8 @@
 package com.cafe.order.domain.order.dto;
 
+import com.cafe.order.domain.menu.dto.CupType;
+import com.cafe.order.domain.menu.dto.ShotOption;
+import com.cafe.order.domain.menu.dto.Temperature;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,14 +37,17 @@ public class OrderItem {
     private Integer menuPrice;
 
     // 옵션 정보
-    @Column(length = 10)
-    private String temperature; // HOT, ICE
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Temperature temperature; // HOT, ICE
 
-    @Column(length = 20, name = "cup_type")
-    private String cupType; // 일회용컵, 개인컵, 매장컵
+    @Enumerated(EnumType.STRING)
+    @Column(name = "cup_type", nullable = false)
+    private CupType cupType; // 일회용컵, 개인컵, 매장컵
 
-    @Column(length = 50)
-    private String options; // 샷추가, 얼음 추가 등
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ShotOption options; // 샷추가, 기본, 오트우유 등
 
     // 수량 및 가격
     @Column(nullable = false)
@@ -51,7 +57,7 @@ public class OrderItem {
     private Integer finalPrice; // 옵션 포함 최종 가격
 
     // 생성자
-    public OrderItem(UUID orderId, UUID menuId, String menuName, Integer menuPrice, String temperature, String cupType, String options, Integer quantity, Integer finalPrice) {
+    public OrderItem(UUID orderId, UUID menuId, String menuName, Integer menuPrice, Temperature temperature, CupType cupType, ShotOption options, Integer quantity, Integer finalPrice) {
         this.orderId = orderId;
         this.menuId = menuId;
         this.menuName = menuName;

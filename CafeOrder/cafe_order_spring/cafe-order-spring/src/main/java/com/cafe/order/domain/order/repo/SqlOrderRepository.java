@@ -1,6 +1,9 @@
 package com.cafe.order.domain.order.repo;
 
 import com.cafe.order.common.util.UUIDUtils;
+import com.cafe.order.domain.menu.dto.CupType;
+import com.cafe.order.domain.menu.dto.ShotOption;
+import com.cafe.order.domain.menu.dto.Temperature;
 import com.cafe.order.domain.order.dto.Order;
 import com.cafe.order.domain.order.dto.OrderItem;
 import com.cafe.order.domain.order.dto.OrderStatus;
@@ -129,9 +132,6 @@ public class SqlOrderRepository {
     }
 
 
-
-
-
     // ResultSet -> Order 변환
     public RowMapper<Order> orderRowMapper() {
         return ((rs, rowNum) -> {
@@ -169,11 +169,20 @@ public class SqlOrderRepository {
             item.setMenuId(convertBytesToUUID(menuIdByte));
 
             item.setMenuName(rs.getString("menu_name"));
+
             item.setMenuPrice(rs.getInt("menu_price"));
-            item.setTemperature(rs.getString("temperature"));
-            item.setCupType(rs.getString("cup_type"));
-            item.setOptions(rs.getString("options"));
+
+            item.setTemperature(rs.getString("temperature") == null ? null :
+                    Temperature.valueOf(rs.getString("temperature")));
+
+            item.setCupType(rs.getString("cup_type") == null ? null :
+                            CupType.valueOf(rs.getString("cup_type")));
+
+            item.setOptions(rs.getString("options") == null ? null :
+                            ShotOption.valueOf(rs.getString("options")));
+
             item.setQuantity(rs.getInt("quantity"));
+
             item.setFinalPrice(rs.getInt("final_price"));
 
             return item;

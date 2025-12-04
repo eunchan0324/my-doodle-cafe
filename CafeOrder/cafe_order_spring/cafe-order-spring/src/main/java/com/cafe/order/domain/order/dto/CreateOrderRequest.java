@@ -1,5 +1,8 @@
 package com.cafe.order.domain.order.dto;
 
+import com.cafe.order.domain.menu.dto.CupType;
+import com.cafe.order.domain.menu.dto.ShotOption;
+import com.cafe.order.domain.menu.dto.Temperature;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,8 +22,8 @@ public class CreateOrderRequest {
 
     // 여러 메뉴가 들어가므로 리스트
     private List<UUID> menuId;
-    private List<String> temperature;
-    private List<String> cupType;
-    private List<String> options;
+    private List<Temperature> temperature;
+    private List<CupType> cupType;
+    private List<ShotOption> options;
     private List<Integer> quantity;
 }

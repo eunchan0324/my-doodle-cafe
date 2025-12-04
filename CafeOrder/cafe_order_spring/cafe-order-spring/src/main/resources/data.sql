@@ -22,131 +22,129 @@ VALUES ('강남점'),
 
 
 -- 사용자 테스트 데이터
-
--- 관리자 계정
 INSERT INTO users (username, password, role, store_id)
 VALUES ('admin', 'admin1234', 'ADMIN', NULL);
 
--- 판매자 계정
 INSERT INTO users (username, password, role, store_id)
 VALUES ('seller1', 'qwer1234', 'SELLER', 1),
        ('seller2', 'qwer1234', 'SELLER', 2),
        ('seller3', 'qwer1234', 'SELLER', 3);
 
--- 고객 계정
 INSERT INTO users (username, password, role, store_id)
 VALUES ('customer1', 'qwer1234', 'CUSTOMER', NULL),
        ('customer2', 'qwer1234', 'CUSTOMER', NULL);
 
 
--- ========================================
--- 주문(orders) 테스트 데이터
--- ========================================
+-- ============================
+-- orders
+-- ============================
 
--- 강남점 (storeId=1) 주문
 INSERT INTO orders (order_id, customer_id, store_id, order_time, total_price, status, waiting_number)
 VALUES
-    -- 주문 1: 새로 접수된 주문
     (X'550e8400e29b41d4a716446655440001', 'customer1', 1, DATEADD('MINUTE', -5, NOW()), 5000, 'ORDER_PLACED', 1),
-    -- 주문 2: 준비 중인 주문
     (X'550e8400e29b41d4a716446655440002', 'customer2', 1, DATEADD('MINUTE', -10, NOW()), 11000, 'PREPARING', 2),
-    -- 주문 3: 준비 완료된 주문 (픽업 대기)
     (X'550e8400e29b41d4a716446655440003', 'customer1', 1, DATEADD('MINUTE', -15, NOW()), 6500, 'READY', 3),
-    -- 주문 4: 완료된 주문 (목록에 안 보임)
     (X'550e8400e29b41d4a716446655440004', 'customer2', 1, DATEADD('DAY', -1, NOW()), 4500, 'COMPLETED', 1);
 
--- 홍대점 (storeId=2) 주문
 INSERT INTO orders (order_id, customer_id, store_id, order_time, total_price, status, waiting_number)
 VALUES
     (X'550e8400e29b41d4a716446655440005', 'customer1', 2, DATEADD('MINUTE', -20, NOW()), 10000, 'PREPARING', 1),
     (X'550e8400e29b41d4a716446655440006', 'customer2', 2, DATEADD('DAY', -2, NOW()), 12000, 'COMPLETED', 1),
     (X'550e8400e29b41d4a716446655440007', 'customer1', 2, DATEADD('MINUTE', -3, NOW()), 5500, 'READY', 2);
 
--- 신촌점 (storeId=3) 주문
 INSERT INTO orders (order_id, customer_id, store_id, order_time, total_price, status, waiting_number)
 VALUES
     (X'550e8400e29b41d4a716446655440008', 'customer2', 3, DATEADD('DAY', -3, NOW()), 15000, 'COMPLETED', 1),
     (X'550e8400e29b41d4a716446655440009', 'customer1', 3, DATEADD('MINUTE', -30, NOW()), 6000, 'PREPARING', 1);
 
 
--- ========================================
--- 주문 항목(order_items) 테스트 데이터
--- ========================================
+-- ============================
+-- order_items
+-- ============================
 
--- 강남점 주문 1: 아메리카노 1잔 (ORDER_PLACED)
-INSERT INTO order_items (order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
+-- 강남점 주문 1
+INSERT INTO order_items
+(order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
 VALUES
     (X'550e8400e29b41d4a716446655440001',
-     X'a0eebc99999b4d6eb3c9aa91c1e4e000',  -- 아메리카노 menu_id (가정)
-     '아메리카노', 5000, 'ICE', '일회용컵', '기본', 1, 5000);
+     X'a0eebc99999b4d6eb3c9aa91c1e4e000',
+     '아메리카노', 5000, 'ICE', 'DISPOSABLE', 'BASIC', 1, 5000);
 
--- 강남점 주문 2: 카페라떼 2잔 (PREPARING)
-INSERT INTO order_items (order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
+-- 강남점 주문 2
+INSERT INTO order_items
+(order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
 VALUES
     (X'550e8400e29b41d4a716446655440002',
-     X'a0eebc99999b4d6eb3c9aa91c1e4e001',  -- 카페라떼 menu_id (가정)
-     '카페라떼', 5500, 'HOT', '개인컵', '기본', 2, 11000);
+     X'a0eebc99999b4d6eb3c9aa91c1e4e001',
+     '카페라떼', 5500, 'HOT', 'PERSONAL', 'BASIC', 2, 11000);
 
--- 강남점 주문 3: 아메리카노 1잔, 녹차라떼 1잔 (READY)
-INSERT INTO order_items (order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
+-- 강남점 주문 3
+INSERT INTO order_items
+(order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
 VALUES
     (X'550e8400e29b41d4a716446655440003',
      X'a0eebc99999b4d6eb3c9aa91c1e4e000',
-     '아메리카노', 3000, 'HOT', '일회용컵', '기본', 1, 3000),
+     '아메리카노', 3000, 'HOT', 'DISPOSABLE', 'BASIC', 1, 3000),
     (X'550e8400e29b41d4a716446655440003',
-     X'a0eebc99999b4d6eb3c9aa91c1e4e002',  -- 녹차라떼 menu_id (가정)
-     '녹차라떼', 3500, 'ICE', '매장컵', '기본', 1, 3500);
+     X'a0eebc99999b4d6eb3c9aa91c1e4e002',
+     '녹차라떼', 3500, 'ICE', 'STORE', 'NONE', 1, 3500);
 
--- 강남점 주문 4: 아메리카노 1잔 (COMPLETED - 목록에 안 보임)
-INSERT INTO order_items (order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
+-- 강남점 주문 4
+INSERT INTO order_items
+(order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
 VALUES
     (X'550e8400e29b41d4a716446655440004',
      X'a0eebc99999b4d6eb3c9aa91c1e4e000',
-     '아메리카노', 4500, 'ICE', '일회용컵', '얼음 추가', 1, 4500);
+     '아메리카노', 4500, 'ICE', 'DISPOSABLE', 'NONE', 1, 4500);
 
--- 홍대점 주문 5: 카페라떼 2잔 (PREPARING)
-INSERT INTO order_items (order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
+-- 홍대점 주문 5
+INSERT INTO order_items
+(order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
 VALUES
     (X'550e8400e29b41d4a716446655440005',
      X'a0eebc99999b4d6eb3c9aa91c1e4e001',
-     '카페라떼', 5000, 'HOT', '일회용컵', '기본', 2, 10000);
+     '카페라떼', 5000, 'HOT', 'DISPOSABLE', 'BASIC', 2, 10000);
 
--- 홍대점 주문 6: 완료된 주문 (COMPLETED)
-INSERT INTO order_items (order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
+-- 홍대점 주문 6
+INSERT INTO order_items
+(order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
 VALUES
     (X'550e8400e29b41d4a716446655440006',
      X'a0eebc99999b4d6eb3c9aa91c1e4e000',
-     '아메리카노', 6000, 'ICE', '일회용컵', '기본', 2, 12000);
+     '아메리카노', 6000, 'ICE', 'DISPOSABLE', 'BASIC', 2, 12000);
 
--- 홍대점 주문 7: 아메리카노 1잔, 녹차라떼 1잔 (READY)
-INSERT INTO order_items (order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
+-- 홍대점 주문 7
+INSERT INTO order_items
+(order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
 VALUES
     (X'550e8400e29b41d4a716446655440007',
      X'a0eebc99999b4d6eb3c9aa91c1e4e000',
-     '아메리카노', 3000, 'ICE', '일회용컵', '기본', 1, 3000),
+     '아메리카노', 3000, 'ICE', 'DISPOSABLE', 'BASIC', 1, 3000),
     (X'550e8400e29b41d4a716446655440007',
      X'a0eebc99999b4d6eb3c9aa91c1e4e002',
-     '녹차라떼', 2500, 'HOT', '개인컵', '기본', 1, 2500);
+     '녹차라떼', 2500, 'HOT', 'PERSONAL', 'NONE', 1, 2500);
 
--- 신촌점 주문 8: 완료된 주문 (COMPLETED)
-INSERT INTO order_items (order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
+-- 신촌점 주문 8
+INSERT INTO order_items
+(order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
 VALUES
     (X'550e8400e29b41d4a716446655440008',
      X'a0eebc99999b4d6eb3c9aa91c1e4e001',
-     '카페라떼', 5000, 'HOT', '일회용컵', '기본', 3, 15000);
+     '카페라떼', 5000, 'HOT', 'DISPOSABLE', 'BASIC', 3, 15000);
 
--- 신촌점 주문 9: 준비 중인 주문 (PREPARING)
-INSERT INTO order_items (order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
+-- 신촌점 주문 9
+INSERT INTO order_items
+(order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price)
 VALUES
     (X'550e8400e29b41d4a716446655440009',
      X'a0eebc99999b4d6eb3c9aa91c1e4e000',
-     '아메리카노', 3000, 'ICE', '일회용컵', '기본', 2, 6000);
+     '아메리카노', 3000, 'ICE', 'DISPOSABLE', 'BASIC', 2, 6000);
 
 
+-- ============================
+-- store_menus 재생성
+-- ============================
 
--- ============================================
--- store_menus 테이블 삭제 후 재생성
--- ============================================
 DROP TABLE IF EXISTS store_menus;
 
 CREATE TABLE store_menus (
@@ -158,9 +156,6 @@ CREATE TABLE store_menus (
                              UNIQUE(store_id, menu_id)
 );
 
--- ============================================
--- store_menus 초기 데이터
--- ============================================
 INSERT INTO store_menus (store_id, menu_id, is_available, recommend_type)
 SELECT 1, id, true, 'BEST'
 FROM menus WHERE name = '아메리카노' LIMIT 1;
@@ -173,35 +168,23 @@ INSERT INTO store_menus (store_id, menu_id, is_available, recommend_type)
 SELECT 1, id, true, 'NONE'
 FROM menus WHERE name = '카푸치노' LIMIT 1;
 
+
 -- ============================
--- MENU_STATUS 더미 데이터
+-- menu_status
 -- ============================
 
--- 강남점(1) 아메리카노 → ON_SALE, 재고 10
 INSERT INTO menu_status (store_id, menu_id, status, stock)
 SELECT 1, id, 'ON_SALE', 10
-FROM menus
-WHERE name = '아메리카노'
-    LIMIT 1;
+FROM menus WHERE name = '아메리카노' LIMIT 1;
 
--- 강남점(1) 카페라떼 → STOP, 재고 5
 INSERT INTO menu_status (store_id, menu_id, status, stock)
 SELECT 1, id, 'STOP', 5
-FROM menus
-WHERE name = '카페라떼'
-    LIMIT 1;
+FROM menus WHERE name = '카페라떼' LIMIT 1;
 
--- 강남점(1) 카푸치노 → SOLD_OUT, 재고 0
 INSERT INTO menu_status (store_id, menu_id, status, stock)
 SELECT 1, id, 'SOLD_OUT', 0
-FROM menus
-WHERE name = '카푸치노'
-    LIMIT 1;
+FROM menus WHERE name = '카푸치노' LIMIT 1;
 
--- 홍대점(2) 티라미수 → ON_SALE, 재고 7
 INSERT INTO menu_status (store_id, menu_id, status, stock)
 SELECT 2, id, 'ON_SALE', 7
-FROM menus
-WHERE name = '티라미수'
-    LIMIT 1;
-
+FROM menus WHERE name = '티라미수' LIMIT 1;

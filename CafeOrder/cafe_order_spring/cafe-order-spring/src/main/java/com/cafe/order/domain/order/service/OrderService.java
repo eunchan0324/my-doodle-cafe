@@ -1,6 +1,6 @@
 package com.cafe.order.domain.order.service;
 
-import com.cafe.order.domain.menu.dto.Menu;
+import com.cafe.order.domain.menu.dto.*;
 import com.cafe.order.domain.menu.repo.JpaMenuRepository;
 import com.cafe.order.domain.menustatus.entity.MenuStatus;
 import com.cafe.order.domain.menustatus.entity.MenuStatusId;
@@ -11,6 +11,7 @@ import com.cafe.order.domain.order.repo.InMemoryOrderRepository;
 import com.cafe.order.domain.order.repo.JpaOrderItemRepository;
 import com.cafe.order.domain.order.repo.JpaOrderRepository;
 import com.cafe.order.domain.order.repo.SqlOrderRepository;
+import com.cafe.order.domain.order.util.OptionPriceCalculator;
 import com.cafe.order.domain.store.dto.Store;
 import com.cafe.order.domain.store.service.StoreService;
 import com.cafe.order.domain.storemenu.dto.StoreMenu;
@@ -261,15 +262,33 @@ public class OrderService {
             String menuName = menu.getName();
             Integer menuPrice = menu.getPrice();
 
-            // 5. 옵션 가격 + 기본 가격 계산하여 finalPrice 만들기
-            Integer qty = req.getQuantity().get(i);
-            Integer finalPrice = menuPrice * qty;
+            // 5. 옵션 포함 단가 계산
+            int unitPrice = OptionPriceCalculator.calculate(
+                    menu.getCategory(),
+                    menuPrice,
+                    req.getTemperature().get(i),
+                    req.getCupType().get(i),
+                    req.getOptions().get(i)
+            );
+
+            // 옵션이 포함된 총 가격
+            int finalPrice = unitPrice * req.getQuantity().get(i);
 
             // 6. 주문 전체 금액 (totalPrice) 계산
             totalPrice += finalPrice;
 
             // 7. OrderItem 리스트 생성
-            OrderItem orderItem = new OrderItem(null, menuId, menuName, menuPrice, req.getTemperature().get(i), req.getCupType().get(i), req.getOptions().get(i), qty, finalPrice);
+            OrderItem orderItem = new OrderItem(
+                    null,
+                    menuId,
+                    menuName,
+                    menuPrice,
+                    req.getTemperature().get(i),
+                    req.getCupType().get(i),
+                    req.getOptions().get(i),
+                    req.getQuantity().get(i),
+                    finalPrice
+            );
 
             items.add(orderItem);
         }
@@ -298,6 +317,7 @@ public class OrderService {
         // 11. 최종 반환 값 - 성공 시 생성된 orderId만 반환
         return order.getOrderId();
     }
+
 }
 
 // 집게용 임시 클래스
