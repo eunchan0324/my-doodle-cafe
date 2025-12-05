@@ -131,7 +131,34 @@ public class SqlOrderRepository {
         return order;
     }
 
+    /**
+     * 구매자용
+     */
+    /**
+     * READ : 주문 목록 확인
+     */
+    public List<Order> findByStoreIdAndCustomerId(Integer storeId, String customerId) {
+        String sql = "SELECT order_id, customer_id, order_time, status, store_id, total_price, waiting_number " +
+                "FROM orders WHERE store_id = ? AND customer_id = ?";
 
+        List<Order> orders = jdbcTemplate.query(sql, orderRowMapper(), storeId, customerId);
+
+        // 각 Order마다 OrderItem 조회
+        for (Order order : orders) {
+            String itemSql = "SELECT id, order_id, menu_id, menu_name, menu_price, temperature, cup_type, options, quantity, final_price " +
+                    "FROM order_items WHERE order_id = ?";
+            byte[] orderIdBytes = convertUUIDToBytes(order.getOrderId());
+            List<OrderItem> items = jdbcTemplate.query(itemSql, orderItemRowMapper(), orderIdBytes);
+            order.setItems(items);
+        }
+
+        return orders;
+    }
+
+
+    /**
+     * RowMapper
+     */
     // ResultSet -> Order 변환
     public RowMapper<Order> orderRowMapper() {
         return ((rs, rowNum) -> {
@@ -188,5 +215,8 @@ public class SqlOrderRepository {
             return item;
         });
     }
+
+
+
 
 }
