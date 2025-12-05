@@ -237,6 +237,40 @@ public class InMemoryOrderRepository {
         return order;
     }
 
+    /**
+     * 구매자용
+     */
+    /**
+     * READ : 주문 목록 확인
+     */
+    public List<Order> findByStoreIdAndCustomerId(Integer storeId, String customerId) {
+        List<Order> result = new ArrayList<>();
+        for (Order order : orders) {
+            if (order.getStoreId().equals(storeId) && order.getCustomerId().equals(customerId)) {
 
+                // OrderItem 설정
+                List<OrderItem> items = new ArrayList<>();
+                for (OrderItem item : orderItems) {
+                    if (item.getOrderId().equals(order.getOrderId())) {
+                        items.add(item);
+                    }
+                }
 
+                // 복사본 생성
+                Order copy = new Order(
+                        order.getOrderId(),
+                        order.getCustomerId(),
+                        order.getStoreId(),
+                        order.getOrderTime(),
+                        order.getTotalPrice(),
+                        order.getStatus(),
+                        order.getWaitingNumber()
+                );
+                order.setItems(items);
+                result.add(order);
+            }
+        }
+
+        return result;
+    }
 }
