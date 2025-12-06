@@ -22,6 +22,7 @@ import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -127,7 +128,6 @@ public class OrderService {
 
         return activeOrders;
     }
-
 
     // READ : 주문 상세 조회 (OrderItem 포함)
     public Order findById(UUID orderId) {
@@ -314,6 +314,18 @@ public class OrderService {
 
         // 11. 최종 반환 값 - 성공 시 생성된 orderId만 반환
         return order.getOrderId();
+    }
+
+    /**
+     * READ : 주문 내역 확인
+     */
+    public List<CustomerOrderSummary> findOrderSummaries(Integer storeId, String customerId) {
+
+        List<Order> orders = orderRepository.findByStoreIdAndCustomerId(storeId, customerId);
+
+        return orders.stream()
+                .map(CustomerOrderSummary::new) // Order -> DTO 변환
+                .collect(Collectors.toList());
     }
 
 }

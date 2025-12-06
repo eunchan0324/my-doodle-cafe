@@ -1,6 +1,7 @@
 package com.cafe.order.domain.order.ctrl;
 
 import com.cafe.order.domain.order.dto.CreateOrderRequest;
+import com.cafe.order.domain.order.dto.CustomerOrderSummary;
 import com.cafe.order.domain.order.dto.Order;
 import com.cafe.order.domain.order.service.OrderService;
 import com.cafe.order.domain.store.dto.Store;
@@ -65,4 +66,20 @@ public class CustomerOrderController {
         model.addAttribute("waitingNumber", waitingNumber);
         return "customer/order/success";
     }
+
+    @GetMapping("/check")
+    public String orderCheck(Model model) {
+        // TODO : 로그인 기능 이후 수정
+        Integer storeId = 1; // 임시 강남점
+
+        // TODO : 로그인 기능 이후 수정
+        String customerId = "customer1"; // 임시 ID
+
+        List<CustomerOrderSummary> customerOrderSummaries = orderService.findOrderSummaries(storeId, customerId);
+
+        model.addAttribute("orderSummaries", customerOrderSummaries);
+
+        return "customer/order/summary";
+    }
+
 }
