@@ -28,6 +28,7 @@ public class StoreMenu {
     @Column(name = "menu_id", nullable = false, columnDefinition = "BINARY(16)")
     private UUID menuId;
 
+    // todo : MenuStatus 안에 SalesStatus와 중복되는 느낌이므로 확인 필요
     @Column(name = "is_available", nullable = false)
     private Boolean isAvailable = true; // 판매 가능 여부 (재고 관리)
 

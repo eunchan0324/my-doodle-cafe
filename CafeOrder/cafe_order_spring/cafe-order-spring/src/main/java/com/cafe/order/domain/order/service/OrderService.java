@@ -1,15 +1,26 @@
 package com.cafe.order.domain.order.service;
 
-import com.cafe.order.domain.order.dto.Order;
-import com.cafe.order.domain.order.dto.OrderStatus;
-import com.cafe.order.domain.order.dto.SalesDto;
+import com.cafe.order.domain.menu.dto.*;
+import com.cafe.order.domain.menu.repo.JpaMenuRepository;
+import com.cafe.order.domain.menustatus.entity.MenuStatus;
+import com.cafe.order.domain.menustatus.entity.MenuStatusId;
+import com.cafe.order.domain.menustatus.entity.SalesStatus;
+import com.cafe.order.domain.menustatus.repo.JpaSellerStockRepository;
+import com.cafe.order.domain.order.dto.*;
 import com.cafe.order.domain.order.repo.InMemoryOrderRepository;
+import com.cafe.order.domain.order.repo.JpaOrderItemRepository;
 import com.cafe.order.domain.order.repo.JpaOrderRepository;
 import com.cafe.order.domain.order.repo.SqlOrderRepository;
+import com.cafe.order.domain.order.util.OptionPriceCalculator;
 import com.cafe.order.domain.store.dto.Store;
 import com.cafe.order.domain.store.service.StoreService;
+import com.cafe.order.domain.storemenu.dto.StoreMenu;
+import com.cafe.order.domain.storemenu.repo.JpaStoreMenuRepository;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -19,11 +30,19 @@ public class OrderService {
 //    private final SqlOrderRepository orderRepository;
 //    private final InMemoryOrderRepository orderRepository;
 
+    private final JpaOrderItemRepository orderItemRepository;
+    private final JpaStoreMenuRepository storeMenuRepository;
+    private final JpaSellerStockRepository sellerStockRepository;
+    private final JpaMenuRepository menuRepository;
     private final StoreService storeService;
 
-    public OrderService(JpaOrderRepository orderRepository, StoreService storeService) {
+    public OrderService(JpaOrderRepository orderRepository, JpaOrderItemRepository orderItemRepository, StoreService storeService, JpaStoreMenuRepository storeMenuRepository, JpaSellerStockRepository sellerStockRepository, JpaMenuRepository menuRepository) {
         this.orderRepository = orderRepository;
+        this.orderItemRepository = orderItemRepository;
         this.storeService = storeService;
+        this.storeMenuRepository = storeMenuRepository;
+        this.sellerStockRepository = sellerStockRepository;
+        this.menuRepository = menuRepository;
     }
 
 
@@ -79,7 +98,9 @@ public class OrderService {
      * 판매자용
      */
 
-    /** 주문 관리 메뉴 */
+    /**
+     * 주문 관리 메뉴
+     */
     // READ : 특정 지점 주문 목록 조회
     public List<Order> findByStoreId(Integer storeId) {
         return orderRepository.findByStoreId(storeId);
@@ -173,7 +194,127 @@ public class OrderService {
     }
 
 
+    /**
+     * 구매자용
+     */
+    /**
+     * CREATE : 구매자의 주문 요청을 받아 Order + OrderItem 전체를 생성하고 저장
+     */
+    public UUID createOrder(CreateOrderRequest req, Integer storeId) {
+        int size = req.getMenuId().size();
+        // 전체 금액 누적용
+        int totalPrice = 0;
 
+        // OrderItem 모음
+        List<OrderItem> items = new ArrayList<>();
+
+        // 1. 입력 값 기본 검증
+        // 1-1. customerId 검증
+        if (req.getCustomerId() == null || req.getCustomerId().isBlank()) {
+            throw new IllegalArgumentException("customerId가 비어있습니다.");
+        }
+
+        // 1-2. 리스트 길이 검증
+        if (size == 0) {
+            throw new IllegalArgumentException("주문 항목이 비어있습니다.");
+        }
+        if (req.getQuantity().size() != size ||
+                req.getTemperature().size() != size ||
+                req.getCupType().size() != size ||
+                req.getOptions().size() != size) {
+            throw new IllegalArgumentException("리스트 길이가 서로 다릅니다.");
+        }
+
+        // 2. Store 검증
+        Store store = storeService.findById(storeId);
+        if (store == null) {
+            throw new IllegalArgumentException("유효하지 않은 storeId입니다.");
+        }
+
+        // 3. 각 메뉴 검증 (판매 여부 + 품절 여부)
+        List<UUID> menuIds = req.getMenuId();
+
+        for (int i = 0; i < menuIds.size(); i++) {
+            UUID menuId = menuIds.get(i);
+
+            // 3-1. 지점에서 판매하는 메뉴인지 확인
+            StoreMenu sm = storeMenuRepository
+                    .findByStoreIdAndMenuId(storeId, menuId)
+                    .orElseThrow(() -> new IllegalArgumentException("판매하지 않는 메뉴입니다: " + menuId));
+
+            // 3-2. 해당 메뉴의 MenuStatus 검증
+            MenuStatusId msId = new MenuStatusId(storeId, menuId);
+
+            MenuStatus ms = sellerStockRepository.findById(msId)
+                    .orElseThrow(() -> new IllegalArgumentException("MenuStatus가 존재하지 않습니다: " + menuId));
+
+            if (!ms.isSellable()) {
+                throw new IllegalArgumentException("판매 불가능한 메뉴입니다(재고=0, 품절, 중지 등): " + menuId);
+            }
+
+
+            // 4. 메뉴 정보 가져오기 (가격, 메뉴명 등)
+            Menu menu = menuRepository.findById(menuId)
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 메뉴:" + menuId));
+
+            String menuName = menu.getName();
+            Integer menuPrice = menu.getPrice();
+
+            // 5. 옵션 포함 단가 계산
+            int unitPrice = OptionPriceCalculator.calculate(
+                    menu.getCategory(),
+                    menuPrice,
+                    req.getTemperature().get(i),
+                    req.getCupType().get(i),
+                    req.getOptions().get(i)
+            );
+
+            // 옵션이 포함된 총 가격
+            int finalPrice = unitPrice * req.getQuantity().get(i);
+
+            // 6. 주문 전체 금액 (totalPrice) 계산
+            totalPrice += finalPrice;
+
+            // 7. OrderItem 리스트 생성
+            OrderItem orderItem = new OrderItem(
+                    null,
+                    menuId,
+                    menuName,
+                    menuPrice,
+                    req.getTemperature().get(i),
+                    req.getCupType().get(i),
+                    req.getOptions().get(i),
+                    req.getQuantity().get(i),
+                    finalPrice
+            );
+
+            items.add(orderItem);
+        }
+
+        // 8. waiting_number 생성
+        LocalDate today = LocalDate.now();
+        Integer waiting_number = orderRepository.findMaxWaitingNumberForStoreToday(storeId, today);
+        if (waiting_number == null) {
+            waiting_number = 1;
+        } else {
+            waiting_number += 1;
+        }
+
+        // 9. Order 엔티티 생성 -> 저장
+        Order order = new Order(req.getCustomerId(), storeId, totalPrice, OrderStatus.ORDER_PLACED, waiting_number);
+
+        orderRepository.save(order);
+
+        // 10. OrderItem 전체 저장
+        for (OrderItem item : items) {
+            item.setOrderId(order.getOrderId());
+        }
+
+        orderItemRepository.saveAll(items);
+
+        // 11. 최종 반환 값 - 성공 시 생성된 orderId만 반환
+        return order.getOrderId();
+    }
 
 }
 

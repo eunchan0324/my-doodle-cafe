@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 완료</title>
+</head>
+<body>
+
+<h1>주문이 완료되었습니다!</h1>
+<hr>
+
+<p>대기 번호:</p>
+<h2 th:text="${waitingNumber}"></h2>
+
+<br>
+
+<a th:href="@{/customer/orders/new}">
+    새로운 주문하기
+</a>
+
+<br><br>
+
+<a th:href="@{/customer}">
+    메인화면으로 돌아가기
+</a>
+
+</body>
+</html>

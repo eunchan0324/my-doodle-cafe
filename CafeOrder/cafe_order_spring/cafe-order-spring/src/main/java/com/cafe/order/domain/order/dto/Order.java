@@ -47,13 +47,14 @@ public class Order {
     private List<OrderItem> items = new ArrayList<>();
 
     // 신규 주문 생성자
-    public Order(String customerId, Integer storeId, Integer totalPrice, OrderStatus status) {
+    public Order(String customerId, Integer storeId, Integer totalPrice, OrderStatus status, Integer waitingNumber) {
         this.orderId = UUID.randomUUID();
         this.customerId = customerId;
         this.storeId = storeId;
         this.orderTime = LocalDateTime.now();
         this.totalPrice = totalPrice;
         this.status = status;
+        this.waitingNumber = waitingNumber;
     }
 
     // DB 로드 생성자
