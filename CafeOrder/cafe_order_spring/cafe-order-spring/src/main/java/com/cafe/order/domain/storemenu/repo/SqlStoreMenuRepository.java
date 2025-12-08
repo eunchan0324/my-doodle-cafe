@@ -1,18 +1,14 @@
 package com.cafe.order.domain.storemenu.repo;
 
-import com.cafe.order.domain.storemenu.dto.RecommendType;
-import com.cafe.order.domain.storemenu.dto.StoreMenu;
+import com.cafe.order.domain.storemenu.entity.StoreMenu;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
-import com.cafe.order.domain.storemenu.dto.StoreMenuRowMapper;
+import com.cafe.order.domain.storemenu.entity.StoreMenuRowMapper;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.cafe.order.common.util.UUIDUtils.convertBytesToUUID;
 import static com.cafe.order.common.util.UUIDUtils.convertUUIDToBytes;
 
 //@Repository

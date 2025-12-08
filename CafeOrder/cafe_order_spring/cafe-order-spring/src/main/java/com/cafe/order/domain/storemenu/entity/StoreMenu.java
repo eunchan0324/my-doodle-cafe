@@ -1,15 +1,13 @@
-package com.cafe.order.domain.storemenu.dto;
+package com.cafe.order.domain.storemenu.entity;
 
+import com.cafe.order.domain.storemenu.dto.RecommendType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.jdbc.core.RowMapper;
 
 import java.util.UUID;
-
-import static com.cafe.order.common.util.UUIDUtils.convertBytesToUUID;
 
 @Entity
 @Table(name = "store_menus")

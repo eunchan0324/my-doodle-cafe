@@ -4,7 +4,7 @@ import com.cafe.order.domain.menu.dto.Menu;
 import com.cafe.order.domain.menu.service.MenuService;
 import com.cafe.order.domain.store.dto.Store;
 import com.cafe.order.domain.store.service.StoreService;
-import com.cafe.order.domain.storemenu.dto.StoreMenu;
+import com.cafe.order.domain.storemenu.entity.StoreMenu;
 import com.cafe.order.domain.storemenu.service.StoreMenuService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

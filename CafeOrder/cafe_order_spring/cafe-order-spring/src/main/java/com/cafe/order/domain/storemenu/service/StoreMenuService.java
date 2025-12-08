@@ -8,6 +8,7 @@ import com.cafe.order.domain.menustatus.entity.MenuStatusId;
 import com.cafe.order.domain.menustatus.repo.JpaSellerStockRepository;
 import com.cafe.order.domain.menustatus.service.SellerStockService;
 import com.cafe.order.domain.storemenu.dto.*;
+import com.cafe.order.domain.storemenu.entity.StoreMenu;
 import com.cafe.order.domain.storemenu.repo.JpaStoreMenuRepository;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package com.cafe.order.domain.storemenu.repo;
 
-import com.cafe.order.domain.storemenu.dto.StoreMenu;
+import com.cafe.order.domain.storemenu.entity.StoreMenu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
