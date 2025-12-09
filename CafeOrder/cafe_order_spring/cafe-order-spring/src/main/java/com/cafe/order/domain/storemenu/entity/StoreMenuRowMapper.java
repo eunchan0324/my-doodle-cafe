@@ -1,5 +1,6 @@
-package com.cafe.order.domain.storemenu.dto;
+package com.cafe.order.domain.storemenu.entity;
 
+import com.cafe.order.domain.storemenu.dto.RecommendType;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

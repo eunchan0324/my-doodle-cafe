@@ -3,7 +3,6 @@ package com.cafe.order.domain.storemenu.ctrl;
 import com.cafe.order.domain.store.dto.Store;
 import com.cafe.order.domain.store.service.StoreService;
 import com.cafe.order.domain.storemenu.dto.MenuWithRecommendType;
-import com.cafe.order.domain.storemenu.dto.StoreMenu;
 import com.cafe.order.domain.storemenu.service.StoreMenuService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/seller/menus/recommend")

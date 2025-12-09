@@ -1,0 +1,52 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>추천 메뉴 조회</title>
+</head>
+<body>
+
+<h1>오늘의 추천 메뉴</h1>
+<hr>
+
+<!-- 전체 추천 메뉴가 하나도 없는 경우 -->
+<div th:if="${#lists.isEmpty(recommendMenus)}">
+    <p>추천 메뉴가 없습니다.</p>
+</div>
+
+<!-- BEST 메뉴 -->
+<div th:if="${!#lists.isEmpty(recommendMenus.?[recommendType.name() == 'BEST'])}">
+    <h3>Best Menu</h3>
+    <ul>
+        <li th:each="menu : ${recommendMenus.?[recommendType.name() == 'BEST']}"
+            th:text="${menu.menuName}">
+        </li>
+    </ul>
+</div>
+
+<!-- NEW 메뉴 -->
+<div th:if="${!#lists.isEmpty(recommendMenus.?[recommendType.name() == 'NEW'])}">
+    <h3>New Menu</h3>
+    <ul>
+        <li th:each="menu : ${recommendMenus.?[recommendType.name() == 'NEW']}"
+            th:text="${menu.menuName}">
+        </li>
+    </ul>
+</div>
+
+<!-- SEASON 메뉴 -->
+<div th:if="${!#lists.isEmpty(recommendMenus.?[recommendType.name() == 'SEASON'])}">
+    <h3>Season Menu</h3>
+    <ul>
+        <li th:each="menu : ${recommendMenus.?[recommendType.name() == 'SEASON']}"
+            th:text="${menu.menuName}">
+        </li>
+    </ul>
+</div>
+
+<div>
+    <a href="/customer">구매자 메뉴로 돌아가기</a>
+</div>
+
+</body>
+</html>

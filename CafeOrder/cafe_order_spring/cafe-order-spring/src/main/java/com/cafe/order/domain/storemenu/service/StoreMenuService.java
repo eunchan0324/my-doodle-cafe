@@ -8,6 +8,7 @@ import com.cafe.order.domain.menustatus.entity.MenuStatusId;
 import com.cafe.order.domain.menustatus.repo.JpaSellerStockRepository;
 import com.cafe.order.domain.menustatus.service.SellerStockService;
 import com.cafe.order.domain.storemenu.dto.*;
+import com.cafe.order.domain.storemenu.entity.StoreMenu;
 import com.cafe.order.domain.storemenu.repo.JpaStoreMenuRepository;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +38,9 @@ public class StoreMenuService {
         this.sellerStockRepository = sellerStockRepository;
     }
 
-    // 판매자 판매 메뉴 관리 기능
+    /**
+     * 판매자 : 판매 메뉴 관리 기능
+     */
 
     /**
      * READ : 지점의 판매 메뉴 조회 (Menu 정보 포함)
@@ -46,15 +49,15 @@ public class StoreMenuService {
         List<StoreMenu> storeMenus = storeMenuRepository.findByStoreId(storeId);
 
         return storeMenus.stream()
-                .map(sm -> {
-                    Menu menu = menuService.findById(sm.getMenuId());
-                    return new MenuWithAvailability(
-                            menu,
-                            sm.getIsAvailable(),
-                            sm.getRecommendType()
-                    );
-                })
-                .collect(Collectors.toList());
+            .map(sm -> {
+                Menu menu = menuService.findById(sm.getMenuId());
+                return new MenuWithAvailability(
+                    menu,
+                    sm.getIsAvailable(),
+                    sm.getRecommendType()
+                );
+            })
+            .collect(Collectors.toList());
     }
 
 
@@ -80,22 +83,22 @@ public class StoreMenuService {
 
             var msId = new MenuStatusId(storeId, sm.getMenuId());
             MenuStatus ms = sellerStockRepository.findById(msId)
-                    .orElseThrow(() -> new IllegalStateException("MenuStatus not found for storeId=" + storeId + ", menuId=" + sm.getMenuId()));
+                .orElseThrow(() -> new IllegalStateException("MenuStatus not found for storeId=" + storeId + ", menuId=" + sm.getMenuId()));
 
             if (!ms.isSellable()) {
                 continue;
             }
 
             Menu menu = menuRepository.findById(sm.getMenuId())
-                    .orElseThrow(() -> new IllegalStateException("Menu not found (menuId=" + sm.getMenuId() + ")"));
+                .orElseThrow(() -> new IllegalStateException("Menu not found (menuId=" + sm.getMenuId() + ")"));
 
 
             var response = new CustomerMenuResponse(
-                    menu.getId(),
-                    menu.getName(),
-                    menu.getPrice(),
-                    ms.getMenu().getCategory(),
-                    ms.getStatus()
+                menu.getId(),
+                menu.getName(),
+                menu.getPrice(),
+                ms.getMenu().getCategory(),
+                ms.getStatus()
             );
 
             result.add(response);
@@ -126,7 +129,9 @@ public class StoreMenuService {
     }
 
 
-    // 판매자 메뉴 추천 기능
+    /**
+     * 판매자 : 메뉴 추천 기능
+     */
 
     /**
      * READ : 지점의 메뉴 + 추천 타입 조회
@@ -137,14 +142,14 @@ public class StoreMenuService {
 
         // 2. 수동으로 Menu 조회 + DTO 조합
         return storeMenus.stream()
-                .map(sm -> {
-                    // menuId로 Menu 조회
-                    Menu menu = menuService.findById(sm.getMenuId());
+            .map(sm -> {
+                // menuId로 Menu 조회
+                Menu menu = menuService.findById(sm.getMenuId());
 
-                    // DTO 생성
-                    return new MenuWithRecommendType(menu, sm.getRecommendType());
-                })
-                .collect(Collectors.toList());
+                // DTO 생성
+                return new MenuWithRecommendType(menu, sm.getRecommendType());
+            })
+            .collect(Collectors.toList());
     }
 
     /**
@@ -168,10 +173,10 @@ public class StoreMenuService {
 
                 // StoreMenu 조회 및 업데이트
                 StoreMenu storeMenu = storeMenuRepository
-                        .findByStoreIdAndMenuId(storeId, menuId)
-                        .orElseThrow(() -> new IllegalArgumentException(
-                                "StoreMenu not found: storeId=" + storeId + ", menuId=" + menuId
-                        ));
+                    .findByStoreIdAndMenuId(storeId, menuId)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                        "StoreMenu not found: storeId=" + storeId + ", menuId=" + menuId
+                    ));
 
                 storeMenu.setRecommendType(recommendType);
                 storeMenuRepository.save(storeMenu);
@@ -181,5 +186,31 @@ public class StoreMenuService {
 
 
     // TODO : 개별 메뉴 추가/삭제 (나중에 API에서 사용)
+
+
+    /**
+     * 구매자 기능
+     */
+    /**
+     * READ : 구매자 추천 메뉴 Dto 조회
+     * <br>
+     * - storeId로 StoreMenu 엔티티 조회 <br>
+     * - Storemenu의 menuId로 Menu 엔티티 조회 <br>
+     * - DTO 결합하여 반환
+     */
+    public List<CustomerRecommendMenuDto> findRecommendMenus(Integer storeId) {
+        List<CustomerRecommendMenuDto> result = new ArrayList<>();
+
+        List<StoreMenu> storeMenus = storeMenuRepository.findByStoreId(storeId);
+
+        for (StoreMenu sm : storeMenus) {
+            Menu menu = menuService.findById(sm.getMenuId());
+            result.add(new CustomerRecommendMenuDto(
+                menu.getName(),
+                sm.getRecommendType()
+            ));
+        }
+        return result;
+    }
 
 }

@@ -1,10 +1,6 @@
 package com.cafe.order.domain.storemenu.repo;
 
-import com.cafe.order.domain.menu.dto.Category;
-import com.cafe.order.domain.menu.dto.Menu;
-import com.cafe.order.domain.storemenu.dto.RecommendType;
-import com.cafe.order.domain.storemenu.dto.StoreMenu;
-import org.springframework.stereotype.Repository;
+import com.cafe.order.domain.storemenu.entity.StoreMenu;
 
 import java.util.ArrayList;
 import java.util.List;
