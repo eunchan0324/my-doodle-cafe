@@ -13,7 +13,18 @@ public class CustomerMenuResponse {
     private String name;
     private Integer price;
     private Category category;
+    private RecommendType recommendType;
     private SalesStatus status;
+
+    public CustomerMenuResponse(UUID menuId, String name, Integer price, Category category, RecommendType recommendType, SalesStatus status) {
+        this.menuId = menuId;
+        this.name = name;
+        this.price = price;
+        this.category = category;
+        this.recommendType = recommendType;
+        this.status = status;
+    }
+
     public CustomerMenuResponse(UUID menuId, String name, Integer price, Category category, SalesStatus status) {
         this.menuId = menuId;
         this.name = name;
