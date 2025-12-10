@@ -213,4 +213,38 @@ public class StoreMenuService {
         return result;
     }
 
+    /**
+     * READ : 지점의 전체 메뉴 조회 + 판매 가능 여부(재고 상태) 포함
+     */
+    public List<CustomerMenuResponse> findAllMenusWithAvailability(Integer storeId) {
+        List<CustomerMenuResponse> result = new ArrayList<>();
+
+        // 1. 해당 지점의 모든 storeMenu를 조회
+        List<StoreMenu> storeMenus = storeMenuRepository.findByStoreId(storeId);
+
+        for (StoreMenu sm : storeMenus) {
+            // 2. MenuStatus 찾기
+            var msId = new MenuStatusId(storeId, sm.getMenuId());
+            MenuStatus ms = sellerStockRepository.findById(msId)
+                .orElseThrow(() -> new IllegalStateException("MenuStatus not found for storeId=" + storeId + ", menuId=" + sm.getMenuId()));
+
+            // 3. Menu 찾기
+            Menu menu = menuRepository.findById(sm.getMenuId())
+                .orElseThrow(() -> new IllegalStateException("Menu not found (menuId=" + sm.getMenuId() + ")"));
+
+            // 4. DTO 생성
+            var response = new CustomerMenuResponse(
+                menu.getId(),
+                menu.getName(),
+                menu.getPrice(),
+                menu.getCategory(),
+                sm.getRecommendType(),
+                ms.getStatus()
+            );
+            result.add(response);
+        }
+        return result;
+    }
+
+
 }
