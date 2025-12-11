@@ -275,7 +275,8 @@ public class StoreMenuService {
             menu.getDescription(),
             storeMenu.getRecommendType(),
             ms.getStatus(),
-            isFavorite
+            isFavorite,
+            menu.getCategory()
         );
     }
 

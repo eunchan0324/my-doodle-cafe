@@ -1,5 +1,6 @@
 package com.cafe.order.domain.storemenu.dto;
 
+import com.cafe.order.domain.menu.dto.Category;
 import com.cafe.order.domain.menustatus.entity.SalesStatus;
 import lombok.Getter;
 
@@ -15,8 +16,9 @@ public class CustomerMenuDetailResponse {
     private RecommendType recommendType;
     private SalesStatus status;
     private boolean isFavorite;
+    private Category category;
 
-    public CustomerMenuDetailResponse(UUID menuId, String name, Integer price, String description, RecommendType recommendType, SalesStatus status, boolean isFavorite) {
+    public CustomerMenuDetailResponse(UUID menuId, String name, Integer price, String description, RecommendType recommendType, SalesStatus status, boolean isFavorite, Category category) {
         this.menuId = menuId;
         this.name = name;
         this.price = price;
@@ -24,5 +26,6 @@ public class CustomerMenuDetailResponse {
         this.recommendType = recommendType;
         this.status = status;
         this.isFavorite = isFavorite;
+        this.category = category;
     }
 }
