@@ -3,10 +3,9 @@ package com.cafe.order.domain.order.repo;
 import com.cafe.order.domain.menu.dto.CupType;
 import com.cafe.order.domain.menu.dto.ShotOption;
 import com.cafe.order.domain.menu.dto.Temperature;
-import com.cafe.order.domain.order.dto.Order;
-import com.cafe.order.domain.order.dto.OrderItem;
+import com.cafe.order.domain.order.entity.Order;
+import com.cafe.order.domain.order.entity.OrderItem;
 import com.cafe.order.domain.order.dto.OrderStatus;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

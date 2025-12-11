@@ -1,6 +1,6 @@
 package com.cafe.order.domain.order.repo;
 
-import com.cafe.order.domain.order.dto.Order;
+import com.cafe.order.domain.order.entity.Order;
 import com.cafe.order.domain.order.dto.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

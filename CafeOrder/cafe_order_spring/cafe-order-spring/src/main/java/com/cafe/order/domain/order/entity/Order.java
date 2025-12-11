@@ -1,10 +1,10 @@
-package com.cafe.order.domain.order.dto;
+package com.cafe.order.domain.order.entity;
 
+import com.cafe.order.domain.order.dto.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

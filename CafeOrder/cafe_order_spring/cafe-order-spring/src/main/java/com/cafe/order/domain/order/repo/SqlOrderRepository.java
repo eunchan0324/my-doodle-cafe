@@ -4,14 +4,12 @@ import com.cafe.order.common.util.UUIDUtils;
 import com.cafe.order.domain.menu.dto.CupType;
 import com.cafe.order.domain.menu.dto.ShotOption;
 import com.cafe.order.domain.menu.dto.Temperature;
-import com.cafe.order.domain.order.dto.Order;
-import com.cafe.order.domain.order.dto.OrderItem;
+import com.cafe.order.domain.order.entity.Order;
+import com.cafe.order.domain.order.entity.OrderItem;
 import com.cafe.order.domain.order.dto.OrderStatus;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;

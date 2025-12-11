@@ -2,12 +2,11 @@ package com.cafe.order.domain.order.ctrl;
 
 import com.cafe.order.domain.order.dto.CreateOrderRequest;
 import com.cafe.order.domain.order.dto.CustomerOrderSummary;
-import com.cafe.order.domain.order.dto.Order;
+import com.cafe.order.domain.order.entity.Order;
 import com.cafe.order.domain.order.service.OrderService;
 import com.cafe.order.domain.store.dto.Store;
 import com.cafe.order.domain.store.service.StoreService;
 import com.cafe.order.domain.storemenu.dto.CustomerMenuResponse;
-import com.cafe.order.domain.storemenu.dto.MenuWithAvailability;
 import com.cafe.order.domain.storemenu.service.StoreMenuService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -1,5 +1,6 @@
 package com.cafe.order.domain.order.dto;
 
+import com.cafe.order.domain.order.entity.Order;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
