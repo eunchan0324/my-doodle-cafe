@@ -73,4 +73,24 @@ public class CartService {
         session.setAttribute(cartSessionKey, cartItems);
     }
 
+    /**
+     * 세션에 저장된 장바구니 항목 리스트 조회
+     */
+    public List<CustomerCartItem> getCartItems(Integer customerId, HttpSession session) {
+        String cartSessionKey = "customer_cart_" + customerId;
+
+        // 세션에서 리스트를 가져와서 안전하게 형 변환
+        Object cartAttribute = session.getAttribute(cartSessionKey);
+
+        //  instanceof는 객체 타입을 확인하는 연산자
+        //  형변환 가능 여부를 확인하며 true / false로 결과를 반환
+        if (cartAttribute instanceof List) {
+            return (List<CustomerCartItem>) cartAttribute;
+        }
+
+        // 장바구니가 비어있다면 빈 리스트 반환
+        return new ArrayList<>();
+    }
+
+
 }
