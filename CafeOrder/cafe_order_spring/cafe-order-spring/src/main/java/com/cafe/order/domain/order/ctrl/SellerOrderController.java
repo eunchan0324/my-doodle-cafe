@@ -1,6 +1,6 @@
 package com.cafe.order.domain.order.ctrl;
 
-import com.cafe.order.domain.order.dto.Order;
+import com.cafe.order.domain.order.entity.Order;
 import com.cafe.order.domain.order.dto.OrderStatus;
 import com.cafe.order.domain.order.service.OrderService;
 import com.cafe.order.domain.store.dto.Store;

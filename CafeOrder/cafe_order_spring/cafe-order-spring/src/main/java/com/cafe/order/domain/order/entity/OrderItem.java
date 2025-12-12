@@ -1,4 +1,4 @@
-package com.cafe.order.domain.order.dto;
+package com.cafe.order.domain.order.entity;
 
 import com.cafe.order.domain.menu.dto.CupType;
 import com.cafe.order.domain.menu.dto.ShotOption;

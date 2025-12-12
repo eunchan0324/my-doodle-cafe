@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>나의 장바구니</title>
+</head>
+<body>
+
+<h1>나의 장바구니 목록</h1>
+<hr/>
+
+<div th:if="${#lists.isEmpty(cartItems)}">
+    <p>장바구니가 비어있습니다. 주문할 메뉴를 담아주세요.</p>
+</div>
+
+<div th:if="${!#lists.isEmpty(cartItems)}">
+
+    <table>
+        <thead>
+        <tr>
+            <th>메뉴 이름</th>
+            <th>옵션</th>
+            <th>수량</th>
+            <th>항목 금액</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${cartItems}">
+            <td th:text="${item.name}">아이스 아메리카노</td>
+
+            <td>
+                <span th:text="|${item.temperature.displayName} / ${item.cupType.displayName}|">HOT / 일회용컵</span>
+                <span th:if="${item.shotOption.name() != 'NONE'}" th:text="| (+ ${item.shotOption.displayName})|"> (+ 샷 추가)</span>
+            </td>
+
+            <td th:text="${item.quantity}">1</td>
+
+            <td th:text="${#numbers.formatInteger(item.finalPrice, 0, 'COMMA')} + '원'">5,200원</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <hr/>
+
+    <div style="font-size: 1.2em; font-weight: bold;">
+        총 주문 금액:
+        <span th:text="${#numbers.formatInteger(totalPrice, 0, 'COMMA')} + '원'">10,400원</span>
+    </div>
+
+</div>
+
+<hr/>
+
+<div>
+    <a th:href="@{/customer/menus}">
+        <button type="button">메뉴판으로 돌아가기</button>
+    </a>
+</div>
+
+
+</body>
+</html>

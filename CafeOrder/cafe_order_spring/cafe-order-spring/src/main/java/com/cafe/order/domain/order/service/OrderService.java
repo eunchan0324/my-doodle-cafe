@@ -6,6 +6,8 @@ import com.cafe.order.domain.menustatus.entity.MenuStatus;
 import com.cafe.order.domain.menustatus.entity.MenuStatusId;
 import com.cafe.order.domain.menustatus.repo.JpaSellerStockRepository;
 import com.cafe.order.domain.order.dto.*;
+import com.cafe.order.domain.order.entity.Order;
+import com.cafe.order.domain.order.entity.OrderItem;
 import com.cafe.order.domain.order.repo.JpaOrderItemRepository;
 import com.cafe.order.domain.order.repo.JpaOrderRepository;
 import com.cafe.order.domain.order.util.OptionPriceCalculator;

@@ -7,29 +7,25 @@ import lombok.Getter;
 import java.util.UUID;
 
 @Getter
-public class CustomerMenuResponse {
+public class CustomerMenuDetailResponse {
 
     private UUID menuId;
     private String name;
     private Integer price;
-    private Category category;
+    private String description;
     private RecommendType recommendType;
     private SalesStatus status;
+    private boolean isFavorite;
+    private Category category;
 
-    public CustomerMenuResponse(UUID menuId, String name, Integer price, Category category, RecommendType recommendType, SalesStatus status) {
+    public CustomerMenuDetailResponse(UUID menuId, String name, Integer price, String description, RecommendType recommendType, SalesStatus status, boolean isFavorite, Category category) {
         this.menuId = menuId;
         this.name = name;
         this.price = price;
-        this.category = category;
+        this.description = description;
         this.recommendType = recommendType;
         this.status = status;
-    }
-
-    public CustomerMenuResponse(UUID menuId, String name, Integer price, Category category, SalesStatus status) {
-        this.menuId = menuId;
-        this.name = name;
-        this.price = price;
+        this.isFavorite = isFavorite;
         this.category = category;
-        this.status = status;
     }
 }
