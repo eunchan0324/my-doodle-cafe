@@ -5,6 +5,7 @@ import com.cafe.order.domain.cart.service.CartService;
 import com.cafe.order.domain.order.dto.CustomerOrderItemRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,7 +51,23 @@ public class CustomerCartController {
     }
 
 
-    // 아래 메서드를 CustomerCartController 클래스 { } 안에 정확히 넣으세요.
+    /**
+     * GET : 장바구니 목록 페이지
+     */
+    @GetMapping
+    public String getCartList(Model model, HttpSession session) {
+        // 임시 ID (todo: 로그인 후 변경)
+        Integer customerId = 1;
+
+        List<CustomerCartItem> cartItems = cartService.getCartItems(customerId, session);
+
+        model.addAttribute("cartItems", cartItems);
+
+        return "customer/cart/list";
+    }
+
+
+    // 테스트 컨트롤러
     @GetMapping("/check-session")
     @ResponseBody
     public List<CustomerCartItem> checkCartSession(HttpSession session) {
