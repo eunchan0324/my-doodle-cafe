@@ -26,4 +26,10 @@ public class FavoriteMenu {
         this.id = new FavoriteMenuId(cusotmerId, menuId);
         this.createdAt = LocalDateTime.now();
     }
+
+    // DB 조회용 생성자
+    public FavoriteMenu(FavoriteMenuId id, LocalDateTime createdAt) {
+        this.id = id;
+        this.createdAt = createdAt;
+    }
 }

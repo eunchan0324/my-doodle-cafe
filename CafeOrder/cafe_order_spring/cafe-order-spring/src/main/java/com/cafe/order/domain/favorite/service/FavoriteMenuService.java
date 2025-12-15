@@ -4,6 +4,7 @@ import com.cafe.order.domain.favorite.dto.FavoriteMenuResponse;
 import com.cafe.order.domain.favorite.entity.FavoriteMenu;
 import com.cafe.order.domain.favorite.entity.FavoriteMenuId;
 import com.cafe.order.domain.favorite.repo.JpaFavoriteMenuRepository;
+import com.cafe.order.domain.favorite.repo.SqlFavoriteMenuRepository;
 import com.cafe.order.domain.menu.dto.Menu;
 import com.cafe.order.domain.menu.repo.JpaMenuRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +17,19 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Transactional
-@RequiredArgsConstructor
 @Service
 public class FavoriteMenuService {
 
     private final JpaFavoriteMenuRepository favoriteMenuRepository;
+//        private final SqlFavoriteMenuRepository favoriteMenuRepository;
+//    private final InMemoryFavoriteMenuRepository favoriteMenuRepository;
+
     private final JpaMenuRepository menuRepository;
+
+    public FavoriteMenuService(JpaFavoriteMenuRepository favoriteMenuRepository, JpaMenuRepository menuRepository) {
+        this.favoriteMenuRepository = favoriteMenuRepository;
+        this.menuRepository = menuRepository;
+    }
 
     /**
      * READ: 특정 고객이 특정 메뉴를 찜했는지 여부를 조회 (메뉴 상세 화면용)
