@@ -1,5 +1,6 @@
 package com.cafe.order.domain.storemenu.ctrl;
 
+import com.cafe.order.domain.favorite.service.FavoriteMenuService;
 import com.cafe.order.domain.menu.dto.Category;
 import com.cafe.order.domain.store.dto.Store;
 import com.cafe.order.domain.store.service.StoreService;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -24,10 +26,12 @@ public class CustomerMenuController {
 
     private final StoreMenuService storeMenuService;
     private final StoreService storeService;
+    private final FavoriteMenuService favoriteMenuService;
 
-    public CustomerMenuController(StoreMenuService storeMenuService, StoreService storeService) {
+    public CustomerMenuController(StoreMenuService storeMenuService, StoreService storeService, FavoriteMenuService favoriteMenuService) {
         this.storeMenuService = storeMenuService;
         this.storeService = storeService;
+        this.favoriteMenuService = favoriteMenuService;
     }
 
     /**
@@ -63,14 +67,25 @@ public class CustomerMenuController {
     public String detail(@PathVariable UUID menuId, Model model) {
         // todo : 로그인 구현 전까지 storeId, userId 임시 사용
         Integer storeId = 1;
-        Integer userId = 1;
+        String customerId = "1";
 
-        CustomerMenuDetailResponse menuDetail = storeMenuService.findMenuDetail(storeId, menuId, userId);
+        CustomerMenuDetailResponse menuDetail = storeMenuService.findMenuDetail(storeId, menuId, customerId);
 
         model.addAttribute("menu", menuDetail);
 
         return "customer/menus/detail";
     }
 
+    /**
+     * COMMAND: 찜 상태를 토글
+     */
+    @PostMapping("/{menuId}/toggle-favorite")
+    public String toggleFavorite(@PathVariable UUID menuId) {
+        // todo : 로그인 이후 custoemrId 수정
+        String customerId = "1";
 
+        favoriteMenuService.toggleFavorite(customerId, menuId);
+
+        return "redirect:/customer/menus" + menuId;
+    }
 }

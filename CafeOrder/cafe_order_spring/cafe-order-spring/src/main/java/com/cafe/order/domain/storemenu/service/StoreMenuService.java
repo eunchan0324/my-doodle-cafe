@@ -1,5 +1,6 @@
 package com.cafe.order.domain.storemenu.service;
 
+import com.cafe.order.domain.favorite.service.FavoriteMenuService;
 import com.cafe.order.domain.menu.dto.Menu;
 import com.cafe.order.domain.menu.repo.JpaMenuRepository;
 import com.cafe.order.domain.menu.service.MenuService;
@@ -10,6 +11,7 @@ import com.cafe.order.domain.menustatus.service.SellerStockService;
 import com.cafe.order.domain.storemenu.dto.*;
 import com.cafe.order.domain.storemenu.entity.StoreMenu;
 import com.cafe.order.domain.storemenu.repo.JpaStoreMenuRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class StoreMenuService {
 
@@ -29,14 +32,7 @@ public class StoreMenuService {
     private final JpaMenuRepository menuRepository;
     private final SellerStockService sellerStockService;
     private final JpaSellerStockRepository sellerStockRepository;
-
-    public StoreMenuService(JpaStoreMenuRepository storeMenuRepository, MenuService menuService, JpaMenuRepository menuRepository, SellerStockService sellerStockService, JpaSellerStockRepository sellerStockRepository) {
-        this.storeMenuRepository = storeMenuRepository;
-        this.menuService = menuService;
-        this.menuRepository = menuRepository;
-        this.sellerStockService = sellerStockService;
-        this.sellerStockRepository = sellerStockRepository;
-    }
+    private final FavoriteMenuService favoriteMenuService;
 
     /**
      * 판매자 : 판매 메뉴 관리 기능
@@ -249,7 +245,7 @@ public class StoreMenuService {
     /**
      * READ : 메뉴 상세 조회
      */
-    public CustomerMenuDetailResponse findMenuDetail(Integer storeId, UUID menuId, Integer userId) {
+    public CustomerMenuDetailResponse findMenuDetail(Integer storeId, UUID menuId, String customerId) {
         // 1. Menu 정보 조회
         Menu menu = menuRepository.findById(menuId)
             .orElseThrow(() -> new IllegalArgumentException("메뉴를 찾을 수 없습니다. menuId : " + menuId));
@@ -264,8 +260,7 @@ public class StoreMenuService {
             .orElseThrow(() -> new IllegalStateException("해당 지점의 메뉴 상태를 찾을 수 없습니다."));
 
         // 4. 찜 상태 확인 (MyMenuRepository.findByUserIdAndMenuId 호출 예정)
-        // todo : 현재는 찜 기능 구현 전이므로, 무조건 false로 고정 / 수정 필요
-        boolean isFavorite = false;
+        boolean isFavorite = favoriteMenuService.isMenuFavorite(customerId, menuId);
 
         // 5. DTO 조합 및 반환
         return new CustomerMenuDetailResponse(
