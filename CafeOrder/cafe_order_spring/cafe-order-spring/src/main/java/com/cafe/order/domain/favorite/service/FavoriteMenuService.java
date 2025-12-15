@@ -20,13 +20,13 @@ import java.util.stream.Collectors;
 @Service
 public class FavoriteMenuService {
 
-    private final JpaFavoriteMenuRepository favoriteMenuRepository;
-//        private final SqlFavoriteMenuRepository favoriteMenuRepository;
+//    private final JpaFavoriteMenuRepository favoriteMenuRepository;
+        private final SqlFavoriteMenuRepository favoriteMenuRepository;
 //    private final InMemoryFavoriteMenuRepository favoriteMenuRepository;
 
     private final JpaMenuRepository menuRepository;
 
-    public FavoriteMenuService(JpaFavoriteMenuRepository favoriteMenuRepository, JpaMenuRepository menuRepository) {
+    public FavoriteMenuService(SqlFavoriteMenuRepository favoriteMenuRepository, JpaMenuRepository menuRepository) {
         this.favoriteMenuRepository = favoriteMenuRepository;
         this.menuRepository = menuRepository;
     }
