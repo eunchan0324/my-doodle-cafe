@@ -28,11 +28,11 @@ public class SqlFavoriteMenuRepository {
     /**
      * READ : 특정 고객이 특정 메뉴를 찜했는지 여부를 조회 (메뉴 상세 화면용)
      */
-    public boolean existsById_CustomerIdAndId_MenuId(String customerId, UUID menuid) {
+    public boolean existsById_CustomerIdAndId_MenuId(String customerId, UUID menuId) {
         String sql = "SELECT count(*) FROM favorite_menu WHERE customer_id = ? AND menu_id = ?";
 
         // Integer.class: 반환 타입을 정수로 지정
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, customerId, menuid);
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, customerId, menuId);
 
         // 결과 판단 (null 체크 및 0보다 큰지 확인)
         return count != null && count > 0;

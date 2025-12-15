@@ -3,6 +3,7 @@ package com.cafe.order.domain.favorite.service;
 import com.cafe.order.domain.favorite.dto.FavoriteMenuResponse;
 import com.cafe.order.domain.favorite.entity.FavoriteMenu;
 import com.cafe.order.domain.favorite.entity.FavoriteMenuId;
+import com.cafe.order.domain.favorite.repo.InMemoryFavoriteMenuRepository;
 import com.cafe.order.domain.favorite.repo.JpaFavoriteMenuRepository;
 import com.cafe.order.domain.favorite.repo.SqlFavoriteMenuRepository;
 import com.cafe.order.domain.menu.dto.Menu;
@@ -20,13 +21,13 @@ import java.util.stream.Collectors;
 @Service
 public class FavoriteMenuService {
 
-//    private final JpaFavoriteMenuRepository favoriteMenuRepository;
-        private final SqlFavoriteMenuRepository favoriteMenuRepository;
+    private final JpaFavoriteMenuRepository favoriteMenuRepository;
+//        private final SqlFavoriteMenuRepository favoriteMenuRepository;
 //    private final InMemoryFavoriteMenuRepository favoriteMenuRepository;
 
     private final JpaMenuRepository menuRepository;
 
-    public FavoriteMenuService(SqlFavoriteMenuRepository favoriteMenuRepository, JpaMenuRepository menuRepository) {
+    public FavoriteMenuService(JpaFavoriteMenuRepository favoriteMenuRepository, JpaMenuRepository menuRepository) {
         this.favoriteMenuRepository = favoriteMenuRepository;
         this.menuRepository = menuRepository;
     }
