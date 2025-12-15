@@ -25,7 +25,7 @@
 <section>
     <h3>주문 및 찜하기</h3>
 
-    <form th:action="@{/customer/menus/{menuId}/toggle-favorite(menuId=${menu.id})}"
+    <form th:action="@{/customer/menus/{menuId}/toggle-favorite(menuId=${menu.getMenuId()})}"
           method="post">
 
         <button type="submit">

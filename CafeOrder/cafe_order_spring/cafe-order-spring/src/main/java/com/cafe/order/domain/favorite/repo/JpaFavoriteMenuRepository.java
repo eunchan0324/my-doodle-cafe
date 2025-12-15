@@ -12,8 +12,10 @@ import java.util.UUID;
 public interface JpaFavoriteMenuRepository extends JpaRepository<FavoriteMenu, FavoriteMenuId> {
 
     // 특정 고객의 찜 목록 전체를 조회
-    List<FavoriteMenu> findByCustomerId(String customerId);
+    // findBy + Id_CustomerId (키 객체 이름 + 내부 필드 이름)
+    List<FavoriteMenu> findById_CustomerId(String customerId);
 
     // 찜 존재 여부 확인
-    boolean existsByCustomerIdAndMenuId(String customerId, UUID menuId);
+    // existsBy + Id_CustomerIdAndId_MenuId (두 필드 모두 키 객체 내부 필드임을 명시)
+    boolean existsById_CustomerIdAndId_MenuId(String customerId, UUID menuId);
 }

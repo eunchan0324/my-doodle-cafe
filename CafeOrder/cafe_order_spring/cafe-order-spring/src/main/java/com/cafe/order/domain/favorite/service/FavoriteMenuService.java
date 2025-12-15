@@ -22,7 +22,7 @@ public class FavoriteMenuService {
      */
     @Transactional(readOnly = true)
     public boolean isMenuFavorite(String customerId, UUID menuId) {
-        return favoriteMenuRepository.existsByCustomerIdAndMenuId(customerId, menuId);
+        return favoriteMenuRepository.existsById_CustomerIdAndId_MenuId(customerId, menuId);
     }
 
     /**
@@ -47,6 +47,6 @@ public class FavoriteMenuService {
      * READ : 찜 목록 조회 메서드
      */
     public List<FavoriteMenu> favoriteMenuList(String customerId) {
-        return favoriteMenuRepository.findByCustomerId(customerId);
+        return favoriteMenuRepository.findById_CustomerId(customerId);
     }
 }
