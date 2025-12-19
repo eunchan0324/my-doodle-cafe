@@ -22,17 +22,18 @@ VALUES ('강남점'),
 
 
 -- 사용자 테스트 데이터
+-- 주의: 모든 계정의 비밀번호는 '1234' 입니다. (BCrypt 암호화 적용됨)
 INSERT INTO users (login_id, password, name, role, store_id)
-VALUES ('admin', 'admin1234', '관리자', 'ADMIN', NULL);
+VALUES ('admin', '$2a$10$6xA3ErUBejb1ruhD7PsPx.XxuR6Ws46MsiugfZcdoOyNMY8q9dkg.', '관리자', 'ADMIN', NULL);
 
 INSERT INTO users (login_id, password, name, role, store_id)
-VALUES ('seller1', 'qwer1234', '판매자1', 'SELLER', 1),
-       ('seller2', 'qwer1234', '판매자2', 'SELLER', 2),
-       ('seller3', 'qwer1234', '판매자3', 'SELLER', 3);
+VALUES ('seller1', '$2a$10$6xA3ErUBejb1ruhD7PsPx.XxuR6Ws46MsiugfZcdoOyNMY8q9dkg.', '판매자1', 'SELLER', 1),
+       ('seller2', '$2a$10$6xA3ErUBejb1ruhD7PsPx.XxuR6Ws46MsiugfZcdoOyNMY8q9dkg.', '판매자2', 'SELLER', 2),
+       ('seller3', '$2a$10$6xA3ErUBejb1ruhD7PsPx.XxuR6Ws46MsiugfZcdoOyNMY8q9dkg.', '판매자3', 'SELLER', 3);
 
 INSERT INTO users (login_id, password, name, role, store_id)
-VALUES ('customer1', 'qwer1234', '구매자1', 'CUSTOMER', NULL),
-       ('customer2', 'qwer1234', '구매자2', 'CUSTOMER', NULL);
+VALUES ('customer1', '$2a$10$6xA3ErUBejb1ruhD7PsPx.XxuR6Ws46MsiugfZcdoOyNMY8q9dkg.', '구매자1', 'CUSTOMER', NULL),
+       ('customer2', '$2a$10$6xA3ErUBejb1ruhD7PsPx.XxuR6Ws46MsiugfZcdoOyNMY8q9dkg.', '구매자2', 'CUSTOMER', NULL);
 
 
 -- ============================

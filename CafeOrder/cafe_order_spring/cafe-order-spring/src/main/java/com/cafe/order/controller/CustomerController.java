@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/customer")
 public class CustomerController {
 
-    // 구매자 로그인 페이지
-
     // 구매자 대시보드 (메인)
-    @GetMapping
+    @GetMapping("/dashboard")
     public String dashboard() {
         return "customer/dashboard";
     }
