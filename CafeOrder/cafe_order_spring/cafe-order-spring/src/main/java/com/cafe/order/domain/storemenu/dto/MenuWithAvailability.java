@@ -1,6 +1,6 @@
 package com.cafe.order.domain.storemenu.dto;
 
-import com.cafe.order.domain.menu.dto.Menu;
+import com.cafe.order.domain.menu.entity.Menu;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -2,7 +2,7 @@ package com.cafe.order.domain.storemenu.ctrl;
 
 import com.cafe.order.domain.favorite.service.FavoriteMenuService;
 import com.cafe.order.domain.menu.dto.Category;
-import com.cafe.order.domain.store.dto.Store;
+import com.cafe.order.domain.store.entity.Store;
 import com.cafe.order.domain.store.service.StoreService;
 import com.cafe.order.domain.storemenu.dto.CustomerMenuDetailResponse;
 import com.cafe.order.domain.storemenu.dto.CustomerMenuResponse;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @RequestMapping("/customer/menus")

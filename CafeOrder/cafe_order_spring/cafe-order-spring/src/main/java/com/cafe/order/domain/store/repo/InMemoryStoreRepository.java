@@ -1,6 +1,6 @@
 package com.cafe.order.domain.store.repo;
 
-import com.cafe.order.domain.store.dto.Store;
+import com.cafe.order.domain.store.entity.Store;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package com.cafe.order.domain.store.service;
 
 import com.cafe.order.domain.store.repo.JpaStoreRepository;
-import com.cafe.order.domain.store.dto.Store;
+import com.cafe.order.domain.store.entity.Store;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

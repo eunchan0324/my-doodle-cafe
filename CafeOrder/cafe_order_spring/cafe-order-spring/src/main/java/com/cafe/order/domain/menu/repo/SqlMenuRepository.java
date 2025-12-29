@@ -1,7 +1,7 @@
 package com.cafe.order.domain.menu.repo;
 
 import com.cafe.order.domain.menu.dto.Category;
-import com.cafe.order.domain.menu.dto.Menu;
+import com.cafe.order.domain.menu.entity.Menu;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

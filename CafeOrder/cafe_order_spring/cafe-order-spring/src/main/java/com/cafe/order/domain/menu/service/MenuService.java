@@ -2,7 +2,7 @@ package com.cafe.order.domain.menu.service;
 
 import com.cafe.order.domain.menu.repo.JpaMenuRepository;
 import com.cafe.order.domain.menu.dto.Category;
-import com.cafe.order.domain.menu.dto.Menu;
+import com.cafe.order.domain.menu.entity.Menu;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

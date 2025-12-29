@@ -1,5 +1,7 @@
-package com.cafe.order.domain.menu.dto;
+package com.cafe.order.domain.menu.entity;
 
+import com.cafe.order.common.entity.BaseEntity;
+import com.cafe.order.domain.menu.dto.Category;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +14,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Menu {
+public class Menu extends BaseEntity {
 
     @Id
     @Column(columnDefinition = "BINARY(16)")
@@ -46,53 +48,5 @@ public class Menu {
     public Menu(String name, Integer price, Category category, String description) {
         this(name, price, category);
         this.description = description;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getRecommend() {
-        return recommend;
-    }
-
-    public void setRecommend(String recommend) {
-        this.recommend = recommend;
     }
 }

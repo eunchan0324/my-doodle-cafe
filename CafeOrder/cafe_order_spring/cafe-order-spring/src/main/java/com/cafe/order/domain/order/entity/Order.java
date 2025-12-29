@@ -1,5 +1,6 @@
 package com.cafe.order.domain.order.entity;
 
+import com.cafe.order.common.entity.BaseEntity;
 import com.cafe.order.domain.order.dto.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,7 +18,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Order {
+public class Order extends BaseEntity {
 
     @Id
     @Column(columnDefinition = "BINARY(16)", name = "order_id")
