@@ -1,5 +1,6 @@
 package com.cafe.order.domain.order.entity;
 
+import com.cafe.order.common.entity.BaseEntity;
 import com.cafe.order.domain.menu.dto.CupType;
 import com.cafe.order.domain.menu.dto.ShotOption;
 import com.cafe.order.domain.menu.dto.Temperature;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-public class OrderItem {
+public class OrderItem extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,7 +1,7 @@
 package com.cafe.order.domain.menu.ctrl;
 
 import com.cafe.order.domain.menu.dto.Category;
-import com.cafe.order.domain.menu.dto.Menu;
+import com.cafe.order.domain.menu.entity.Menu;
 import com.cafe.order.domain.menu.service.MenuService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

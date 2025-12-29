@@ -1,5 +1,6 @@
 package com.cafe.order.domain.favorite.entity;
 
+import com.cafe.order.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -14,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "favorite_menu")
 @Entity
-public class FavoriteMenu {
+public class FavoriteMenu extends BaseEntity {
 
     @EmbeddedId
     private FavoriteMenuId id;

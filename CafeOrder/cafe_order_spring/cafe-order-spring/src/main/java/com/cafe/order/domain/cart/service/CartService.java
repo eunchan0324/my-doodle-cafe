@@ -1,7 +1,7 @@
 package com.cafe.order.domain.cart.service;
 
 import com.cafe.order.domain.cart.dto.CustomerCartItem;
-import com.cafe.order.domain.menu.dto.Menu;
+import com.cafe.order.domain.menu.entity.Menu;
 import com.cafe.order.domain.menu.repo.JpaMenuRepository;
 import com.cafe.order.domain.order.dto.CustomerOrderItemRequest;
 import jakarta.servlet.http.HttpSession;

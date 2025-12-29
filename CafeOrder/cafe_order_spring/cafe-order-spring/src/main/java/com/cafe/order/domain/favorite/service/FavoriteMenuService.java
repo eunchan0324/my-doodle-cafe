@@ -3,12 +3,9 @@ package com.cafe.order.domain.favorite.service;
 import com.cafe.order.domain.favorite.dto.FavoriteMenuResponse;
 import com.cafe.order.domain.favorite.entity.FavoriteMenu;
 import com.cafe.order.domain.favorite.entity.FavoriteMenuId;
-import com.cafe.order.domain.favorite.repo.InMemoryFavoriteMenuRepository;
 import com.cafe.order.domain.favorite.repo.JpaFavoriteMenuRepository;
-import com.cafe.order.domain.favorite.repo.SqlFavoriteMenuRepository;
-import com.cafe.order.domain.menu.dto.Menu;
+import com.cafe.order.domain.menu.entity.Menu;
 import com.cafe.order.domain.menu.repo.JpaMenuRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

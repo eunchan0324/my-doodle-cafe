@@ -1,7 +1,7 @@
 package com.cafe.order.domain.storemenu.service;
 
 import com.cafe.order.domain.favorite.service.FavoriteMenuService;
-import com.cafe.order.domain.menu.dto.Menu;
+import com.cafe.order.domain.menu.entity.Menu;
 import com.cafe.order.domain.menu.repo.JpaMenuRepository;
 import com.cafe.order.domain.menu.service.MenuService;
 import com.cafe.order.domain.menustatus.entity.MenuStatus;

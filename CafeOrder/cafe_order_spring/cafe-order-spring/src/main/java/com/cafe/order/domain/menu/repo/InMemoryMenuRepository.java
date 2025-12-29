@@ -1,8 +1,7 @@
 package com.cafe.order.domain.menu.repo;
 
 import com.cafe.order.domain.menu.dto.Category;
-import com.cafe.order.domain.menu.dto.Menu;
-import org.springframework.stereotype.Repository;
+import com.cafe.order.domain.menu.entity.Menu;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -2,7 +2,7 @@ package com.cafe.order.domain.order.service;
 
 import com.cafe.order.domain.cart.dto.CustomerCartItem;
 import com.cafe.order.domain.cart.service.CartService;
-import com.cafe.order.domain.menu.dto.*;
+import com.cafe.order.domain.menu.entity.Menu;
 import com.cafe.order.domain.menu.repo.JpaMenuRepository;
 import com.cafe.order.domain.menustatus.entity.MenuStatus;
 import com.cafe.order.domain.menustatus.entity.MenuStatusId;
@@ -13,7 +13,7 @@ import com.cafe.order.domain.order.entity.OrderItem;
 import com.cafe.order.domain.order.repo.JpaOrderItemRepository;
 import com.cafe.order.domain.order.repo.JpaOrderRepository;
 import com.cafe.order.domain.order.util.OptionPriceCalculator;
-import com.cafe.order.domain.store.dto.Store;
+import com.cafe.order.domain.store.entity.Store;
 import com.cafe.order.domain.store.service.StoreService;
 import com.cafe.order.domain.storemenu.entity.StoreMenu;
 import com.cafe.order.domain.storemenu.repo.JpaStoreMenuRepository;

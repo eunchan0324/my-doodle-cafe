@@ -1,5 +1,6 @@
 package com.cafe.order.domain.storemenu.entity;
 
+import com.cafe.order.common.entity.BaseEntity;
 import com.cafe.order.domain.storemenu.dto.RecommendType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -14,7 +15,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StoreMenu {
+public class StoreMenu extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +41,4 @@ public class StoreMenu {
         this.isAvailable = true;
         this.recommendType = RecommendType.NONE; // 기본값
     }
-
-
 }

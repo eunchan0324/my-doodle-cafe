@@ -3,7 +3,7 @@ package com.cafe.order.domain.menustatus.ctrl;
 import com.cafe.order.domain.menustatus.entity.MenuStatus;
 import com.cafe.order.domain.menustatus.entity.SalesStatus;
 import com.cafe.order.domain.menustatus.service.SellerStockService;
-import com.cafe.order.domain.store.dto.Store;
+import com.cafe.order.domain.store.entity.Store;
 import com.cafe.order.domain.store.service.StoreService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

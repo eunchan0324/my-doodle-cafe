@@ -1,13 +1,12 @@
 package com.cafe.order.domain.menustatus.repo;
 
-import com.cafe.order.domain.menu.dto.Menu;
+import com.cafe.order.domain.menu.entity.Menu;
 import com.cafe.order.domain.menu.repo.InMemoryMenuRepository;
 import com.cafe.order.domain.menustatus.entity.MenuStatus;
 import com.cafe.order.domain.menustatus.entity.MenuStatusId;
 import com.cafe.order.domain.menustatus.entity.SalesStatus;
-import com.cafe.order.domain.store.dto.Store;
+import com.cafe.order.domain.store.entity.Store;
 import com.cafe.order.domain.store.repo.InMemoryStoreRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;

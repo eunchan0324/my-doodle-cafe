@@ -3,7 +3,7 @@ package com.cafe.order.domain.order.ctrl;
 import com.cafe.order.domain.order.entity.Order;
 import com.cafe.order.domain.order.dto.OrderStatus;
 import com.cafe.order.domain.order.service.OrderService;
-import com.cafe.order.domain.store.dto.Store;
+import com.cafe.order.domain.store.entity.Store;
 import com.cafe.order.domain.store.service.StoreService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

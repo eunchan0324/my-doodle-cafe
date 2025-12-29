@@ -1,7 +1,8 @@
 package com.cafe.order.domain.menustatus.entity;
 
-import com.cafe.order.domain.menu.dto.Menu;
-import com.cafe.order.domain.store.dto.Store;
+import com.cafe.order.common.entity.BaseEntity;
+import com.cafe.order.domain.menu.entity.Menu;
+import com.cafe.order.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table
 @Entity
-public class MenuStatus {
+public class MenuStatus extends BaseEntity {
 
     @EmbeddedId
     private MenuStatusId id;
@@ -136,6 +137,4 @@ public class MenuStatus {
             status = SalesStatus.SOLD_OUT; // 재고가 0이면 SOLD_OUT
         }
     }
-
-
 }

@@ -146,16 +146,16 @@ VALUES
 -- store_menus 재생성
 -- ============================
 
-DROP TABLE IF EXISTS store_menus;
-
-CREATE TABLE store_menus (
-                             id INT AUTO_INCREMENT PRIMARY KEY,
-                             store_id INT NOT NULL,
-                             menu_id BINARY(16) NOT NULL,
-                             is_available BOOLEAN DEFAULT TRUE NOT NULL,
-                             recommend_type VARCHAR(20),
-                             UNIQUE(store_id, menu_id)
-);
+-- DROP TABLE IF EXISTS store_menus;
+--
+-- CREATE TABLE store_menus (
+--                              id INT AUTO_INCREMENT PRIMARY KEY,
+--                              store_id INT NOT NULL,
+--                              menu_id BINARY(16) NOT NULL,
+--                              is_available BOOLEAN DEFAULT TRUE NOT NULL,
+--                              recommend_type VARCHAR(20),
+--                              UNIQUE(store_id, menu_id)
+-- );
 
 INSERT INTO store_menus (store_id, menu_id, is_available, recommend_type)
 SELECT 1, id, true, 'BEST'

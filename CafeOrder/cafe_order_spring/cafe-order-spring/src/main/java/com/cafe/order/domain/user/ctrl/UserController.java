@@ -1,6 +1,6 @@
 package com.cafe.order.domain.user.ctrl;
 
-import com.cafe.order.domain.store.dto.Store;
+import com.cafe.order.domain.store.entity.Store;
 import com.cafe.order.domain.store.service.StoreService;
 import com.cafe.order.domain.user.entity.User;
 import com.cafe.order.domain.user.service.UserService;
