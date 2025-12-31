@@ -1,17 +1,23 @@
 package com.cafe.order.domain.user.service;
 
 import com.cafe.order.domain.store.service.StoreService;
+import com.cafe.order.domain.user.dto.UserSignupRequest;
 import com.cafe.order.domain.user.repo.JpaUserRepository;
 import com.cafe.order.domain.user.dto.SellerDto;
 import com.cafe.order.domain.user.entity.User;
 import com.cafe.order.domain.user.entity.UserRole;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true) // 조회용 트랜잭션으로 설정 (성능 최적화)
 public class UserService {
 
     private final JpaUserRepository userRepository;
@@ -19,12 +25,39 @@ public class UserService {
 //    private final InMemoryUserRepository userRepository;
 
     private final StoreService storeService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(JpaUserRepository userRepository, StoreService storeService) {
-        this.userRepository = userRepository;
-        this.storeService = storeService;
+
+    /**
+     * 구매자(Customer) 기능
+     */
+    @Transactional
+    public void signup(UserSignupRequest request) {
+        // 1. 아이디 중복 체크
+        if (userRepository.findByLoginId(request.getLoginId()).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
+        }
+
+        // 2. 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+
+        // 3. 유저 엔티티 생성 (Role = CUSTOMER, StorieId = null)
+        User user = new User(
+                request.getLoginId(),
+                encodedPassword,
+                request.getName(),
+                UserRole.CUSTOMER,
+                null
+        );
+
+        // 4. DB 저장
+        userRepository.save(user);
     }
 
+
+    /**
+     * 판매자(Seller) 및 관리자 기능
+     */
     // READ : 전체 판매자 계정 조회
     public List<User> findAllSellers() {
         return userRepository.findByRole(UserRole.SELLER);
@@ -62,8 +95,11 @@ public class UserService {
     }
 
     // CREATE : 판매자 계정 생성
+    @Transactional
     public User create(String username, String password, String name, Integer storeId) {
-        User user = new User(username, password, name, UserRole.SELLER, storeId);
+        String encoded = passwordEncoder.encode(password);
+
+        User user = new User(username, encoded, name, UserRole.SELLER, storeId);
         return userRepository.save(user);
     }
 
@@ -77,7 +113,7 @@ public class UserService {
 
         // 비밀번호가 입력된 경우만 변경
         if (password != null && !password.isEmpty()) {
-            seller.setPassword(password);
+            seller.setPassword(passwordEncoder.encode(password)); // 암호화 적용
         }
 
         seller.setName(name);
