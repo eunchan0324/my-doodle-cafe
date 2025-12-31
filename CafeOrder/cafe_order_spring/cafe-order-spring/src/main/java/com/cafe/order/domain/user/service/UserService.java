@@ -31,6 +31,10 @@ public class UserService {
     /**
      * 구매자(Customer) 기능
      */
+
+    /**
+     * 회원가입
+     */
     @Transactional
     public void signup(UserSignupRequest request) {
         // 1. 아이디 중복 체크

@@ -2,8 +2,10 @@ package com.cafe.order.domain.user.ctrl;
 
 import com.cafe.order.domain.store.entity.Store;
 import com.cafe.order.domain.store.service.StoreService;
+import com.cafe.order.domain.user.dto.UserSignupRequest;
 import com.cafe.order.domain.user.entity.User;
 import com.cafe.order.domain.user.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,15 +13,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
     private final StoreService storeService;
 
-    public UserController(UserService userService, StoreService storeService) {
-        this.userService = userService;
-        this.storeService = storeService;
-    }
+    // ==========================================
+    // [Admin] 관리자 및 판매자 관리 기능
+    // ==========================================
+
 
     // CREATE : 판매자 계정 생성 폼
     @GetMapping("/admin/sellers/new")
@@ -87,4 +90,29 @@ public class UserController {
         return "redirect:/admin/sellers";
     }
 
+
+    // ==========================================
+    // [Public] 일반 고객 기능 (회원가입, 마이페이지 등)
+    // ==========================================
+
+    /**
+     * 회원가입 폼 화면 (GET)
+     */
+    @GetMapping("/users/signup")
+    public String signupForm(Model model) {
+        model.addAttribute("signupRequest", new UserSignupRequest());
+        return "signup";
+    }
+
+    /**
+     * 회원가입 처리 (POST)
+     */
+    @PostMapping("/users/signup")
+    public String signup(@ModelAttribute UserSignupRequest request) {
+        // 서비스의 signup 메서드 호출 (DTO 전달)
+        userService.signup(request);
+
+        // 가입 성공 시 로그인 페이지로 리다이렉트
+        return "redirect:/login";
+    }
 }
