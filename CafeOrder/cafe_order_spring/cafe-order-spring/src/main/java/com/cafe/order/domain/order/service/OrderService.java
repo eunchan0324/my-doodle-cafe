@@ -17,7 +17,10 @@ import com.cafe.order.domain.store.entity.Store;
 import com.cafe.order.domain.store.service.StoreService;
 import com.cafe.order.domain.storemenu.entity.StoreMenu;
 import com.cafe.order.domain.storemenu.repo.JpaStoreMenuRepository;
+import com.cafe.order.domain.user.entity.User;
+import com.cafe.order.domain.user.repo.JpaUserRepository;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +29,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class OrderService {
 
     private final JpaOrderRepository orderRepository;
@@ -38,16 +42,7 @@ public class OrderService {
     private final JpaMenuRepository menuRepository;
     private final StoreService storeService;
     private final CartService cartService;
-
-    public OrderService(JpaOrderRepository orderRepository, JpaOrderItemRepository orderItemRepository, StoreService storeService, JpaStoreMenuRepository storeMenuRepository, JpaSellerStockRepository sellerStockRepository, JpaMenuRepository menuRepository, CartService cartService) {
-        this.orderRepository = orderRepository;
-        this.orderItemRepository = orderItemRepository;
-        this.storeService = storeService;
-        this.storeMenuRepository = storeMenuRepository;
-        this.sellerStockRepository = sellerStockRepository;
-        this.menuRepository = menuRepository;
-        this.cartService = cartService;
-    }
+    private final JpaUserRepository userRepository;
 
 
     /**
@@ -203,6 +198,7 @@ public class OrderService {
     /**
      * CREATE : 구매자의 주문 요청을 받아 Order + OrderItem 전체를 생성하고 저장
      */
+    @Transactional
     public UUID createOrder(CreateOrderRequest req, Integer storeId) {
         int size = req.getMenuId().size();
         // 전체 금액 누적용
@@ -212,9 +208,9 @@ public class OrderService {
         List<OrderItem> items = new ArrayList<>();
 
         // 1. 입력 값 기본 검증
-        // 1-1. customerId 검증
-        if (req.getCustomerId() == null || req.getCustomerId().isBlank()) {
-            throw new IllegalArgumentException("customerId가 비어있습니다.");
+        // 1-1. userId 검증
+        if (req.getUserId() == null) {
+            throw new IllegalArgumentException("userId가 비어있습니다.");
         }
 
         // 1-2. 리스트 길이 검증
@@ -233,6 +229,10 @@ public class OrderService {
         if (store == null) {
             throw new IllegalArgumentException("유효하지 않은 storeId입니다.");
         }
+
+        // 2-1. User 조회
+        User user = userRepository.findById(req.getUserId())
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다: " + req.getUserId()));
 
         // 3. 각 메뉴 검증 (판매 여부 + 품절 여부)
         List<UUID> menuIds = req.getMenuId();
@@ -304,7 +304,7 @@ public class OrderService {
         }
 
         // 9. Order 엔티티 생성 -> 저장
-        Order order = new Order(req.getCustomerId(), storeId, totalPrice, OrderStatus.ORDER_PLACED, waiting_number);
+        Order order = new Order(user, storeId, totalPrice, OrderStatus.ORDER_PLACED, waiting_number);
 
         orderRepository.save(order);
 
@@ -324,7 +324,7 @@ public class OrderService {
      */
     public List<CustomerOrderSummary> findOrderSummaries(Integer storeId, String customerId) {
 
-        List<Order> orders = orderRepository.findByStoreIdAndCustomerId(storeId, customerId);
+        List<Order> orders = orderRepository.findByStoreIdAndUserLoginId(storeId, customerId);
 
         return orders.stream()
                 .map(CustomerOrderSummary::new) // Order -> DTO 변환
@@ -338,6 +338,12 @@ public class OrderService {
     public UUID createOrderFromCart(String customerId, Integer storeId, HttpSession session) {
         List<OrderItem> items = new ArrayList<>();
         Integer totalPrice = 0;
+
+        // todo : customerId 자체 컨트롤러 리팩토링 이후 수정 필요
+        Integer userId = Integer.parseInt(customerId);
+
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         // 1. 장바구니 데이터 가져오기 (CartService 활용)
         List<CustomerCartItem> cartItems = cartService.getCartItems(customerId, session);
@@ -393,7 +399,7 @@ public class OrderService {
             waiting_number += 1;
         }
 
-        Order order = new Order(customerId, storeId, totalPrice, OrderStatus.ORDER_PLACED, waiting_number);
+        Order order = new Order(user, storeId, totalPrice, OrderStatus.ORDER_PLACED, waiting_number);
 
         orderRepository.save(order);
 

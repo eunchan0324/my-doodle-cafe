@@ -6,6 +6,7 @@ import com.cafe.order.domain.order.service.OrderService;
 import com.cafe.order.domain.store.service.StoreService;
 import com.cafe.order.domain.storemenu.service.StoreMenuService;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,17 +16,10 @@ import java.util.UUID;
 
 @RequestMapping("/customer/orders")
 @Controller
+@RequiredArgsConstructor
 public class CustomerOrderController {
 
     private final OrderService orderService;
-    private final StoreService storeService;
-    private final StoreMenuService storeMenuService;
-
-    public CustomerOrderController(OrderService orderService, StoreService storeService, StoreMenuService storeMenuService) {
-        this.orderService = orderService;
-        this.storeService = storeService;
-        this.storeMenuService = storeMenuService;
-    }
 
 //    @GetMapping("/new")
 //    public String showOrderForm(Model model) {

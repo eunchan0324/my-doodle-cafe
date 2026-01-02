@@ -1,4 +1,4 @@
--- 메뉴 테스트 데이터
+    -- 메뉴 테스트 데이터
 INSERT INTO menus (id, name, price, category, description)
 VALUES (RANDOM_UUID(), '아메리카노', 4500, 'COFFEE', '깊고 진한 에스프레소에 물을 더한 커피'),
        (RANDOM_UUID(), '카페라떼', 5000, 'COFFEE', '에스프레소와 스팀 우유의 조화'),
@@ -35,28 +35,27 @@ INSERT INTO users (login_id, password, name, role, store_id)
 VALUES ('customer1', '$2a$10$6xA3ErUBejb1ruhD7PsPx.XxuR6Ws46MsiugfZcdoOyNMY8q9dkg.', '구매자1', 'CUSTOMER', NULL),
        ('customer2', '$2a$10$6xA3ErUBejb1ruhD7PsPx.XxuR6Ws46MsiugfZcdoOyNMY8q9dkg.', '구매자2', 'CUSTOMER', NULL);
 
-
 -- ============================
 -- orders
 -- ============================
 
-INSERT INTO orders (order_id, customer_id, store_id, order_time, total_price, status, waiting_number)
-VALUES
-    (X'550e8400e29b41d4a716446655440001', 'customer1', 1, DATEADD('MINUTE', -5, NOW()), 5000, 'ORDER_PLACED', 1),
-    (X'550e8400e29b41d4a716446655440002', 'customer2', 1, DATEADD('MINUTE', -10, NOW()), 11000, 'PREPARING', 2),
-    (X'550e8400e29b41d4a716446655440003', 'customer1', 1, DATEADD('MINUTE', -15, NOW()), 6500, 'READY', 3),
-    (X'550e8400e29b41d4a716446655440004', 'customer2', 1, DATEADD('DAY', -1, NOW()), 4500, 'COMPLETED', 1);
+    INSERT INTO orders (order_id, user_id, store_id, order_time, total_price, status, waiting_number)
+    VALUES
+        (X'550e8400e29b41d4a716446655440001', 5, 1, DATEADD('MINUTE', -5, NOW()), 5000, 'ORDER_PLACED', 1),
+        (X'550e8400e29b41d4a716446655440002', 6, 1, DATEADD('MINUTE', -10, NOW()), 11000, 'PREPARING', 2),
+        (X'550e8400e29b41d4a716446655440003', 5, 1, DATEADD('MINUTE', -15, NOW()), 6500, 'READY', 3),
+        (X'550e8400e29b41d4a716446655440004', 6, 1, DATEADD('DAY', -1, NOW()), 4500, 'COMPLETED', 1);
 
-INSERT INTO orders (order_id, customer_id, store_id, order_time, total_price, status, waiting_number)
-VALUES
-    (X'550e8400e29b41d4a716446655440005', 'customer1', 2, DATEADD('MINUTE', -20, NOW()), 10000, 'PREPARING', 1),
-    (X'550e8400e29b41d4a716446655440006', 'customer2', 2, DATEADD('DAY', -2, NOW()), 12000, 'COMPLETED', 1),
-    (X'550e8400e29b41d4a716446655440007', 'customer1', 2, DATEADD('MINUTE', -3, NOW()), 5500, 'READY', 2);
+    INSERT INTO orders (order_id, user_id, store_id, order_time, total_price, status, waiting_number)
+    VALUES
+        (X'550e8400e29b41d4a716446655440005', 5, 2, DATEADD('MINUTE', -20, NOW()), 10000, 'PREPARING', 1),
+        (X'550e8400e29b41d4a716446655440006', 6, 2, DATEADD('DAY', -2, NOW()), 12000, 'COMPLETED', 1),
+        (X'550e8400e29b41d4a716446655440007', 5, 2, DATEADD('MINUTE', -3, NOW()), 5500, 'READY', 2);
 
-INSERT INTO orders (order_id, customer_id, store_id, order_time, total_price, status, waiting_number)
-VALUES
-    (X'550e8400e29b41d4a716446655440008', 'customer2', 3, DATEADD('DAY', -3, NOW()), 15000, 'COMPLETED', 1),
-    (X'550e8400e29b41d4a716446655440009', 'customer1', 3, DATEADD('MINUTE', -30, NOW()), 6000, 'PREPARING', 1);
+    INSERT INTO orders (order_id, user_id, store_id, order_time, total_price, status, waiting_number)
+    VALUES
+        (X'550e8400e29b41d4a716446655440008', 6, 3, DATEADD('DAY', -3, NOW()), 15000, 'COMPLETED', 1),
+        (X'550e8400e29b41d4a716446655440009', 5, 3, DATEADD('MINUTE', -30, NOW()), 6000, 'PREPARING', 1);
 
 
 -- ============================

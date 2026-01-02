@@ -28,9 +28,6 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false, name = "customer_id")
-    private String customerId;
-
     @Column(nullable = false, name = "store_id")
     private Integer storeId;
 
@@ -64,9 +61,9 @@ public class Order extends BaseEntity {
     }
 
     // DB 로드 생성자
-    public Order(UUID orderId, String customerId, Integer storeId, LocalDateTime orderTime, Integer totalPrice, OrderStatus status, Integer waitingNumber) {
+    public Order(UUID orderId, User user, Integer storeId, LocalDateTime orderTime, Integer totalPrice, OrderStatus status, Integer waitingNumber) {
         this.orderId = orderId;
-        this.customerId = customerId;
+        this.user = user;
         this.storeId = storeId;
         this.orderTime = orderTime;
         this.totalPrice = totalPrice;
