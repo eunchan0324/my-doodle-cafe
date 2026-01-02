@@ -2,6 +2,7 @@ package com.cafe.order.domain.order.entity;
 
 import com.cafe.order.common.entity.BaseEntity;
 import com.cafe.order.domain.order.dto.OrderStatus;
+import com.cafe.order.domain.store.entity.Store;
 import com.cafe.order.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,8 +29,9 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false, name = "store_id")
-    private Integer storeId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "store_id", nullable = false)
+    private Store store;
 
     @Column(nullable = false, updatable = false, name = "order_time")
     private LocalDateTime orderTime;
@@ -50,10 +52,10 @@ public class Order extends BaseEntity {
     private List<OrderItem> items = new ArrayList<>();
 
     // 신규 주문 생성자
-    public Order(User user, Integer storeId, Integer totalPrice, OrderStatus status, Integer waitingNumber) {
+    public Order(User user, Store store, Integer totalPrice, OrderStatus status, Integer waitingNumber) {
         this.orderId = UUID.randomUUID();
         this.user = user;
-        this.storeId = storeId;
+        this.store = store;
         this.orderTime = LocalDateTime.now();
         this.totalPrice = totalPrice;
         this.status = status;
@@ -61,10 +63,10 @@ public class Order extends BaseEntity {
     }
 
     // DB 로드 생성자
-    public Order(UUID orderId, User user, Integer storeId, LocalDateTime orderTime, Integer totalPrice, OrderStatus status, Integer waitingNumber) {
+    public Order(UUID orderId, User user, Store store, LocalDateTime orderTime, Integer totalPrice, OrderStatus status, Integer waitingNumber) {
         this.orderId = orderId;
         this.user = user;
-        this.storeId = storeId;
+        this.store = store;
         this.orderTime = orderTime;
         this.totalPrice = totalPrice;
         this.status = status;
