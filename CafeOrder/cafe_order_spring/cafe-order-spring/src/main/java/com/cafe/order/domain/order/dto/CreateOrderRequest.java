@@ -16,8 +16,8 @@ import java.util.UUID;
 public class CreateOrderRequest {
 
     // 주문 단위 값
-    // TODO : 로그인 이후 @Setter 삭제 필요
-    private String customerId;
+    // TODO : 로그인 기능 구현 이후 @Setter 삭제 필요
+    private Integer userId;
     private OrderType orderType;
 
     // 여러 메뉴가 들어가므로 리스트

@@ -2,6 +2,7 @@ package com.cafe.order.domain.order.entity;
 
 import com.cafe.order.common.entity.BaseEntity;
 import com.cafe.order.domain.order.dto.OrderStatus;
+import com.cafe.order.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +23,10 @@ public class Order extends BaseEntity {
     @Id
     @Column(columnDefinition = "BINARY(16)", name = "order_id")
     private UUID orderId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(nullable = false, name = "customer_id")
     private String customerId;
@@ -49,9 +53,9 @@ public class Order extends BaseEntity {
     private List<OrderItem> items = new ArrayList<>();
 
     // 신규 주문 생성자
-    public Order(String customerId, Integer storeId, Integer totalPrice, OrderStatus status, Integer waitingNumber) {
+    public Order(User user, Integer storeId, Integer totalPrice, OrderStatus status, Integer waitingNumber) {
         this.orderId = UUID.randomUUID();
-        this.customerId = customerId;
+        this.user = user;
         this.storeId = storeId;
         this.orderTime = LocalDateTime.now();
         this.totalPrice = totalPrice;
