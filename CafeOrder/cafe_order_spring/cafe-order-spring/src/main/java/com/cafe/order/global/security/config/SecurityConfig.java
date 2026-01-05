@@ -41,6 +41,13 @@ public class SecurityConfig {
                         .usernameParameter("loginId")
                         .successHandler(customAuthenticationSuccessHandler)
                         .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout") // 로그아웃 요청을 처리할 URL
+                        .logoutSuccessUrl("/") // 로그아웃 성공 시 리다이렉트 할 URL
+                        .invalidateHttpSession(true) // 세션 무효화 (필수)
+                        .deleteCookies("JSESSIONID") // 쿠키 삭제 (필수)
+                        .permitAll() // 로그아웃 URL은 인증 없이 접근 가능해야 함
                 );
 
         return http.build();

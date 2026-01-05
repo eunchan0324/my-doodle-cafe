@@ -27,9 +27,11 @@
         <a href="/admin/orders">이동</a>
     </div>
 
-    <div>
-        <a href="/">로그아웃</a>
-    </div>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" style="background: none; border: none; color: purple; cursor: pointer; text-decoration: underline;">
+            로그아웃
+        </button>
+    </form>
 
 </body>
 </html>
