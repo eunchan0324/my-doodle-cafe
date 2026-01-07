@@ -39,6 +39,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security' // 시큐리티 핵심 라이브러리
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6' // 타임리프에서 시큐리티 태그 사용 (Boot 3.x용)
     testImplementation 'org.springframework.security:spring-security-test' // 테스트용 시큐리티 라이브러리
+
+    implementation 'org.springframework.boot:spring-boot-starter-validation' // 검증용 라이브러리(Validation Library)
 }
 
 tasks.named('test') {
