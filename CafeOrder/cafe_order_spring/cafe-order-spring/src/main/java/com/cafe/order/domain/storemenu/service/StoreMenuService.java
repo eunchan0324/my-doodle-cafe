@@ -4,8 +4,6 @@ import com.cafe.order.domain.favorite.service.FavoriteMenuService;
 import com.cafe.order.domain.menu.entity.Menu;
 import com.cafe.order.domain.menu.repo.JpaMenuRepository;
 import com.cafe.order.domain.menu.service.MenuService;
-import com.cafe.order.domain.menustatus.entity.MenuStatus;
-import com.cafe.order.domain.menustatus.entity.MenuStatusId;
 import com.cafe.order.domain.menustatus.repo.JpaSellerStockRepository;
 import com.cafe.order.domain.menustatus.service.SellerStockService;
 import com.cafe.order.domain.storemenu.dto.*;
@@ -42,7 +40,7 @@ public class StoreMenuService {
      * READ : 지점의 판매 메뉴 조회 (Menu 정보 포함)
      */
     public List<MenuWithAvailability> findStoreMenus(Integer storeId) {
-        List<StoreMenu> storeMenus = storeMenuRepository.findByStoreId(storeId);
+        List<StoreMenu> storeMenus = storeMenuRepository.findByStore_Id(storeId);
 
         return storeMenus.stream()
             .map(sm -> {
@@ -61,7 +59,7 @@ public class StoreMenuService {
      * READ : 지점의 판매 메뉴 조회 (StoreMenu만)
      */
     public List<StoreMenu> findByStoreId(Integer storeId) {
-        return storeMenuRepository.findByStoreId(storeId);
+        return storeMenuRepository.findByStore_Id(storeId);
     }
 
     /**
@@ -70,7 +68,7 @@ public class StoreMenuService {
     public List<CustomerMenuResponse> findSellableMenus(Integer storeId) {
         List<CustomerMenuResponse> result = new ArrayList<>();
 
-        List<StoreMenu> storeMenus = storeMenuRepository.findByStoreId(storeId);
+        List<StoreMenu> storeMenus = storeMenuRepository.findByStore_Id(storeId);
 
         for (StoreMenu sm : storeMenus) {
             if (!sm.getIsAvailable()) {
@@ -110,7 +108,7 @@ public class StoreMenuService {
      */
     public void updateStoreMenus(Integer storeId, List<UUID> menuIds) {
         // 1. 기존 판매 메뉴 전체 삭제
-        List<StoreMenu> existingMenus = storeMenuRepository.findByStoreId(storeId);
+        List<StoreMenu> existingMenus = storeMenuRepository.findByStore_Id(storeId);
         for (StoreMenu sm : existingMenus) {
             storeMenuRepository.deleteById(sm.getId());
         }
@@ -134,7 +132,7 @@ public class StoreMenuService {
      */
     public List<MenuWithRecommendType> findStoreMenusWithRecommendType(Integer storeId) {
         // 1. StoreMenu 조회
-        List<StoreMenu> storeMenus = storeMenuRepository.findByStoreId(storeId);
+        List<StoreMenu> storeMenus = storeMenuRepository.findByStore_Id(storeId);
 
         // 2. 수동으로 Menu 조회 + DTO 조합
         return storeMenus.stream()
@@ -169,7 +167,7 @@ public class StoreMenuService {
 
                 // StoreMenu 조회 및 업데이트
                 StoreMenu storeMenu = storeMenuRepository
-                    .findByStoreIdAndMenuId(storeId, menuId)
+                    .findByStore_idAndMenu_id(storeId, menuId)
                     .orElseThrow(() -> new IllegalArgumentException(
                         "StoreMenu not found: storeId=" + storeId + ", menuId=" + menuId
                     ));
@@ -197,7 +195,7 @@ public class StoreMenuService {
     public List<CustomerRecommendMenuDto> findRecommendMenus(Integer storeId) {
         List<CustomerRecommendMenuDto> result = new ArrayList<>();
 
-        List<StoreMenu> storeMenus = storeMenuRepository.findByStoreId(storeId);
+        List<StoreMenu> storeMenus = storeMenuRepository.findByStore_Id(storeId);
 
         for (StoreMenu sm : storeMenus) {
             Menu menu = menuService.findById(sm.getMenuId());
@@ -216,7 +214,7 @@ public class StoreMenuService {
         List<CustomerMenuResponse> result = new ArrayList<>();
 
         // 1. 해당 지점의 모든 storeMenu를 조회
-        List<StoreMenu> storeMenus = storeMenuRepository.findByStoreId(storeId);
+        List<StoreMenu> storeMenus = storeMenuRepository.findByStore_Id(storeId);
 
         for (StoreMenu sm : storeMenus) {
             // 2. MenuStatus 찾기
@@ -251,7 +249,7 @@ public class StoreMenuService {
             .orElseThrow(() -> new IllegalArgumentException("메뉴를 찾을 수 없습니다. menuId : " + menuId));
 
         // 2. StoreMenu 조회
-        StoreMenu storeMenu = storeMenuRepository.findByStoreIdAndMenuId(storeId, menuId)
+        StoreMenu storeMenu = storeMenuRepository.findByStore_idAndMenu_id(storeId, menuId)
             .orElseThrow(() -> new IllegalArgumentException("StoreMenu를 찾을 수 없습니다. storeId : " + storeId + ", menuId : " + menuId));
 
         // 3. MenuStatus 조회

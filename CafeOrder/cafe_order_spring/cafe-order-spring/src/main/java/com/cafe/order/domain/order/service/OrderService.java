@@ -4,8 +4,6 @@ import com.cafe.order.domain.cart.dto.CustomerCartItem;
 import com.cafe.order.domain.cart.service.CartService;
 import com.cafe.order.domain.menu.entity.Menu;
 import com.cafe.order.domain.menu.repo.JpaMenuRepository;
-import com.cafe.order.domain.menustatus.entity.MenuStatus;
-import com.cafe.order.domain.menustatus.entity.MenuStatusId;
 import com.cafe.order.domain.menustatus.repo.JpaSellerStockRepository;
 import com.cafe.order.domain.order.dto.*;
 import com.cafe.order.domain.order.entity.Order;
@@ -247,7 +245,7 @@ public class OrderService {
 
             // 3-1. 지점에서 판매하는 메뉴인지 확인
             StoreMenu sm = storeMenuRepository
-                    .findByStoreIdAndMenuId(storeId, menuId)
+                    .findByStore_idAndMenu_id(storeId, menuId)
                     .orElseThrow(() -> new IllegalArgumentException("판매하지 않는 메뉴입니다: " + menuId));
 
             // 3-2. 해당 메뉴의 MenuStatus 검증
@@ -360,7 +358,7 @@ public class OrderService {
             UUID menuId = item.getMenuId();
 
             StoreMenu sm = storeMenuRepository
-                    .findByStoreIdAndMenuId(storeId, menuId)
+                    .findByStore_idAndMenu_id(storeId, menuId)
                     .orElseThrow(() -> new IllegalArgumentException("해당 지점에서 판매하지 않는 메뉴입니다."));
 
             MenuStatusId msId = new MenuStatusId(storeId, menuId);

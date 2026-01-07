@@ -1,7 +1,5 @@
 package com.cafe.order.domain.menustatus.repo;
 
-import com.cafe.order.domain.menustatus.entity.MenuStatus;
-import com.cafe.order.domain.menustatus.entity.MenuStatusId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
