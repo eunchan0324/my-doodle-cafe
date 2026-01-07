@@ -22,9 +22,9 @@ public class OrderItem extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // Order와의 관계 (N:1)
-    @Column(columnDefinition = "BINARY(16)", name = "order_id")
-    private UUID orderId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
     // Menu와의 관계 (N:1)
     @Column(columnDefinition = "BINARY(16)", nullable = false, name = "menu_id")
@@ -58,8 +58,7 @@ public class OrderItem extends BaseEntity {
     private Integer finalPrice; // 옵션 포함 최종 가격
 
     // 생성자
-    public OrderItem(UUID orderId, UUID menuId, String menuName, Integer menuPrice, Temperature temperature, CupType cupType, ShotOption options, Integer quantity, Integer finalPrice) {
-        this.orderId = orderId;
+    public OrderItem(UUID menuId, String menuName, Integer menuPrice, Temperature temperature, CupType cupType, ShotOption options, Integer quantity, Integer finalPrice) {
         this.menuId = menuId;
         this.menuName = menuName;
         this.menuPrice = menuPrice;
