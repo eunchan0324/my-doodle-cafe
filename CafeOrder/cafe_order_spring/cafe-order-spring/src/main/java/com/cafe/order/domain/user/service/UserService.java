@@ -131,6 +131,7 @@ public class UserService {
     }
 
     // DELETE : 판매자 계정 삭제
+    @Transactional
     public void delete(Integer id) {
         userRepository.deleteById(id);
     }

@@ -34,7 +34,7 @@
             <option th:each="store : ${stores}"
                     th:value="${store.id}"
                     th:text="${store.name}"
-                    th:selected="${store.id == seller.storeId}"></option>
+                    th:selected="${seller.store != null and store.id == seller.store.id}"></option>
         </select>
     </div>
 
