@@ -198,7 +198,12 @@ public class SqlOrderRepository {
             item.setId(rs.getInt("id")); // 수정, 삭제 대비
 
             byte[] orderIdByte = rs.getBytes("order_id");
-            item.setOrderId(convertBytesToUUID(orderIdByte));
+            UUID orderId = convertBytesToUUID(orderIdByte);
+
+            Order fakeOrder = new Order();
+            fakeOrder.setOrderId(orderId);
+
+            item.setOrder(fakeOrder);
 
             byte[] menuIdByte = rs.getBytes("menu_id");
             item.setMenuId(convertBytesToUUID(menuIdByte));
@@ -223,8 +228,4 @@ public class SqlOrderRepository {
             return item;
         });
     }
-
-
-
-
 }

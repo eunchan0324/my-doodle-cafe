@@ -285,7 +285,6 @@ public class OrderService {
 
             // 7. OrderItem 리스트 생성
             OrderItem orderItem = new OrderItem(
-                    null,
                     menuId,
                     menuName,
                     menuPrice,
@@ -308,17 +307,16 @@ public class OrderService {
             waiting_number += 1;
         }
 
-        // 9. Order 엔티티 생성 -> 저장
+        // 9. Order. OrderItem 생성 및 저장
         Order order = new Order(user, store, totalPrice, OrderStatus.ORDER_PLACED, waiting_number);
 
-        orderRepository.save(order);
-
-        // 10. OrderItem 전체 저장
+        // 연관 관계 설정 (메서드에서 item 쪽에도 order를 더해줌)
         for (OrderItem item : items) {
-            item.setOrderId(order.getOrderId());
+            order.addOrderItem(item);
         }
 
-        orderItemRepository.saveAll(items);
+        // 저장
+        orderRepository.save(order);
 
         // 11. 최종 반환 값 - 성공 시 생성된 orderId만 반환
         return order.getOrderId();
@@ -381,7 +379,6 @@ public class OrderService {
             totalPrice += item.getFinalPrice();
 
             OrderItem orderItem = new OrderItem(
-                    null,
                     menuId,
                     item.getName(),
                     menu.getPrice(),
@@ -410,14 +407,12 @@ public class OrderService {
         }
 
         Order order = new Order(user, store, totalPrice, OrderStatus.ORDER_PLACED, waiting_number);
-        orderRepository.save(order);
 
-        // 5. OrderItem 엔티티 전체 저장 (Order ID 설정)
         for (OrderItem item : items) {
-            item.setOrderId(order.getOrderId());
+            order.addOrderItem(item); // OrderItem의 order 엔티티 자동 저장
         }
 
-        orderItemRepository.saveAll(items);
+        orderRepository.save(order);
 
         // 6. 장바구니 데이터 비우기 (세션에서 제거)
         String cartSessionKey = "customer_cart_" + customerId;
