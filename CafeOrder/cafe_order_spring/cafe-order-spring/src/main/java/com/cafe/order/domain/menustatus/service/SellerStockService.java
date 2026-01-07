@@ -2,10 +2,8 @@ package com.cafe.order.domain.menustatus.service;
 
 import com.cafe.order.domain.menustatus.entity.MenuStatus;
 import com.cafe.order.domain.menustatus.entity.MenuStatusId;
-import com.cafe.order.domain.menustatus.entity.SalesStatus;
-import com.cafe.order.domain.menustatus.repo.InMemorySellerStockRepository;
+import com.cafe.order.domain.storemenu.entity.SalesStatus;
 import com.cafe.order.domain.menustatus.repo.JpaSellerStockRepository;
-import com.cafe.order.domain.menustatus.repo.SqlSellerStockRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

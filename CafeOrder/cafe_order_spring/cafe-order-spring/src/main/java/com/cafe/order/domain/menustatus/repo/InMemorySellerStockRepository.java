@@ -4,7 +4,7 @@ import com.cafe.order.domain.menu.entity.Menu;
 import com.cafe.order.domain.menu.repo.InMemoryMenuRepository;
 import com.cafe.order.domain.menustatus.entity.MenuStatus;
 import com.cafe.order.domain.menustatus.entity.MenuStatusId;
-import com.cafe.order.domain.menustatus.entity.SalesStatus;
+import com.cafe.order.domain.storemenu.entity.SalesStatus;
 import com.cafe.order.domain.store.entity.Store;
 import com.cafe.order.domain.store.repo.InMemoryStoreRepository;
 
