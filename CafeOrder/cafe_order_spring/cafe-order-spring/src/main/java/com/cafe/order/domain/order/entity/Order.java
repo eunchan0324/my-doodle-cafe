@@ -46,9 +46,7 @@ public class Order extends BaseEntity {
     @Column(name = "waiting_number")
     private Integer waitingNumber;
 
-    // OrderItem과의 관계 (1:N)
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", referencedColumnName = "order_id")
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
     // 신규 주문 생성자
