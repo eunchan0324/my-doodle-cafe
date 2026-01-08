@@ -13,5 +13,5 @@ public interface JpaStoreMenuRepository extends JpaRepository<StoreMenu, Integer
 
     List<StoreMenu> findByStore_Id(Integer storeId);
 
-    Optional<StoreMenu> findByStore_idAndMenu_id(Integer storeId, UUID menuId);
+    Optional<StoreMenu> findByStore_IdAndMenu_Id(Integer storeId, UUID menuId);
 }

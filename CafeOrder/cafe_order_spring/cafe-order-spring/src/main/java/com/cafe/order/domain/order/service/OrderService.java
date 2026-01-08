@@ -245,7 +245,7 @@ public class OrderService {
 
             // 3-1. 지점에서 판매하는 메뉴인지 확인
             StoreMenu sm = storeMenuRepository
-                    .findByStore_idAndMenu_id(storeId, menuId)
+                    .findByStore_IdAndMenu_Id(storeId, menuId)
                     .orElseThrow(() -> new IllegalArgumentException("판매하지 않는 메뉴입니다: " + menuId));
 
             // 3-2. 해당 메뉴의 MenuStatus 검증
@@ -358,7 +358,7 @@ public class OrderService {
             UUID menuId = item.getMenuId();
 
             StoreMenu sm = storeMenuRepository
-                    .findByStore_idAndMenu_id(storeId, menuId)
+                    .findByStore_IdAndMenu_Id(storeId, menuId)
                     .orElseThrow(() -> new IllegalArgumentException("해당 지점에서 판매하지 않는 메뉴입니다."));
 
             MenuStatusId msId = new MenuStatusId(storeId, menuId);
