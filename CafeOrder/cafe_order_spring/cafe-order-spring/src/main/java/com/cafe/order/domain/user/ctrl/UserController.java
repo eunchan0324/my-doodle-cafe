@@ -5,9 +5,11 @@ import com.cafe.order.domain.store.service.StoreService;
 import com.cafe.order.domain.user.dto.UserSignupRequest;
 import com.cafe.order.domain.user.entity.User;
 import com.cafe.order.domain.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -100,7 +102,7 @@ public class UserController {
      */
     @GetMapping("/users/signup")
     public String signupForm(Model model) {
-        model.addAttribute("signupRequest", new UserSignupRequest());
+        model.addAttribute("userSignupRequest", new UserSignupRequest());
         return "customer/signup";
     }
 
@@ -108,7 +110,14 @@ public class UserController {
      * 회원가입 처리 (POST)
      */
     @PostMapping("/users/signup")
-    public String signup(@ModelAttribute UserSignupRequest request) {
+    public String signup(@Valid @ModelAttribute UserSignupRequest request,
+                         BindingResult bindingResult) {
+        // 검증 에러 확인
+        if (bindingResult.hasErrors()) {
+            // 에러가 있다면 회원가입 폼으로 다시 돌려보냄 (입력한 정보 + 에러 정보가 같이)
+            return "customer/signup";
+        }
+
         // 서비스의 signup 메서드 호출 (DTO 전달)
         userService.signup(request);
 
