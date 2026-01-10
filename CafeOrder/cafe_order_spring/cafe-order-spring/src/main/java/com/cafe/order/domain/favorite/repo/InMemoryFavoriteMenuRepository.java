@@ -21,21 +21,21 @@ public class InMemoryFavoriteMenuRepository {
     /**
      * READ : 고객의 찜 목록 전체 조회 (stream)
      */
-    public List<FavoriteMenu> findById_CustomerId(String customerId) {
+    public List<FavoriteMenu> findById_CustomerId(Integer userId) {
         return favoriteMenus.stream()
-                .filter(f -> f.getId().getCustomerId().equals(customerId))
-                .collect(Collectors.toList());
+            .filter(f -> f.getId().getUserId().equals(userId))
+            .collect(Collectors.toList());
     }
 
     /**
      * READ : 고객의 찜 목록 전체 조회 (자바 반복문)
      */
     @Deprecated
-    public List<FavoriteMenu> findById_CustomerIdBasedRoop(String customerId) {
+    public List<FavoriteMenu> findById_CustomerIdBasedRoop(Integer userId) {
         List<FavoriteMenu> result = new ArrayList<>();
 
         for (FavoriteMenu favoriteMenu : favoriteMenus) {
-            if (favoriteMenu.getId().getCustomerId().equals(customerId)) {
+            if (favoriteMenu.getUser().getId().equals(userId)) {
                 result.add(favoriteMenu);
             }
         }
@@ -47,9 +47,9 @@ public class InMemoryFavoriteMenuRepository {
     /**
      * READ : 특정 고객이 특정 메뉴를 찜했는지 여부를 조회 (메뉴 상세 화면용)
      */
-    public boolean existsById_CustomerIdAndId_MenuId(String customerId, UUID menuId) {
+    public boolean existsById_CustomerIdAndId_MenuId(Integer userId, UUID menuId) {
         for (FavoriteMenu favoriteMenu : favoriteMenus) {
-            if (favoriteMenu.getId().getCustomerId().equals(customerId)
+            if (favoriteMenu.getUser().getId().equals(userId)
                     && favoriteMenu.getId().getMenuId().equals(menuId)) {
                 return true;
             }
@@ -72,7 +72,7 @@ public class InMemoryFavoriteMenuRepository {
     @Deprecated
     public boolean existsByIdBasedRoop(FavoriteMenuId id) {
         for (FavoriteMenu favoriteMenu : favoriteMenus) {
-            if (favoriteMenu.getId().getCustomerId().equals(id.getCustomerId())
+            if (favoriteMenu.getUser().getId().equals(id.getUserId())
                     && favoriteMenu.getId().getMenuId().equals(id.getMenuId())) {
                 return true;
             }
