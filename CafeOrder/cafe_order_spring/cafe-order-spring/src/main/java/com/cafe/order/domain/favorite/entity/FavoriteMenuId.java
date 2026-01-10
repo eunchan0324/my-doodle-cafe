@@ -2,27 +2,21 @@ package com.cafe.order.domain.favorite.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.UUID;
 
 @Getter
-@NoArgsConstructor
-@EqualsAndHashCode
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@EqualsAndHashCode // 식별자 클래스는 반드시 equals, hashCode 구현 필수
 @Embeddable
 public class FavoriteMenuId implements Serializable {
 
-    @Column(name = "customer_id", nullable = false)
-    private String customerId;
+    @Column(name = "user_id")
+    private Integer userId;
 
-    @Column(name = "menu_id", nullable = false)
+    @Column(name = "menu_id")
     private UUID menuId;
-
-    public FavoriteMenuId(String customerId, UUID menuId) {
-        this.customerId = customerId;
-        this.menuId = menuId;
-    }
 }
