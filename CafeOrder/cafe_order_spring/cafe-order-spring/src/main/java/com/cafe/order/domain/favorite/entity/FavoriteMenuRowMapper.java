@@ -1,5 +1,7 @@
 package com.cafe.order.domain.favorite.entity;
 
+import com.cafe.order.domain.menu.entity.Menu;
+import com.cafe.order.domain.user.entity.User;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -13,22 +15,31 @@ public class FavoriteMenuRowMapper implements RowMapper<FavoriteMenu> {
 
     @Override
     public FavoriteMenu mapRow(ResultSet rs, int rowNum) throws SQLException {
+        // 1. 빈 객체 생성
+        var favoriteMenu = new FavoriteMenu();
 
-        // 1. Customer ID 추출 (String) todo : 로그인 기능 이후 수정
-        String customerId = rs.getString("customer_id");
+        // 2. User 껍데기 객체 생성 (user_id 컬럼)
+        int userId = rs.getInt("user_id");
+        var user = new User();
+        user.setId(userId);
+        favoriteMenu.setUser(user);
 
-        // 2. Menu ID 추출 (Bytes -> UUID 변환)
+        // 3. Menu 껍데기 객체 생성(menu_id 컬럼)
         byte[] menuIdBytes = rs.getBytes("menu_id");
         UUID menuId = convertBytesToUUID(menuIdBytes);
+        var menu = new Menu();
+        menu.setId(menuId);
+        favoriteMenu.setMenu(menu);
 
-        // 3. 복합 키 객체 생성
-        FavoriteMenuId id = new FavoriteMenuId(customerId, menuId);
+        // 4. 복합키 생성 및 주입
+        FavoriteMenuId id = new FavoriteMenuId(userId, menuId);
+        favoriteMenu.setId(id);
 
-        // 4. 생성일시 추출 (Timestamp -> LocalDateTiem)
+        // 5. 생성일시 매핑
         java.sql.Timestamp timestamp = rs.getTimestamp("created_at");
         LocalDateTime createdAt = (timestamp != null) ? timestamp.toLocalDateTime() : null;
+        favoriteMenu.setCreatedAt(createdAt);
 
-        // 5. 엔티티 생성 및 반환 (조회용 생성자 사용)
-        return new FavoriteMenu(id, createdAt);
+        return favoriteMenu;
     }
 }

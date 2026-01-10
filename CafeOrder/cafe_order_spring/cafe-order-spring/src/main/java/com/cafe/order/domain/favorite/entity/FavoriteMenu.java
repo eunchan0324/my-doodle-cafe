@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -18,19 +19,23 @@ import java.util.UUID;
 public class FavoriteMenu extends BaseEntity {
 
     @EmbeddedId
+    @Setter(AccessLevel.PROTECTED)
     private FavoriteMenuId id;
 
     @MapsId("userId") // FavoriteMenuId.userId와 매핑
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @Setter(AccessLevel.PROTECTED)
     private User user;
 
     @MapsId("menuId") // FavoriteMenuId.menuId와 매핑됨
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id", nullable = false)
+    @Setter(AccessLevel.PROTECTED)
     private Menu menu;
 
     @Column(name = "created_at", nullable = false)
+    @Setter(AccessLevel.PROTECTED)
     private LocalDateTime createdAt;
 
     // 생성자
