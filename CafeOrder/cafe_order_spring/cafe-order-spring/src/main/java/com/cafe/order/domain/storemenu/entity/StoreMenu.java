@@ -25,21 +25,26 @@ public class StoreMenu extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.PROTECTED) // RowMapper 를 위해 개방
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
+    @Setter(AccessLevel.PROTECTED)
     private Store store;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id", nullable = false)
+    @Setter(AccessLevel.PROTECTED)
     private Menu menu;
 
     @Column(nullable = false)
+    @Setter(AccessLevel.PROTECTED)
     private Integer stock;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
+    @Setter(AccessLevel.PROTECTED)
     private SalesStatus salesStatus;
 
     @Setter
