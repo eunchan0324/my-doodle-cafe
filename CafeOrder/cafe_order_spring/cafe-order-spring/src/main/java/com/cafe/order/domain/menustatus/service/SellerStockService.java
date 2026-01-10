@@ -1,7 +1,6 @@
 package com.cafe.order.domain.menustatus.service;
 
 import com.cafe.order.domain.storemenu.entity.SalesStatus;
-import com.cafe.order.domain.menustatus.repo.JpaSellerStockRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,16 +9,6 @@ import java.util.UUID;
 
 @Service
 public class SellerStockService {
-
-    private final JpaSellerStockRepository sellerStockRepository;
-//    private final SqlSellerStockRepository sellerStockRepository;
-//    private final InMemorySellerStockRepository sellerStockRepository;
-
-
-    public SellerStockService(JpaSellerStockRepository sellerStockRepository) {
-        this.sellerStockRepository = sellerStockRepository;
-    }
-
 
     /**
      * READ : storeId로 List<MenuStatus> 목록 반환

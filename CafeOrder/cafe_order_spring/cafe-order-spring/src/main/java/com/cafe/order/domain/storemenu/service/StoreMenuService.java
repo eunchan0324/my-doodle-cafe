@@ -4,7 +4,6 @@ import com.cafe.order.domain.favorite.service.FavoriteMenuService;
 import com.cafe.order.domain.menu.entity.Menu;
 import com.cafe.order.domain.menu.repo.JpaMenuRepository;
 import com.cafe.order.domain.menu.service.MenuService;
-import com.cafe.order.domain.menustatus.repo.JpaSellerStockRepository;
 import com.cafe.order.domain.menustatus.service.SellerStockService;
 import com.cafe.order.domain.store.entity.Store;
 import com.cafe.order.domain.store.repo.JpaStoreRepository;
@@ -35,7 +34,6 @@ public class StoreMenuService {
     private final JpaStoreRepository storeRepository;
     private final MenuService menuService;
     private final SellerStockService sellerStockService;
-    private final JpaSellerStockRepository sellerStockRepository;
 
     // ========== 판매자 : 판매 메뉴 관리 기능 ==========
 

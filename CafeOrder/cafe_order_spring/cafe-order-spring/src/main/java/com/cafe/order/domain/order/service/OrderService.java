@@ -4,7 +4,6 @@ import com.cafe.order.domain.cart.dto.CustomerCartItem;
 import com.cafe.order.domain.cart.service.CartService;
 import com.cafe.order.domain.menu.entity.Menu;
 import com.cafe.order.domain.menu.repo.JpaMenuRepository;
-import com.cafe.order.domain.menustatus.repo.JpaSellerStockRepository;
 import com.cafe.order.domain.order.dto.*;
 import com.cafe.order.domain.order.entity.Order;
 import com.cafe.order.domain.order.entity.OrderItem;
