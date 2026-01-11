@@ -17,8 +17,4 @@ public interface JpaMenuRepository extends JpaRepository<Menu, UUID> {
 
     // 카테고리별 조회
     List<Menu> findByCategory(Category category);
-
-    // 추천 메뉴 조회
-    List<Menu> findByRecommend(String recommend);
-
 }
