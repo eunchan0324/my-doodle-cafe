@@ -29,11 +29,11 @@ public class SqlMenuRepository {
         byte[] idBytes = convertUUIDToBytes(menu.getId());
 
         // 데이터 전달 : SQL 작성
-        String sql = "INSERT INTO menus (id, name, price, category, description, recommend)" +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO menus (id, name, price, category, description)" +
+                "VALUES (?, ?, ?, ?, ?)";
 
         // 데이터 저장
-        jdbcTemplate.update(sql, idBytes, menu.getName(), menu.getPrice(), menu.getCategory().name(), menu.getDescription(), menu.getRecommend());
+        jdbcTemplate.update(sql, idBytes, menu.getName(), menu.getPrice(), menu.getCategory().name(), menu.getDescription());
 
         // 데이터 반환
         return menu;
@@ -42,7 +42,7 @@ public class SqlMenuRepository {
     // READ : 메뉴 전체 조회
     public List<Menu> findAll() {
         // 1. SQL 직접 작성
-        String sql = "SELECT id, name, price, category, description, recommend FROM menus";
+        String sql = "SELECT id, name, price, category, description FROM menus";
 
         // 2. 쿼리 실행 + RowMapper로 변환
         return jdbcTemplate.query(sql, menuRowMapper());
@@ -51,7 +51,7 @@ public class SqlMenuRepository {
     // READ : 메뉴 id로 상세 조회
     public Optional<Menu> findById(UUID uuid) {
         // SQL 준비
-        String sql = "SELECT id, name, price, category, description, recommend FROM menus WHERE id = ?";
+        String sql = "SELECT id, name, price, category, description FROM menus WHERE id = ?";
 
         // UUID 변환
         byte[] idBytes = convertUUIDToBytes(uuid);
@@ -68,13 +68,13 @@ public class SqlMenuRepository {
     // UPDATE : 메뉴 수정
     public Menu update(Menu menu) {
         String sql = "UPDATE menus " +
-                "SET name = ?, price = ?, category = ?, description = ?, recommend = ? " +
+                "SET name = ?, price = ?, category = ?, description = ?, " +
                 "WHERE id = ?";
 
         // UUID 변환
         byte[] idBytes = convertUUIDToBytes(menu.getId());
 
-        jdbcTemplate.update(sql, menu.getName(), menu.getPrice(), menu.getCategory().name(), menu.getDescription(), menu.getRecommend(), idBytes);
+        jdbcTemplate.update(sql, menu.getName(), menu.getPrice(), menu.getCategory().name(), menu.getDescription(), idBytes);
 
         return menu;
     }
@@ -108,13 +108,8 @@ public class SqlMenuRepository {
             menu.setPrice(rs.getInt("price"));
             menu.setCategory(Category.valueOf(rs.getString("category")));
             menu.setDescription(rs.getString("description"));
-            menu.setRecommend(rs.getString("recommend"));
 
             return menu;
         };
     }
-
-
-
-
 }
