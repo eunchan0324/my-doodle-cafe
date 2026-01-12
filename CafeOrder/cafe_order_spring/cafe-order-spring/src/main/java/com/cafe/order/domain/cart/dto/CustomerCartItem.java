@@ -26,6 +26,4 @@ public class CustomerCartItem {
     private Temperature temperature;
     private CupType cupType;
     private ShotOption shotOption;
-
-
 }

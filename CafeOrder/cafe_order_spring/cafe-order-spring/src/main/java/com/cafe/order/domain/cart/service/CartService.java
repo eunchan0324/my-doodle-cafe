@@ -5,6 +5,7 @@ import com.cafe.order.domain.menu.entity.Menu;
 import com.cafe.order.domain.menu.repo.JpaMenuRepository;
 import com.cafe.order.domain.order.dto.CustomerOrderItemRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,19 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CartService {
 
     private final JpaMenuRepository menuRepository;
 
-    public CartService(JpaMenuRepository menuRepository) {
-        this.menuRepository = menuRepository;
-    }
+    private static final String CART_SESSION_PREFIX = "customer_cart_";
 
     /**
      * 장바구니에 항목을 추가하고 세션에 저장하는 로직
      */
-    public void addItemToCart(String customerId, CustomerOrderItemRequest request, HttpSession session) {
+    public void addItemToCart(Integer userId, CustomerOrderItemRequest request, HttpSession session) {
         // 1. Request DTO를 이용하여 DB에서 메뉴 정보 조회
         Menu menu = menuRepository.findById(request.getMenuId())
             .orElseThrow(() -> new IllegalArgumentException("메뉴를 찾을 수 없습니다."));
@@ -55,7 +55,7 @@ public class CartService {
 
         // 4. 세션에서 장바구니 리스트를 가져와 항목을 추가하고 다시 세션에 저장
         // 4-1. 세션에서 장바구니 리스트를 가져와 항목을 추가하고 없으면 새로 생성
-        String cartSessionKey = "customer_cart_" + customerId;
+        String cartSessionKey = CART_SESSION_PREFIX + userId;
 
         Object cartAttribute = session.getAttribute(cartSessionKey);
         List<CustomerCartItem> cartItems;
@@ -76,8 +76,9 @@ public class CartService {
     /**
      * 세션에 저장된 장바구니 항목 리스트 조회
      */
-    public List<CustomerCartItem> getCartItems(String customerId, HttpSession session) {
-        String cartSessionKey = "customer_cart_" + customerId;
+    @SuppressWarnings("unchecked")
+    public List<CustomerCartItem> getCartItems(Integer userId, HttpSession session) {
+        String cartSessionKey = CART_SESSION_PREFIX + userId;
 
         // 세션에서 리스트를 가져와서 안전하게 형 변환
         Object cartAttribute = session.getAttribute(cartSessionKey);

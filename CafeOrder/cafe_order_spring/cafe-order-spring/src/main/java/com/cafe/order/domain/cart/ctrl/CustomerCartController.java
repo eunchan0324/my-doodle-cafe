@@ -3,7 +3,10 @@ package com.cafe.order.domain.cart.ctrl;
 import com.cafe.order.domain.cart.dto.CustomerCartItem;
 import com.cafe.order.domain.cart.service.CartService;
 import com.cafe.order.domain.order.dto.CustomerOrderItemRequest;
+import com.cafe.order.global.security.dto.CustomUserDetails;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,31 +14,31 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/customer/cart")
 public class CustomerCartController {
 
     private final CartService cartService;
-
-    public CustomerCartController(CartService cartService) {
-        this.cartService = cartService;
-    }
 
     /**
      * POST : 메뉴 상세 페이지에서 넘어온 항목을 장바구니에 추가 처리
      */
     @PostMapping("/add")
     public String addToCart(
-        // View Form에서 정의된 DTO를 자동으로 바인딩
-        @ModelAttribute CustomerOrderItemRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails, // 인증된 사용자 정보 주입
+            @ModelAttribute CustomerOrderItemRequest request,
+            HttpSession session) {
 
-        // 세션에 접근하기 위한 객체 (장바구니 저장소)
-        HttpSession session) {
+        // 로그인 안 된 상태 처리 (혹시 모를 방어 로직)
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
 
-        // 1. 임시 customerId 설정 (TODO: 로그인 구현 시 변경)
-        String customerId = "1";
+        // 1. 로그인 유저 ID 사용
+        Integer userId = userDetails.getId();
 
         // 2. Service 호출 : 가격 계산 및 세션에 장바구니 항목 저장
-        cartService.addItemToCart(customerId, request, session);
+        cartService.addItemToCart(userId, request, session);
 
         // 3. 중간 확인 페이지로 리다이렉트 (다른 메뉴 보기 / 장바구니 보기 선택지 제공)
         return "redirect:/customer/cart/added";
@@ -55,11 +58,20 @@ public class CustomerCartController {
      * GET : 장바구니 목록 페이지
      */
     @GetMapping
-    public String getCartList(Model model, HttpSession session) {
-        // 임시 ID (todo: 로그인 후 변경)
-        String customerId = "1";
+    public String getCartList(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            Model model,
+            HttpSession session) {
 
-        List<CustomerCartItem> cartItems = cartService.getCartItems(customerId, session);
+        // 로그인 안 된 상태 방어 로직
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+
+        // 실제 로그인 ID
+        Integer userId = userDetails.getId();
+
+        List<CustomerCartItem> cartItems = cartService.getCartItems(userId, session);
 
         // 총 금액 계산
         Integer totalPrice = cartService.calculateTotalPrice(cartItems);
@@ -69,23 +81,4 @@ public class CustomerCartController {
 
         return "customer/cart/list";
     }
-
-
-    // 테스트 컨트롤러
-    @GetMapping("/check-session")
-    @ResponseBody
-    public List<CustomerCartItem> checkCartSession(HttpSession session) {
-        // ... (아까 논의했던 세션 확인 로직) ...
-
-        Integer customerId = 1;
-        String cartSessionKey = "customer_cart_" + customerId;
-
-        Object cartAttribute = session.getAttribute(cartSessionKey);
-
-        if (cartAttribute instanceof List) {
-            return (List<CustomerCartItem>) cartAttribute;
-        }
-        return List.of();
-    }
-
 }
