@@ -1,10 +1,12 @@
 package com.cafe.order.domain.order.ctrl;
 
-import com.cafe.order.domain.order.entity.Order;
 import com.cafe.order.domain.order.dto.OrderStatus;
+import com.cafe.order.domain.order.entity.Order;
 import com.cafe.order.domain.order.service.OrderService;
 import com.cafe.order.domain.store.entity.Store;
-import com.cafe.order.domain.store.service.StoreService;
+import com.cafe.order.global.security.dto.CustomUserDetails;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,30 +16,30 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/seller")
+@RequiredArgsConstructor
 public class SellerOrderController {
 
     private final OrderService orderService;
-    private final StoreService storeService;
-
-    public SellerOrderController(OrderService orderService, StoreService storeService) {
-        this.orderService = orderService;
-        this.storeService = storeService;
-    }
 
     /**
-     * 주문 관리 메뉴
+     * [READ] 주문 관리 목록
      */
-    // READ : 로그인된 판매자 지점 조회
-    // todo : 임시 storeId 설정, 로그인 기능 이후 @RequestParam Integer storeId 으로 수정 필요
     @GetMapping("/orders")
-    public String orderList(Model model) {
-        Integer storeId = 1;
+    public String orderList(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            Model model) {
 
-        // 주문 목록 조회 (COMPLETED 제외)
+        // 보안 체크 (비로그인, 가게가 없는 유저)
+        if (userDetails == null || userDetails.getStore() == null) {
+            return "redirect:/login";
+        }
+
+        // 1. 로그인 유저 객체에서 Store 조회
+        Store store = userDetails.getStore();
+        Integer storeId = store.getId();
+
+        // 2. 내 가게의 주문 목록 조회 (COMPLETED 제외)
         List<Order> orders = orderService.findActiveOrderByStoreId(storeId);
-
-        // Store 조회해서 이름 가져오기
-        Store store = storeService.findById(storeId);
 
         model.addAttribute("orders", orders);
         model.addAttribute("storeName", store.getName());
@@ -45,7 +47,9 @@ public class SellerOrderController {
         return "seller/order/list";
     }
 
-    // READ : 상세 주문 조회
+    /**
+     * [READ] 상세 주문 조회
+     */
     @GetMapping("/orders/{id}")
     public String orderDetail(@PathVariable UUID id, Model model) {
         Order order = orderService.findById(id);
@@ -55,7 +59,9 @@ public class SellerOrderController {
         return "seller/order/detail";
     }
 
-    // UPDATE : 주문 상태 변경
+    /**
+     * [UPDATE] 주문 상태 변경
+     */
     @PostMapping("/orders/{id}/status")
     public String updateStatus(@PathVariable UUID id, @RequestParam String status) {
         // String -> OrderStatus Enum 변환
@@ -65,17 +71,25 @@ public class SellerOrderController {
         orderService.updateStatus(id, newStatus);
 
         return "redirect:/seller/orders";
-
     }
 
 
     /**
-     * 매출 관리 메뉴
+     * [READ] 매출 관리 대시보드
      */
-    // todo : 임시 storeId 설정, 로그인 기능 이후 @RequestParam Integer storeId 으로 수정 필요
     @GetMapping("/sales")
-    public String salesDashboard(Model model) {
-        Integer storeId = 1; // 임시 (강남점)
+    public String salesDashboard(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            Model model) {
+
+        // 보안 체크
+        if (userDetails == null || userDetails.getStore() == null) {
+            return "redirect:/login";
+        }
+
+        // Store 조회
+        Store store = userDetails.getStore();
+        Integer storeId = store.getId();
 
         // 완료된 주문 목록 조회 (COMPLETE)
         List<Order> completedOrders = orderService.findCompleteOrdersByStoreId(storeId);
@@ -86,17 +100,11 @@ public class SellerOrderController {
         // 주문 건수
         int totalOrders = completedOrders.size();
 
-        // Store 조회
-        Store store = storeService.findById(storeId);
-
         model.addAttribute("storeName", store.getName());
         model.addAttribute("totalSales", totalSales);
         model.addAttribute("totalOrders", totalOrders);
         model.addAttribute("orders", completedOrders);
 
         return "seller/sales/dashboard";
-
-
     }
-
 }

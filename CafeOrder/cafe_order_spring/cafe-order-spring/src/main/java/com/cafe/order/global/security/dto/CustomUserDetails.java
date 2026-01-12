@@ -1,5 +1,6 @@
 package com.cafe.order.global.security.dto;
 
+import com.cafe.order.domain.store.entity.Store;
 import com.cafe.order.domain.user.entity.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -46,5 +47,13 @@ public class CustomUserDetails implements UserDetails {
 
     public Integer getId() {
         return user.getId();
+    }
+
+    /**
+     * 로그인한 유저의 Store 정보 가져오기
+     * (판매자가 아니면 null일 수 있음)
+     */
+    public Store getStore() {
+        return user.getStore();
     }
 }

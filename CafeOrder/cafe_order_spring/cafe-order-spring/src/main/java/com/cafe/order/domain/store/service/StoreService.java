@@ -2,23 +2,19 @@ package com.cafe.order.domain.store.service;
 
 import com.cafe.order.domain.store.repo.JpaStoreRepository;
 import com.cafe.order.domain.store.entity.Store;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class StoreService {
 
     private final JpaStoreRepository storeRepository;
-
 //    private final SqlStoreRepository storeRepository;
-
 //    private final InMemoryStoreRepository storeRepository;
-
-    public StoreService(JpaStoreRepository storeRepository) {
-        this.storeRepository = storeRepository;
-    }
 
     // CREATE : 지점 생성
     public Store create(String name) {
@@ -56,7 +52,6 @@ public class StoreService {
         storeRepository.deleteById(id);
     }
 
-
     // 특정 ID를 제외한 지점 목록
     public List<Store> findAvailableStores(List<Integer> excludeIds) {
         List<Store> allStores = storeRepository.findAll();
@@ -65,6 +60,4 @@ public class StoreService {
                 .filter(store -> !excludeIds.contains(store.getId()))
                 .collect(Collectors.toList());
     }
-
-
 }

@@ -23,18 +23,29 @@ public class CustomerOrderController {
 
     private final OrderService orderService;
 
+    /**
+     * READ : 나의 주문 내역 확인 페이지
+     */
     @GetMapping("/check")
     public String orderCheck(
-            @AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            HttpSession session,
+            Model model) {
 
         // 비로그인 처리
         if (userDetails == null) {
             return "redirect:/login";
         }
 
-        // TODO : 로그인 기능 이후 수정
-        Integer storeId = 1; // 임시 강남점
+        // 세션에서 현재 지점 ID 가져오기
+        Integer storeId = (Integer) session.getAttribute("currentStoreId");
 
+        // 지점 정보가 없으면 선택 페이지로 이동
+        if (storeId == null) {
+            return "redirect:/customer/stores/select";
+        }
+
+        // 로그인 유저 ID
         Integer userId = userDetails.getId();
 
         List<CustomerOrderSummary> customerOrderSummaries = orderService.findOrderSummaries(storeId, userId);
@@ -49,16 +60,22 @@ public class CustomerOrderController {
      */
     @PostMapping
     public String createOrderFromCart(@AuthenticationPrincipal CustomUserDetails userDetails, HttpSession session) {
-        // 로그인 방어 로직
+        // 비로그인 방어 로직
         if (userDetails == null) {
             return "redirect:/login";
         }
 
         Integer userId = userDetails.getId();
 
-        // todo : 지점 선택 기능 구현 후 수정
-        Integer storeId = 1;
+        // 세션에서 현재 지점 ID 가져오기
+        Integer storeId = (Integer) session.getAttribute("currentStoreId");
 
+        // 지점 정보가 없으면 선택 페이지로 이동
+        if (storeId == null) {
+            return "redirect:/customer/stores/select";
+        }
+
+        // 주문 생성
         UUID orderId = orderService.createOrderFromCart(userId, storeId, session);
 
         return "redirect:/customer/orders/" + orderId;
