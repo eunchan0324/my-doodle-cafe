@@ -18,7 +18,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        String redirectUrl = "/customer/dashboard"; // 기본값 (고객)
+        String redirectUrl = "/customer/stores/select"; // 기본값 (고객)
 
         for (GrantedAuthority authority : authorities) {
             String role = authority.getAuthority();
