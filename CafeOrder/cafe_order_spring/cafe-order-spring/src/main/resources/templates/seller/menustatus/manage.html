@@ -24,31 +24,27 @@
           th:action="@{'/seller/stock/' + ${ms.menu.id} + '/update'}">
         <tr>
 
-            <!-- 메뉴명 -->
             <td th:text="${ms.menu.name}"></td>
 
-            <!-- 재고 입력 -->
             <td>
                 <input type="number" name="stock" th:value="${ms.stock}">
             </td>
 
-            <!--현재 상태 표시-->
-            <td th:text="${ms.status.displayName}"></td>
+            <td th:text="${ms.salesStatus.displayName}"></td>
 
-            <!--새 상태 select-->
             <td>
                 <select name="status">
-                    <option value="ON_SALE" th:selected="${ms.status.name() == 'ON_SALE'}">
+                    <option value="ON_SALE" th:selected="${ms.salesStatus.name() == 'ON_SALE'}">
                         판매중
                     </option>
 
-                    <option value="STOP" th:selected="${ms.status.name() == 'STOP'}">
+                    <option value="STOP" th:selected="${ms.salesStatus.name() == 'STOP'}">
                         판매중지
                     </option>
+
                 </select>
             </td>
 
-            <!-- 제출 버튼 -->
             <td>
                 <button type="submit">수정</button>
             </td>
@@ -59,7 +55,7 @@
 </table>
 
 <div>
-    <a href="/seller">판매자 메뉴로 돌아가기</a>
+    <a href="/seller/dashboard">판매자 메뉴로 돌아가기</a>
 </div>
 
 </body>

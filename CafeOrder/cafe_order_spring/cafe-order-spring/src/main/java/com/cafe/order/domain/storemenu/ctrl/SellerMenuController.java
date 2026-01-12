@@ -46,11 +46,11 @@ public class SellerMenuController {
         // 전체 메뉴 목록
         List<Menu> allMenus = menuService.findAll();
 
-        // 현재 판매중인 메뉴 ID 목록
+        // 현재 우리 지점에 판매중인 메뉴 ID 목록 조회
         List<StoreMenu> storeMenus = storeMenuService.findByStoreId(storeId);
 
         Set<UUID> sellingMenuIds = storeMenus.stream()
-                .map(StoreMenu::getMenuId)
+                .map(sm -> sm.getMenu().getId())
                 .collect(Collectors.toSet());
 
         model.addAttribute("store", store);
@@ -70,7 +70,7 @@ public class SellerMenuController {
 
         Set<UUID> sellingMenuIds = new HashSet<>();
         for (StoreMenu storeMenu : storeMenus) {
-            sellingMenuIds.add(storeMenu.getMenuId());
+            sellingMenuIds.add(storeMenu.getMenu().getId());
         }
 
         model.addAttribute("allMenus", allMenus);

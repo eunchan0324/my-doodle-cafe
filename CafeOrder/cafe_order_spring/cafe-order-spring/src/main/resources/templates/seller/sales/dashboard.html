@@ -42,7 +42,7 @@
             <tbody>
                 <tr th:each="o : ${orders}">
                     <td th:text="${o.waitingNumber}">1</td>
-                    <td th:text="${o.customerId}">customer1</td>
+                    <td th:text="${o.user.loginId}">customer1</td>
                     <td th:text="${o.getMenuSummary()}">아메리카노</td>
                     <td th:text="${o.totalPrice}">3000</td>
                     <td th:text="${#temporals.format(o.orderTime, 'MM-dd HH:mm')}">11-20 23:15</td>
@@ -54,7 +54,7 @@
 
     <hr>
 
-<a href="/seller">판매자 메뉴로 돌아가기</a>
+<a href="/seller/dashboard">판매자 메뉴로 돌아가기</a>
 
 </body>
 </html>

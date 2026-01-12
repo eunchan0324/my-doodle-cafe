@@ -1,7 +1,7 @@
 package com.cafe.order.domain.storemenu.dto;
 
 import com.cafe.order.domain.menu.dto.Category;
-import com.cafe.order.domain.menustatus.entity.SalesStatus;
+import com.cafe.order.domain.storemenu.entity.SalesStatus;
 import lombok.Getter;
 
 import java.util.UUID;

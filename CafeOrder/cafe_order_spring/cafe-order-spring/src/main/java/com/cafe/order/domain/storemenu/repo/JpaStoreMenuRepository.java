@@ -11,8 +11,7 @@ import java.util.UUID;
 @Repository
 public interface JpaStoreMenuRepository extends JpaRepository<StoreMenu, Integer> {
 
+    List<StoreMenu> findByStore_Id(Integer storeId);
 
-    List<StoreMenu> findByStoreId(Integer storeId);
-
-    Optional<StoreMenu> findByStoreIdAndMenuId(Integer storeId, UUID menuId);
+    Optional<StoreMenu> findByStore_IdAndMenu_Id(Integer storeId, UUID menuId);
 }
