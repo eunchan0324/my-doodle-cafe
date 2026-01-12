@@ -54,9 +54,9 @@ public class CustomerOrderController {
             return "redirect:/login";
         }
 
-        // 임시 id 설정 (todo : 로그인 구현 후 수정)
         Integer userId = userDetails.getId();
 
+        // todo : 지점 선택 기능 구현 후 수정
         Integer storeId = 1;
 
         UUID orderId = orderService.createOrderFromCart(userId, storeId, session);
