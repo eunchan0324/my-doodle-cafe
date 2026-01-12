@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>회원가입</title>
+<head th:replace="~{fragments/header :: commonHead('회원가입', ~{::style})}">
     <style>
         .field-error {
             border-color: #dc3545;

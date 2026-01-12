@@ -1,8 +1,6 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>판매자 판매 메뉴 관리</title>
+<head th:replace="~{fragments/header :: commonHead('판매자 판매 메뉴 관리', ~{::script})}">
     <script>
         // 전체 선택
         function selectAll() {

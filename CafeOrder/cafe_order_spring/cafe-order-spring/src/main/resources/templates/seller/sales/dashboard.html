@@ -1,9 +1,6 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>매출 조회</title>
-</head>
+<head th:replace="~{fragments/header :: commonHead('매출 조회')}"></head>
 <body>
     <h1>매출 조회 - <span th:text="${storeName}"></span></h1>
 

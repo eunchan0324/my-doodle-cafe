@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>메뉴 주문</title>
-</head>
+<head th:replace="~{fragments/header :: commonHead('메뉴 주문')}"></head>
 <body>
 
 <h1 th:text="|${store.name} 메뉴 주문|"></h1>

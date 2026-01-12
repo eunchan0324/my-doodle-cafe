@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title th:text="${menu.name} + ' 상세'">메뉴 상세</title>
-</head>
+<head th:replace="~{fragments/header :: commonHead(${menu.name} + ' 상세')}"></head>
 <body>
 
 <header>
