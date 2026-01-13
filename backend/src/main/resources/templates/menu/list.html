@@ -1,0 +1,51 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: commonHead('메뉴 목록')}"></head>
+<body>
+<h1>현재 등록된 전체 메뉴 목록</h1>
+<a href="/admin/menus/new">새 메뉴 등록</a>
+
+<div th:if="${menus.isEmpty()}">
+    <p>등록된 메뉴가 없습니다.</p>
+</div>
+
+<table th:unless="${menus.isEmpty()}">
+    <tr>
+        <th>ID</th>
+        <th>이름</th>
+        <th>가격</th>
+        <th>카테고리</th>
+        <th>설명</th>
+        <th>상세</th>
+        <th>수정</th>
+        <th>삭제</th>
+    </tr>
+
+    <tr th:each="m : ${menus}">
+        <td th:text="${m.id}"></td>
+        <td th:text="${m.name}"></td>
+        <td th:text="${m.price}"></td>
+        <td th:text="${m.category}"></td>
+        <td th:text="${m.description}"></td>
+        <td>
+            <a th:href="@{/admin/menus/{id}(id=${m.id})}">상세</a>
+
+        </td>
+        <td>
+            <a th:href="@{/admin/menus/edit/{id}(id=${m.id})}">수정</a>
+        </td>
+        <td>
+            <form method="post" th:action="@{/admin/menus/delete/{id}(id=${m.id})}" style="display: inline">
+                <button type="submit">삭제</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<div>
+    <a href="/admin">관리자 메뉴로 돌아가기</a>
+</div>
+
+
+</body>
+</html>

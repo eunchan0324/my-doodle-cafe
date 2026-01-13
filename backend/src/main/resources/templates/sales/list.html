@@ -1,0 +1,32 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: commonHead('매출 조회')}"></head>
+<body>
+    <h1>전체 매출 조회</h1>
+
+    <div th:if="${sales.isEmpty()}">
+        <p>매출이 존재하지 않습니다.</p>
+    </div>
+
+    <table th:unless="${sales.isEmpty()}">
+        <tr>
+            <td>지점명</td>
+            <td>주문 수</td>
+            <td>총 매출</td>
+        </tr>
+
+        <tr th:each="s : ${sales}">
+            <th th:text="${s.getStoreName()}">지점명</th>
+            <th th:text="${s.getOrderCount()}">주문 수</th>
+            <th th:text="${s.getTotalSales()}">총 매출</th>
+        </tr>
+
+    </table>
+
+<div>
+    <a href="/admin">관리자 메뉴로 돌아가기</a>
+</div>
+
+
+</body>
+</html>

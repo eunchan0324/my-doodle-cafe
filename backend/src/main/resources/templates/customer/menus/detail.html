@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: commonHead(${menu.name} + ' 상세')}"></head>
+<body>
+
+<header>
+    <h1 th:text="${menu.name}">[메뉴 이름]</h1>
+    <span th:if="${menu.recommendType != null and menu.recommendType.name() != 'NONE'}">
+            [<span th:text="${menu.recommendType.displayName}">추천 타입</span>]
+        </span>
+</header>
+
+<hr/>
+
+<section>
+    <p th:text="${menu.description}">메뉴에 대한 자세한 설명이 들어갑니다.</p>
+    <p style="font-weight: bold;" th:text="${#numbers.formatInteger(menu.price, 0, 'COMMA')} + '원'">4,700원</p>
+</section>
+
+<hr/>
+
+<section>
+    <h3>주문 및 찜하기</h3>
+
+    <form th:action="@{/customer/menus/{menuId}/toggle-favorite(menuId=${menu.getMenuId()})}"
+          method="post">
+
+        <button type="submit">
+            <span th:if="${menu.isFavorite}">❤️ 찜 해제</span>
+            <span th:unless="${menu.isFavorite}">🤍 찜하기</span>
+        </button>
+    </form>
+
+    <hr/>
+
+    <form id="orderForm" th:action="@{/customer/cart/add}" method="post">
+
+        <input type="hidden" name="menuId" th:value="${menu.menuId}"/>
+
+        <div>
+            <h4>수량</h4>
+            <input type="number" min="1" value="1" name="quantity"/>
+        </div>
+
+        <div>
+            <h4>온도 선택</h4>
+            <select name="temperature">
+                <option th:each="t : ${T(com.cafe.order.domain.menu.dto.Temperature).values()}"
+                        th:value="${t.name()}"
+                        th:text="${t.displayName}">
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <h4>컵 종류</h4>
+            <select name="cupType">
+                <option th:each="c : ${T(com.cafe.order.domain.menu.dto.CupType).values()}"
+                        th:value="${c.name()}"
+                        th:text="|${c.displayName}${c.priceDelta != 0 ? ' (+' + #numbers.formatInteger(c.priceDelta, 0, 'COMMA') + '원)' : ''}|">
+                </option>
+            </select>
+        </div>
+
+        <div th:if="${menu.category.name() == 'COFFEE'}">
+            <h4>샷 옵션</h4>
+            <select name="shotOption">
+                <option th:each="o : ${T(com.cafe.order.domain.menu.dto.ShotOption).values()}"
+                        th:if="${o.name() != 'NONE'}"
+                        th:value="${o.name()}"
+                        th:text="|${o.displayName}${o.priceDelta > 0 ? ' (+' + #numbers.formatInteger(o.priceDelta, 0, 'COMMA') + '원)' : ''}|">
+                </option>
+            </select>
+        </div>
+
+        <input type="hidden" name="shotOption" value="NONE"
+               th:unless="${menu.category.name() == 'COFFEE'}"/>
+
+        <br/>
+
+        <div th:with="isUnsellable = ${menu.status.name() == 'SOLD_OUT' or menu.status.name() == 'STOP'}">
+
+            <button type="submit" th:disabled="${isUnsellable}">
+                <span th:if="${isUnsellable}">[판매 불가] 주문 불가</span>
+                <span th:unless="${isUnsellable}">장바구니에 담기</span>
+            </button>
+
+            <p th:if="${menu.status.name() == 'SOLD_OUT'}" style="color: red;">
+                * 현재 품절 상태입니다. 장바구니에 담을 수 없습니다.
+            </p>
+            <p th:if="${menu.status.name() == 'STOP'}" style="color: gray;">
+                * 현재 판매 중지 상태입니다. 장바구니에 담을 수 없습니다.
+            </p>
+        </div>
+    </form>
+</section>
+
+<div>
+    <a href="/customer/menus">뒤로가기</a>
+</div>
+
+</body>
+</html>

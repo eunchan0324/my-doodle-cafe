@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: commonHead('찜 목록')}"></head>
+<body>
+
+<header>
+    <h1>나의 찜 목록</h1>
+</header>
+
+<hr/>
+
+<div th:if="${#lists.isEmpty(favorites)}">
+    <h2>찜한 메뉴가 없습니다.</h2>
+    <p>메뉴를 둘러보고 찜해보세요!</p>
+    <a href="/customer/menus">전체 메뉴 보러가기</a>
+</div>
+
+<div th:unless="${#lists.isEmpty(favorites)}">
+    <p th:text="|총 ${#lists.size(favorites)}개의 메뉴를 찜했습니다.|"></p>
+
+    <table>
+        <thead>
+        <tr>
+            <th>메뉴 이름</th>
+            <th>가격</th>
+            <th>카테고리</th>
+            <th>관리</th>
+            <th>찜 취소</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="fav : ${favorites}">
+
+            <td th:text="${fav.menuName}"></td>
+
+            <td th:text="|${#numbers.formatInteger(fav.price, 0, 'COMMA')}원|"></td>
+
+            <td th:text="${fav.category.displayName}"></td>
+
+            <td>
+                <a th:href="@{/customer/menus/{menuId}(menuId=${fav.menuId})}">상세 보기</a>
+            </td>
+
+            <td style="text-align: center">
+                <form th:action="@{/customer/favorites/{menuId}/toggle(menuId=${fav.menuId}, redirect='list')}"
+                    method="post">
+
+                    <button type="submit" style="background: none; border: none; cursor: pointer; color: red; font-weight: bold; font-size: 1.2em;">
+                        &times; </button>
+
+
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<hr/>
+
+<div>
+    <a href="/customer">구매자 메뉴로 돌아가기</a>
+</div>
+
+</body>
+</html>

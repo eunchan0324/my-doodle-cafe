@@ -1,0 +1,22 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: commonHead('지점명 수정')}"></head>
+<body>
+    <h1>지점명 수정</h1>
+
+    <form method="post" th:action="@{/admin/stores/{id}/update(id=${store.id})}">
+        <div>
+            <label>지점명 : </label>
+            <input type="text" name="name" th:value="${store.name}" required>
+        </div>
+
+        <div>
+            <button type="submit">수정</button>
+            <a href="/admin/stores">취소</a>
+
+        </div>
+
+    </form>
+
+</body>
+</html>

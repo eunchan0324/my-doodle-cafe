@@ -1,0 +1,43 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: commonHead('주문 내역 확인')}"></head>
+<body>
+    <h1>나의 주문 내역</h1>
+
+<div th:if="${orderSummaries.isEmpty()}">
+    <p>주문 내역이 존재하지 않습니다.</p>
+</div>
+
+<table th:unless="${orderSummaries.isEmpty()}">
+    <tr>
+        <td>대기번호</td>
+        <td>주문 메뉴명 요약</td>
+        <td>총 결제 금액</td>
+        <td>주문시간</td>
+        <td>상태</td>
+        <td>상세보기</td>
+    </tr>
+
+    <tr th:each="os : ${orderSummaries}">
+        <td th:text="${os.watingNumber}"></td>
+        <td th:text="${os.menuSummary}"></td>
+        <td th:text="${os.totalPrice}"></td>
+        <td th:text="${#temporals.format(os.orderTime, 'yyyy-MM-dd HH:mm')}"></td>
+        <td th:text="${os.orderStatus.displayName}"></td>
+        <td>
+<!--            todo : 상세보기 추후 구현-->
+            <a>상세보기</a>
+        </td>
+    </tr>
+</table>
+
+<br>
+
+<div>
+    <a href="/customer/dashboard">구매자 메뉴로 돌아가기</a>
+</div>
+
+
+
+</body>
+</html>

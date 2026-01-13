@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<div th:fragment="topNav(storeName)" style="background-color: #f0f0f0; padding: 10px; margin-bottom: 20px;">
+    <h3>현재 매장: <span th:text="${storeName}">매장명</span></h3>
+    <a th:if="${#authorization != null and #authorization.expression('hasRole(''CUSTOMER'')')}" href="/customer/stores/select">매장 변경하기</a>
+</div>
+
+</body>
+</html>

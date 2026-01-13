@@ -1,0 +1,59 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: commonHead('판매자 재고/상태 관리')}"></head>
+<body>
+<h1>재고/상태 관리</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>메뉴명</th>
+        <th>재고</th>
+        <th>현재 상태</th>
+        <th>새 상태</th>
+        <th>수정</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <form method="post"
+          th:each="ms : ${menuStatuses}"
+          th:action="@{'/seller/stock/' + ${ms.menu.id} + '/update'}">
+        <tr>
+
+            <td th:text="${ms.menu.name}"></td>
+
+            <td>
+                <input type="number" name="stock" th:value="${ms.stock}">
+            </td>
+
+            <td th:text="${ms.salesStatus.displayName}"></td>
+
+            <td>
+                <select name="status">
+                    <option value="ON_SALE" th:selected="${ms.salesStatus.name() == 'ON_SALE'}">
+                        판매중
+                    </option>
+
+                    <option value="STOP" th:selected="${ms.salesStatus.name() == 'STOP'}">
+                        판매중지
+                    </option>
+
+                </select>
+            </td>
+
+            <td>
+                <button type="submit">수정</button>
+            </td>
+        </tr>
+    </form>
+    </tbody>
+
+</table>
+
+<div>
+    <a href="/seller/dashboard">판매자 메뉴로 돌아가기</a>
+</div>
+
+</body>
+</html>

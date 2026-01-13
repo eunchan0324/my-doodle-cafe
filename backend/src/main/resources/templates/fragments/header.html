@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="commonHead(title, extraHead)">
+    <meta charset="UTF-8">
+    <title th:text="${title}">Cafe Order</title>
+    <!-- 공통 CSS나 스크립트가 있다면 여기에 추가 가능 -->
+    <th:block th:replace="${extraHead} ?: ~{}"></th:block>
+</head>
+<body>
+</body>
+</html>
