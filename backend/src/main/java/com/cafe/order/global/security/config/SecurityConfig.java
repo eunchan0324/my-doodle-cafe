@@ -46,6 +46,11 @@ public class SecurityConfig {
 
                         // 허용 경로들
                         .requestMatchers("/", "/login", "/users/signup", "/join", "/login-proc").permitAll()
+                        
+                        // TODO: 개발 단계에서는 API 테스트를 위해 모든 API(/api/**)를 허용합니다.
+                        // 나중에 JWT 인증이나 세션 인증을 적용한 후에는 반드시 보안 설정을 강화해야 합니다.
+                        .requestMatchers("/api/**").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 // 기존 폼 로그인 유지 (나중에 API 로그인으로 바꿀 때 수정 예정)
