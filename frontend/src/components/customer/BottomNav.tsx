@@ -1,29 +1,38 @@
 // src/components/customer/BottomNav.tsx
 import { NavLink } from 'react-router-dom';
+import { Coffee, Receipt, ThumbsUp, User } from 'lucide-react';
 
 type NavItem = {
   label: string;
   path: string;
-  icon: string;
+  icon: typeof Coffee;
 };
 
 const navItems: NavItem[] = [
-  { label: '메뉴', path: '/customer/menus', icon: '☕' },
-  { label: '추천', path: '/customer/pick', icon: '👍' },
-  { label: '내역', path: '/customer/history', icon: '🧾' },
-  { label: '마이', path: '/customer/my', icon: '🙂' },
+  { label: '메뉴', path: '/customer/menus', icon: Coffee },
+  { label: '추천', path: '/customer/pick', icon: ThumbsUp },
+  { label: '내역', path: '/customer/history', icon: Receipt },
+  { label: '마이', path: '/customer/my', icon: User },
 ];
 
 export default function BottomNav() {
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t-2 border-ink"
+      className="fixed bottom-0 left-0 right-0 z-50 bg-white"
       aria-label="하단 네비게이션"
+      style={{
+        backgroundImage:
+          'url("data:image/svg+xml,%3Csvg width=\'160\' height=\'6\' viewBox=\'0 0 160 6\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 3 Q 10 1 20 3 T 40 3 T 60 3 T 80 3 T 100 3 T 120 3 T 140 3 T 160 3\' stroke=\'%2318181B\' stroke-width=\'2\' fill=\'none\' stroke-linecap=\'round\'/%3E%3C/svg%3E")',
+        backgroundRepeat: 'repeat-x',
+        backgroundPosition: 'top -2px left',
+      }}
     >
       <div className="max-w-mobile mx-auto px-4">
-        <ul className="flex items-center justify-between py-2">
-          {navItems.map((item) => (
-            <li key={item.path} className="flex-1">
+        <ul className="flex items-center justify-between py-3.5">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <li key={item.path} className="flex-1">
               <NavLink
                 to={item.path}
                 className={({ isActive }) =>
@@ -34,11 +43,12 @@ export default function BottomNav() {
                   }`
                 }
               >
-                <span className="text-lg">{item.icon}</span>
+                <Icon className="h-5 w-5" strokeWidth={2.2} />
                 <span>{item.label}</span>
               </NavLink>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ul>
       </div>
     </nav>
