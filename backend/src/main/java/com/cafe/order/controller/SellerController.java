@@ -23,5 +23,4 @@ public class SellerController {
 
         return "seller/dashboard";
     }
-
 }

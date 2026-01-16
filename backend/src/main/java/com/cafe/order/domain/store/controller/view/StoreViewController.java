@@ -1,4 +1,4 @@
-package com.cafe.order.domain.store.ctrl;
+package com.cafe.order.domain.store.controller.view;
 
 import com.cafe.order.domain.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/admin/stores")
 @RequiredArgsConstructor
-public class StoreController {
+public class StoreViewController {
 
     private final StoreService storeService;
 

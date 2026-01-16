@@ -3,6 +3,7 @@ package com.cafe.order.domain.user.repo;
 import com.cafe.order.domain.user.entity.User;
 import com.cafe.order.domain.user.entity.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,6 +16,6 @@ public interface JpaUserRepository extends JpaRepository<User, Integer> {
     List<User> findByRole(UserRole role);
 
     // loginId로 회원 정보를 찾는 메서드
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.store WHERE u.loginId = :loginId")
     Optional<User> findByLoginId(String loginId);
-
 }

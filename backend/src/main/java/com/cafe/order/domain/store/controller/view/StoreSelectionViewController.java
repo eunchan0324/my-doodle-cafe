@@ -1,4 +1,4 @@
-package com.cafe.order.domain.store.ctrl;
+package com.cafe.order.domain.store.controller.view;
 
 import com.cafe.order.domain.store.entity.Store;
 import com.cafe.order.domain.store.service.StoreService;
@@ -16,7 +16,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/customer/stores")
 @RequiredArgsConstructor
-public class StoreSelectionController {
+public class StoreSelectionViewController {
 
     private final StoreService storeService;
 
