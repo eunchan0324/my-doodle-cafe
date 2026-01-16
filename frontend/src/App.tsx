@@ -1,13 +1,33 @@
 // src/App.tsx
-import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Landing from './pages/Landing';
+import CustomerStores from './pages/customer/Stores';
+import AdminLogin from './pages/admin/Login';
+import './App.css';
 
 function App() {
   return (
-    <div>
-      <h1>Cafe Order App</h1>
-      <p>이제 여기에 매장 목록이 들어올 거예요!</p>
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        {/* 랜딩 페이지 */}
+        <Route path="/" element={<Landing />} />
+
+        {/* Customer 라우트 */}
+        <Route path="/customer/stores" element={<CustomerStores />} />
+        {/* <Route path="/customer/menu" element={<CustomerMenu />} /> */}
+
+        {/* Seller 라우트 (나중에 추가) */}
+        {/* <Route path="/seller/dashboard" element={<SellerDashboard />} /> */}
+
+        {/* Admin 라우트 */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        {/* <Route path="/admin/dashboard" element={<AdminDashboard />} /> */}
+
+        {/* 404 페이지 (나중에 추가) */}
+        {/* <Route path="*" element={<NotFound />} /> */}
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
