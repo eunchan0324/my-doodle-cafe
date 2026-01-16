@@ -1,9 +1,9 @@
 // src/App.tsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Landing from './pages/Landing';
-import CustomerStores from './pages/customer/Stores';
 import AdminLogin from './pages/admin/Login';
 import './App.css';
+import SelectStore from './pages/customer/SelectStore';
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
         <Route path="/" element={<Landing />} />
 
         {/* Customer 라우트 */}
-        <Route path="/customer/stores" element={<CustomerStores />} />
+        <Route path="/customer/select_store" element={<SelectStore />} />
         {/* <Route path="/customer/menu" element={<CustomerMenu />} /> */}
 
         {/* Seller 라우트 (나중에 추가) */}
