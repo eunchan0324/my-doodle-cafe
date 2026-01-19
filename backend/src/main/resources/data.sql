@@ -62,6 +62,28 @@ INSERT INTO store_menus (store_id, menu_id, stock, sales_status, recommend_type)
 SELECT 1, id, 0, 'SOLD_OUT', 'NONE'
 FROM menus WHERE name = '카푸치노';
 
+-- 강남점(1) 데이터 대폭 보충
+INSERT INTO store_menus (store_id, menu_id, stock, sales_status, recommend_type)
+SELECT 1, id, 30, 'ON_SALE', 'NEW' FROM menus WHERE name = '바닐라라떼';
+
+INSERT INTO store_menus (store_id, menu_id, stock, sales_status, recommend_type)
+SELECT 1, id, 20, 'ON_SALE', 'NONE' FROM menus WHERE name = '카라멜마끼아또';
+
+INSERT INTO store_menus (store_id, menu_id, stock, sales_status, recommend_type)
+SELECT 1, id, 15, 'ON_SALE', 'BEST' FROM menus WHERE name = '녹차라떼';
+
+INSERT INTO store_menus (store_id, menu_id, stock, sales_status, recommend_type)
+SELECT 1, id, 0, 'SOLD_OUT', 'NONE' FROM menus WHERE name = '초코라떼';
+
+INSERT INTO store_menus (store_id, menu_id, stock, sales_status, recommend_type)
+SELECT 1, id, 40, 'ON_SALE', 'BEST' FROM menus WHERE name = '딸기스무디';
+
+INSERT INTO store_menus (store_id, menu_id, stock, sales_status, recommend_type)
+SELECT 1, id, 10, 'ON_SALE', 'NONE' FROM menus WHERE name = '치즈케이크';
+
+INSERT INTO store_menus (store_id, menu_id, stock, sales_status, recommend_type)
+SELECT 1, id, 5, 'ON_SALE', 'NEW' FROM menus WHERE name = '티라미수';
+
 -- 홍대점(2) : 티라미수 (판매중, 재고 20, 추천: NONE)
 INSERT INTO store_menus (store_id, menu_id, stock, sales_status, recommend_type)
 SELECT 2, id, 20, 'ON_SALE', 'NONE'
