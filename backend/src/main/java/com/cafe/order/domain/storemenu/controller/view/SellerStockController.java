@@ -1,34 +1,31 @@
-package com.cafe.order.domain.storemenu.ctrl;
+package com.cafe.order.domain.storemenu.controller.view;
 
 import com.cafe.order.domain.store.entity.Store;
-import com.cafe.order.domain.storemenu.dto.MenuWithRecommendType;
+import com.cafe.order.domain.storemenu.entity.SalesStatus;
+import com.cafe.order.domain.storemenu.entity.StoreMenu;
 import com.cafe.order.domain.storemenu.service.StoreMenuService;
 import com.cafe.order.global.security.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
+@RequestMapping("/seller/stock")
 @Controller
-@RequestMapping("/seller/menus/recommend")
 @RequiredArgsConstructor
-public class SellerMenuRecommendController {
+public class SellerStockController {
 
     private final StoreMenuService storeMenuService;
 
     /**
-     * READ : 판매 메뉴 추천 관리 페이지
-     * - 판매 메뉴 목록 표시 + 현재 추천 타입 표시
+     * READ : 재고/판매 상태 조회
      */
     @GetMapping
-    public String menuRecommendManage(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+    public String stockManage(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
 
         // 보안 체크 (비로그인, 가게가 없는 유저)
         if (userDetails == null || userDetails.getStore() == null) {
@@ -39,23 +36,23 @@ public class SellerMenuRecommendController {
         Store store = userDetails.getStore();
         Integer storeId = store.getId();
 
-        // 판매중인 메뉴 목록 + 추천 타입 조히
-        List<MenuWithRecommendType> sellingMenus =
-                storeMenuService.findStoreMenusWithRecommendType(storeId);
+        List<StoreMenu> storeMenus = storeMenuService.findByStoreId(storeId);
 
         model.addAttribute("store", store);
-        model.addAttribute("menus", sellingMenus);
+        model.addAttribute("menuStatuses", storeMenus);
 
-        return "seller/menu/recommend";
+        return "seller/menustatus/manage";
     }
 
     /**
-     * UPDATE : 추천 타입 일괄 적용
+     * UPDATE : 재고/판매 상태 일괄 수정
      */
-    @PostMapping("/apply")
-    public String recommendApply(
+    @PostMapping("/{menuId}/update")
+    public String updateMenuStatus(
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestParam Map<String, String> params) {
+            @PathVariable UUID menuId,
+            @RequestParam int stock,
+            @RequestParam SalesStatus status) {
 
         // 보안 체크 (비로그인, 가게가 없는 유저)
         if (userDetails == null || userDetails.getStore() == null) {
@@ -66,9 +63,9 @@ public class SellerMenuRecommendController {
         Store store = userDetails.getStore();
         Integer storeId = store.getId();
 
-        // 추천 타입 업데이트
-        storeMenuService.updateRecommendTypes(storeId, params);
+        // 재고, 판매 상태 수정
+        storeMenuService.updateStockAndStatus(storeId, menuId, stock, status);
 
-        return "redirect:/seller/menus/recommend";
+        return "redirect:/seller/stock";
     }
 }

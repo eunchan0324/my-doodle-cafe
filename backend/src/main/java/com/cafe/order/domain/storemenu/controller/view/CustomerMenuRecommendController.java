@@ -1,4 +1,4 @@
-package com.cafe.order.domain.storemenu.ctrl;
+package com.cafe.order.domain.storemenu.controller.view;
 
 import com.cafe.order.domain.storemenu.dto.CustomerRecommendMenuDto;
 import com.cafe.order.domain.storemenu.service.StoreMenuService;
