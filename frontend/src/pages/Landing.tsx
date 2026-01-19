@@ -93,7 +93,7 @@ export default function Landing() {
         
         {/* 버튼 항상 노출 */}
         <button
-          onClick={() => navigate('/customer/select_store')}
+          onClick={() => navigate('/customer/login')}
           className="w-full max-w-xs btn btn-crayon text-2xl py-3 font-normal animate-bounce-slow"
         >
           주문하기 →
@@ -111,7 +111,7 @@ export default function Landing() {
           img="/images/nala_welcome.png"
           title="입장하기"
           label="주문하러 가기"
-          path="/customer/select_store"
+          path="/customer/login"
           isAccent={true}
         />
 

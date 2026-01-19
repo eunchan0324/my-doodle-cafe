@@ -42,6 +42,11 @@ export default function MenuList() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      navigate('/customer/login');
+      return;
+    }
     let isMounted = true;
 
     async function fetchMenus() {
@@ -72,7 +77,7 @@ export default function MenuList() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [navigate]);
 
   const categoryTabs = useMemo(() => {
     const ordered: Category[] = ['COFFEE', 'BEVERAGE', 'DESSERT'];

@@ -19,6 +19,14 @@ export default function SelectStore() {
   const characterImages = ['/images/nala_welcome.png', '/images/simba_manager.png'];
 
   useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      navigate('/customer/login');
+      return;
+    }
+  }, [navigate]);
+
+  useEffect(() => {
     let isMounted = true;
 
     async function fetchStores() {

@@ -54,6 +54,11 @@ export default function MenuDetail() {
   const [shotOption, setShotOption] = useState<ShotOption>('NONE');
 
   useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      navigate('/customer/login');
+      return;
+    }
     let isMounted = true;
 
     async function fetchMenuDetail() {
@@ -83,7 +88,7 @@ export default function MenuDetail() {
     return () => {
       isMounted = false;
     };
-  }, [menuId]);
+  }, [menuId, navigate]);
 
   useEffect(() => {
     if (!menu) return;
