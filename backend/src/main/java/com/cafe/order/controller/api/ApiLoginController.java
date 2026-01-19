@@ -6,6 +6,7 @@ import com.cafe.order.global.security.dto.LoginRequest;
 import com.cafe.order.global.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +44,18 @@ public class ApiLoginController {
         Map<String, String> response = new HashMap<>();
         response.put("accessToken", token);
         response.put("message", "로그인 성공!");
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        // 1. 현재 쓰레드의 보안 컨텐스트를 비운다.
+        SecurityContextHolder.clearContext();
+
+        // 2. 응답 구성
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "로그아웃 되었습니다.");
 
         return ResponseEntity.ok(response);
     }
