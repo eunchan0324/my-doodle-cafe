@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -197,6 +198,11 @@ public class UserService {
 //    return storeIds;
 //  }
 
-
+    /**
+     * READ : LoginId로 user 조회
+     */
+    public Optional<User> findByLoginId(String loginId) {
+        return userRepository.findByLoginId(loginId);
+    }
 }
 
