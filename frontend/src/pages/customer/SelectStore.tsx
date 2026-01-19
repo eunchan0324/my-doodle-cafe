@@ -59,7 +59,7 @@ export default function SelectStore() {
     if (!selectedStoreId || !selectedStoreName) return;
     sessionStorage.setItem('selectedStoreId', String(selectedStoreId));
     sessionStorage.setItem('selectedStoreName', selectedStoreName);
-    navigate('/customer/menus', { state: { storeId: selectedStoreId } });
+    navigate(`/customer/stores/${selectedStoreId}/menus`);
   };
 
   return (

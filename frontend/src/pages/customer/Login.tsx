@@ -60,7 +60,7 @@ export default function CustomerLogin() {
                 className="input mt-2"
                 value={loginId}
                 onChange={(event) => setLoginId(event.target.value)}
-                placeholder="customer1"
+                placeholder="Id"
               />
             </div>
 
@@ -74,7 +74,7 @@ export default function CustomerLogin() {
                 className="input mt-2"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                placeholder="••••"
+                placeholder="password"
               />
             </div>
 
