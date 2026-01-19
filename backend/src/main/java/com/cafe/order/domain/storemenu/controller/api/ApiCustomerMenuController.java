@@ -4,19 +4,21 @@ import com.cafe.order.domain.favorite.service.FavoriteMenuService;
 import com.cafe.order.domain.menu.dto.Category;
 import com.cafe.order.domain.store.entity.Store;
 import com.cafe.order.domain.store.service.StoreService;
+import com.cafe.order.domain.storemenu.dto.CustomerMenuDetailResponse;
 import com.cafe.order.domain.storemenu.dto.CustomerMenuResponse;
 import com.cafe.order.domain.storemenu.service.StoreMenuService;
+import com.cafe.order.global.security.dto.CustomUserDetails;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -55,5 +57,40 @@ public class ApiCustomerMenuController {
         response.put("menus", groupMenus); // 메뉴 목록
 
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 메뉴 상세보기
+     */
+    @GetMapping("/{menuId}")
+    public ResponseEntity<?> getMenuDetail(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            HttpSession session,
+            @PathVariable UUID menuId) {
+
+        // 비로그인 처리
+        if (userDetails == null) {
+            return ResponseEntity.status(401).body("로그인이 필요합니다.");
+        }
+
+        Integer storeId = (Integer) session.getAttribute("currentStoreId");
+
+        // 지점 미선택 처리
+        if (storeId == null) {
+            return ResponseEntity.badRequest().body("지점이 선택되지 않았습니다.");
+        }
+
+        try {
+            // 서비스 호출
+            Integer userId = userDetails.getId();
+            CustomerMenuDetailResponse menuDetailResponse = storeMenuService.findMenuDetail(storeId, menuId, userId);
+
+            // 성공 응답
+            return ResponseEntity.ok(menuDetailResponse);
+
+        } catch (IllegalArgumentException e) {
+            // 예외 처리 (404)
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 }
