@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,11 +34,12 @@ public class StoreApiController {
      * GET /api/v1/stores
      */
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<StoreResponse>> getAllStores() {
         List<StoreResponse> stores = storeService.findAll().stream()
                 .map(StoreResponse::from) // 엔티티를 DTO로 변환
                 .collect(Collectors.toList());
-        
+
         return ResponseEntity.ok(stores); // 200 OK 상태 코드와 함께 데이터 반환
     }
 
@@ -46,6 +48,7 @@ public class StoreApiController {
      * GET /api/v1/stores/{id}
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
     public ResponseEntity<StoreResponse> getStoreById(@PathVariable Integer id) {
         Store store = storeService.findById(id);
         if (store == null) {
@@ -60,6 +63,7 @@ public class StoreApiController {
      * @Valid: StoreCreateRequest의 @NotBlank 검증을 활성화합니다.
      */
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StoreResponse> createStore(@Valid @RequestBody StoreCreateRequest request) {
         // @RequestBody: JSON 데이터를 자바 객체로 변환해줍니다.
         Store savedStore = storeService.create(request.getName());
@@ -74,6 +78,7 @@ public class StoreApiController {
      * PUT /api/v1/stores/{id}
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StoreResponse> updateStore(
             @PathVariable Integer id,
             @Valid @RequestBody StoreCreateRequest request) {
@@ -87,6 +92,7 @@ public class StoreApiController {
      * DELETE /api/v1/stores/{id}
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteStore(@PathVariable Integer id) {
         storeService.delete(id);
         return ResponseEntity.noContent().build(); // 204 No Content (성공했지만 줄 데이터는 없음)
