@@ -8,6 +8,8 @@ import MenuList from './pages/customer/MenuList';
 import MenuDetail from './pages/customer/MenuDetail';
 import CustomerLogin from './pages/customer/Login';
 import MyPage from './pages/customer/MyPage';
+import Cart from './pages/customer/Cart';
+import OrderComplete from './pages/customer/OrderComplete';
 import Forbidden from './pages/Forbidden';
 
 function App() {
@@ -21,6 +23,8 @@ function App() {
         <Route path="/customer/login" element={<CustomerLogin />} />
         <Route path="/customer/select_store" element={<SelectStore />} />
         <Route path="/customer/my" element={<MyPage />} />
+        <Route path="/customer/cart" element={<Cart />} />
+        <Route path="/customer/order-complete" element={<OrderComplete />} />
         <Route path="/customer/stores/:storeId/menus" element={<MenuList />} />
         <Route path="/customer/stores/:storeId/menus/:menuId" element={<MenuDetail />} />
 

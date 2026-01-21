@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeft, Heart } from 'lucide-react';
 import CustomerLayout from '../../layouts/CustomerLayout';
 import api from '../../api/axios';
+import { addToCart } from '../../utils/cart';
 
 type Category = 'COFFEE' | 'BEVERAGE' | 'DESSERT';
 type RecommendType = 'BEST' | 'NEW' | 'NONE';
@@ -48,6 +49,7 @@ export default function MenuDetail() {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
+  const [showCartModal, setShowCartModal] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [temperature, setTemperature] = useState<Temperature>('ICE');
   const [cupType, setCupType] = useState<CupType>('DISPOSABLE');
@@ -127,6 +129,50 @@ export default function MenuDetail() {
     } catch (error) {
       setActionMessage('찜 상태를 변경하지 못했어요.');
     }
+  };
+
+  const handleAddToCart = () => {
+    if (!storeId || !menuId || !menu) return;
+    const storeName = sessionStorage.getItem('selectedStoreName') || '매장';
+    addToCart({
+      menuId,
+      name: menu.name,
+      basePrice: menu.price,
+      quantity,
+      temperature,
+      cupType,
+      shotOption: menu.category === 'COFFEE' ? shotOption : 'NONE',
+      storeId: Number(storeId),
+      storeName,
+    });
+    setShowCartModal(true);
+  };
+
+  const handleGoToCart = () => {
+    setShowCartModal(false);
+    navigate('/customer/cart');
+  };
+
+  const handleContinueShopping = () => {
+    setShowCartModal(false);
+    navigate(-1);
+  };
+
+  const handleOrderNow = () => {
+    if (!storeId || !menuId || !menu) return;
+    const storeName = sessionStorage.getItem('selectedStoreName') || '매장';
+    addToCart({
+      menuId,
+      name: menu.name,
+      basePrice: menu.price,
+      quantity,
+      temperature,
+      cupType,
+      shotOption: menu.category === 'COFFEE' ? shotOption : 'NONE',
+      storeId: Number(storeId),
+      storeName,
+    });
+    navigate('/customer/cart');
   };
 
   return (
@@ -282,13 +328,24 @@ export default function MenuDetail() {
                 </span>
               </div>
 
-              <button
-                type="button"
-                className="btn btn-primary w-full"
-                disabled={isUnsellable}
-              >
-                {isUnsellable ? '[판매 불가] 주문 불가' : '장바구니에 담기'}
-              </button>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={handleAddToCart}
+                  className="btn btn-primary flex-1"
+                  disabled={isUnsellable}
+                >
+                  {isUnsellable ? '품절' : '장바구니 담기'}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleOrderNow}
+                  className="btn btn-crayon flex-1"
+                  disabled={isUnsellable}
+                >
+                  {isUnsellable ? '주문 불가' : '바로 주문'}
+                </button>
+              </div>
 
               {isUnsellable && (
                 <div className="text-sm">
@@ -309,6 +366,45 @@ export default function MenuDetail() {
           </div>
         )}
       </div>
+
+      {/* 바텀 시트 모달 */}
+      {showCartModal && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center">
+          {/* 배경 오버레이 */}
+          <div
+            className="absolute inset-0 bg-ink/40"
+            onClick={() => setShowCartModal(false)}
+          />
+          {/* 모달 바디 */}
+          <div className="relative w-full max-w-mobile bg-white rounded-t-3xl p-6 pb-24 animate-slide-up">
+            <div className="text-center space-y-4">
+              <div className="text-4xl">🛒</div>
+              <h2 className="font-doodle text-2xl text-ink">
+                장바구니에 담았어요!
+              </h2>
+              <p className="text-sm text-ink/70">
+                {menu?.name} × {quantity}
+              </p>
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={handleContinueShopping}
+                  className="btn btn-primary flex-1"
+                >
+                  다른 메뉴 보기
+                </button>
+                <button
+                  type="button"
+                  onClick={handleGoToCart}
+                  className="btn btn-crayon flex-1"
+                >
+                  장바구니 보기
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </CustomerLayout>
   );
 }
