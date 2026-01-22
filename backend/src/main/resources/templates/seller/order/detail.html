@@ -1,13 +1,13 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/header :: commonHead('주문 상세')}"></head>
+<head th:replace="~{fragments/header :: commonHead('주문 상세', null)}"></head>
 <body>
     <h1>주문 상세 정보</h1>
 
     <!-- 주문 기본 정보-->
     <div>
         <p>대기번호: <span th:text="${order.waitingNumber}"></span></p>
-        <p>고객 ID: <span th:text="${order.customerId}"></span></p>
+        <p>고객 ID: <span th:text="${order.getUser().id}"></span></p>
         <p>주문 상태: <span th:text="${order.status + '[' + order.status.displayName + ']'}"></span></p>
         <p>주문 시간: <span th:text="${#temporals.format(order.orderTime, 'yyyy-MM-dd HH:mm:ss')}"></span></p>
         <p>총 결제 금액: <span th:text="${order.totalPrice}"></span></p>
