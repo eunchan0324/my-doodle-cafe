@@ -32,6 +32,32 @@ public class StoreMenuService {
     private final FavoriteMenuService favoriteMenuService;
     private final JpaStoreRepository storeRepository;
 
+
+    // ==============================
+    // ============ API =============
+    // ==============================
+
+    // ========== 판매자 ==========
+
+    /**
+     * 메뉴 추천 타입 단건 수정
+     */
+    @Transactional
+    public void updateRecommendType(Integer storeId, UUID menuId, RecommendType recommendType) {
+        StoreMenu storeMenu = storeMenuRepository
+                .findByStore_IdAndMenu_Id(storeId, menuId)
+                .orElseThrow(() -> new IllegalArgumentException("메뉴를 찾을 수 없습니다."));
+
+        storeMenu.setRecommendType(recommendType);
+    }
+
+
+
+
+    // ==============================
+    // ========== 타임리프 ==========
+    // ==============================
+
     // ========== 판매자 : 판매 메뉴 관리 기능 ==========
 
     /**

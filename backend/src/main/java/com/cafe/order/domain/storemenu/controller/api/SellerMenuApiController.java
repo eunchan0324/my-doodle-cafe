@@ -1,17 +1,20 @@
 package com.cafe.order.domain.storemenu.controller.api;
 
 import com.cafe.order.domain.storemenu.dto.SellerMenuResponse;
+import com.cafe.order.domain.storemenu.dto.SellerMenuUpdateRequest;
+import com.cafe.order.domain.storemenu.dto.SellerRecommendUpdateRequest;
 import com.cafe.order.domain.storemenu.entity.StoreMenu;
 import com.cafe.order.domain.storemenu.service.StoreMenuService;
+import com.cafe.order.global.security.dto.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/stores/{storeId}/menus")
@@ -37,4 +40,35 @@ public class SellerMenuApiController {
 
         return ResponseEntity.ok(response);
     }
+
+    /**
+     * 재고, 판매 상태 수정
+     */
+    @PatchMapping("/{menuId}/update")
+    public ResponseEntity<?> updateStockStatus(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Integer storeId,
+            @PathVariable UUID menuId,
+            @RequestBody SellerMenuUpdateRequest request) {
+
+        storeMenuService.updateStockAndStatus(storeId, menuId, request.getStock(), request.getStatus());
+
+        return ResponseEntity.ok().body("재고, 판매 상태가 변경되었습니다.");
+    }
+
+    /**
+     * 추천 타입 수정
+     */
+    @PatchMapping("/{menuId}/recommend")
+    public ResponseEntity<?> updateRecommend(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Integer storeId,
+            @PathVariable UUID menuId,
+            @RequestBody SellerRecommendUpdateRequest request) {
+
+        storeMenuService.updateRecommendType(storeId, menuId, request.getRecommendType());
+
+        return ResponseEntity.ok().body("추천 상태가 변경되었습니다.");
+    }
+
 }
