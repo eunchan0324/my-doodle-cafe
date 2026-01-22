@@ -43,6 +43,7 @@ public class ApiLoginController {
         // 4. 응답 (토큰 전달)
         Map<String, String> response = new HashMap<>();
         response.put("accessToken", token);
+        response.put("role", user.getRole().name());
         response.put("message", "로그인 성공!");
 
         return ResponseEntity.ok(response);
