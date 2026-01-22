@@ -1,4 +1,4 @@
-package com.cafe.order.domain.favorite.ctrl;
+package com.cafe.order.domain.favorite.controller.view;
 
 import com.cafe.order.domain.favorite.dto.FavoriteMenuResponse;
 import com.cafe.order.domain.favorite.service.FavoriteMenuService;
