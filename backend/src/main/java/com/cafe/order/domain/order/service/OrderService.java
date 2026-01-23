@@ -14,6 +14,7 @@ import com.cafe.order.domain.store.entity.Store;
 import com.cafe.order.domain.store.service.StoreService;
 import com.cafe.order.domain.storemenu.entity.StoreMenu;
 import com.cafe.order.domain.storemenu.repo.JpaStoreMenuRepository;
+import com.cafe.order.domain.storemenu.service.StoreMenuService;
 import com.cafe.order.domain.user.entity.User;
 import com.cafe.order.domain.user.repo.JpaUserRepository;
 import jakarta.servlet.http.HttpSession;
@@ -37,6 +38,101 @@ public class OrderService {
     private final StoreService storeService;
     private final CartService cartService;
     private final JpaUserRepository userRepository;
+    private final StoreMenuService storeMenuService;
+
+    // ======= REST API =======
+
+    /**
+     * 주문 생성 메서드 (Stateless)
+     * - 클라이언트가 보낸 JSON 데이터를 기반으로 주문을 생성
+     * - 세션 장바구니를 쓰지 않고, 요청 데이텨(request)를 전적으로 신뢰하여 처리
+     *
+     * @param userId  주문하는 사용자 ID (JWT에서 추출)
+     * @param request 주문 상세 정보가 담긴 DTO (지점 ID, 아이템 리스트 등)
+     * @return 생성된 주문의 UUID
+     */
+    @Transactional
+    public Order createOrder(Integer userId, OrderCreateRequest request) {
+        // 1. 사용자 조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        // 2. 지점 조회
+        Store store = storeService.findById(request.getStoreId());
+        if (store == null) {
+            throw new IllegalArgumentException("유효하지 않은 storeId입니다.");
+        }
+
+        // 3. 아이템 처리 및 총 가격 계산을 위한 변수 준비
+        List<OrderItem> orderItems = new ArrayList<>();
+        int totalPrice = 0;
+
+        // 4. 요청받은 아이템 리스트
+        for (OrderCreateRequest.ItemRequest itemReq : request.getItems()) {
+
+            // 4-1. 메뉴 판매 가능 여부 검증
+            UUID menuId = itemReq.getMenuId();
+
+            StoreMenu storeMenu = storeMenuRepository.findByStore_IdAndMenu_Id(store.getId(), menuId)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 지점에서 판매하지 않는 메뉴입니다."));
+
+            if (!storeMenu.isSellable()) {
+                throw new IllegalArgumentException("주문할 수 없는 메뉴입니다: " + storeMenu.getMenu().getName());
+            }
+
+            // 4-2. 재고 차감
+            storeMenu.decreaseStock(itemReq.getQuantity());
+
+            // 4-3. 가격 계산
+            Menu menu = storeMenu.getMenu();
+
+            // 옵션 가격
+            int optionPrice = 0;
+            optionPrice += itemReq.getCupType().getPriceDelta(); // 컵 사이즈
+            optionPrice += itemReq.getShotOption().getPriceDelta(); // 샷 추가
+
+            // 최종 아이템 1개 가격 (기본가 + 옵션가)
+            int unitPrice = menu.getPrice() + optionPrice;
+
+            // 해당 라인 총 가격 (단가 * 수량)
+            int lineTotalPrice = unitPrice * itemReq.getQuantity();
+
+            // 전체 주문 금액에 누적
+            totalPrice += lineTotalPrice;
+
+            // 4-4. OrderItem 엔티티 만들기
+            OrderItem orderItem = new OrderItem(
+                    menu.getId(),
+                    menu.getName(),
+                    menu.getPrice(),
+                    itemReq.getTemperature(),
+                    itemReq.getCupType(),
+                    itemReq.getShotOption(),
+                    itemReq.getQuantity(),
+                    lineTotalPrice
+            );
+
+            // 4-5 리스트에 추가
+            orderItems.add(orderItem);
+        }
+
+        // 5. 대기번호 생성
+        LocalDate today = LocalDate.now();
+        Integer waitingNumber = orderRepository.findMaxWaitingNumberForStoreToday(request.getStoreId(), today);
+
+        waitingNumber = (waitingNumber == null) ? 1 : waitingNumber + 1;
+
+        // 6. Order 엔티티 생성
+        Order order = new Order(user, store, totalPrice, OrderStatus.ORDER_PLACED, waitingNumber);
+
+        for (OrderItem item : orderItems) {
+            order.addOrderItem(item);
+        }
+
+        orderRepository.save(order);
+
+        return order;
+    }
 
 
     // ======= 관리자용 =======

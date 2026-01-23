@@ -2,21 +2,22 @@
 import { useEffect, useState } from 'react';
 import type { MouseEvent } from 'react';
 import { MapPin } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { getCartCount } from '../../utils/cart';
 
 interface StoreFloatingBarProps {
   storeName?: string;
-  cartCount?: number;
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
 export default function StoreFloatingBar({
   storeName = '매장 선택',
-  cartCount = 0,
   onClick,
 }: StoreFloatingBarProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [currentStoreName, setCurrentStoreName] = useState(storeName);
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     const storedName = sessionStorage.getItem('selectedStoreName');
@@ -25,7 +26,8 @@ export default function StoreFloatingBar({
     } else {
       setCurrentStoreName(storeName);
     }
-  }, [storeName]);
+    setCartCount(getCartCount());
+  }, [storeName, location.pathname]);
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     if (onClick) {
       onClick(event);

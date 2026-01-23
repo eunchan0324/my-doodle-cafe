@@ -1,10 +1,8 @@
-package com.cafe.order.domain.order.ctrl;
+package com.cafe.order.domain.order.controller.view;
 
 import com.cafe.order.domain.order.dto.CustomerOrderSummary;
 import com.cafe.order.domain.order.entity.Order;
 import com.cafe.order.domain.order.service.OrderService;
-import com.cafe.order.domain.store.service.StoreService;
-import com.cafe.order.domain.storemenu.service.StoreMenuService;
 import com.cafe.order.global.security.dto.CustomUserDetails;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

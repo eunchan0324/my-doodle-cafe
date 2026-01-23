@@ -1,4 +1,4 @@
-package com.cafe.order.domain.order.ctrl;
+package com.cafe.order.domain.order.controller.view;
 
 import com.cafe.order.domain.order.dto.OrderStatus;
 import com.cafe.order.domain.order.entity.Order;

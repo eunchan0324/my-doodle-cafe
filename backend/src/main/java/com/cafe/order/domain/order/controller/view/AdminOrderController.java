@@ -1,4 +1,4 @@
-package com.cafe.order.domain.order.ctrl;
+package com.cafe.order.domain.order.controller.view;
 
 import com.cafe.order.domain.order.service.OrderService;
 import org.springframework.stereotype.Controller;
