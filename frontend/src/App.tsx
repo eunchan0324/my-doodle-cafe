@@ -17,6 +17,11 @@ import SellerOrders from './pages/seller/Orders';
 import SellerMenuManager from './pages/seller/MenuManager';
 import SellerSales from './pages/seller/Sales';
 import Forbidden from './pages/Forbidden';
+import AdminLayout from './layouts/AdminLayout';
+import AdminMenus from './pages/admin/Menus';
+import AdminStores from './pages/admin/Stores';
+import AdminAccounts from './pages/admin/Accounts';
+import AdminSales from './pages/admin/Sales';
 
 function App() {
   return (
@@ -52,7 +57,13 @@ function App() {
         </Route>
 
         {/* Admin 라우트 (나중에 추가) */}
-        {/* <Route path="/admin/dashboard" element={<AdminDashboard />} /> */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Navigate to="/admin/menus" replace />} />
+          <Route path="menus" element={<AdminMenus />} />
+          <Route path="stores" element={<AdminStores />} />
+          <Route path="accounts" element={<AdminAccounts />} />
+          <Route path="sales" element={<AdminSales />} />
+        </Route>
 
         {/* 403 권한 없음 페이지 */}
         <Route path="/forbidden" element={<Forbidden />} />
