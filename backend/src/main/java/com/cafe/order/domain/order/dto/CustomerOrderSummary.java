@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public class CustomerOrderSummary {
 
     private Integer watingNumber;
+    private String storeName;
     private LocalDateTime orderTime;
     private Integer totalPrice;
     private OrderStatus orderStatus;
@@ -16,6 +17,7 @@ public class CustomerOrderSummary {
 
     public CustomerOrderSummary(Order order) {
         this.watingNumber = order.getWaitingNumber();
+        this.storeName = order.getStore().getName();
         this.orderTime = order.getOrderTime();
         this.totalPrice = order.getTotalPrice();
         this.orderStatus = order.getStatus();

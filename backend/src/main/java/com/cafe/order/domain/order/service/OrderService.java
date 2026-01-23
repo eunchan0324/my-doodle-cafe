@@ -134,6 +134,24 @@ public class OrderService {
         return order;
     }
 
+    /**
+     * 구매자의 모든 주문 내역 조회 (전체 지점 합산)
+     * - 특정 지점에 상관없이 사용자가 주문한 모든 내역을 최신순으로 조회
+     *
+     * @param userId 조회할 사용자 ID
+     * @return 주문 요약 정보(DTO) 리스트
+     */
+    public List<CustomerOrderSummary> findOrderByUserId(Integer userId) {
+        // 1. DB에서 해당 사용자의 모든 주문을 최신순으로 조회
+        List<Order> orders = orderRepository.findByUserIdOrderByOrderTimeDesc(userId);
+
+        // 2. 조회된 Order 엔티티 리스트를 CustomerOrderSummary DTO로 변환
+        // -stream()을 사용하여 각 Order 객체를 CustomerOrderSummary 생성자에 넘겨 변환
+        return orders.stream()
+                .map(CustomerOrderSummary::new)
+                .toList();
+    }
+
 
     // ======= 관리자용 =======
 

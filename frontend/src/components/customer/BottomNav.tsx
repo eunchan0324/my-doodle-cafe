@@ -1,21 +1,38 @@
 // src/components/customer/BottomNav.tsx
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { Coffee, Receipt, ThumbsUp, User } from 'lucide-react';
 
 type NavItem = {
   label: string;
   path: string;
   icon: typeof Coffee;
+  dynamic?: boolean;
 };
 
 const navItems: NavItem[] = [
-  { label: '메뉴', path: '/customer/menus', icon: Coffee },
+  { label: '메뉴', path: '/customer/menus', icon: Coffee, dynamic: true },
   { label: '추천', path: '/customer/pick', icon: ThumbsUp },
   { label: '내역', path: '/customer/history', icon: Receipt },
   { label: '마이', path: '/customer/my', icon: User },
 ];
 
 export default function BottomNav() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // 메뉴 페이지 패턴 체크 (/customer/stores/:storeId/menus)
+  const isMenuActive = /^\/customer\/stores\/\d+\/menus/.test(location.pathname);
+
+  const handleMenuClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const storeId = sessionStorage.getItem('selectedStoreId');
+    if (storeId) {
+      navigate(`/customer/stores/${storeId}/menus`);
+    } else {
+      navigate('/customer/select_store');
+    }
+  };
+
   return (
     <nav
       className="fixed bottom-0 left-0 right-0 z-50 bg-white"
@@ -33,19 +50,34 @@ export default function BottomNav() {
             const Icon = item.icon;
             return (
               <li key={item.path} className="flex-1">
-              <NavLink
-                to={item.path}
-                className={({ isActive }) =>
-                  `flex flex-col items-center justify-center gap-1 text-xs font-sans transition-all duration-150 ${
-                    isActive
-                      ? 'text-crayon -translate-y-1'
-                      : 'text-ink/40'
-                  }`
-                }
-              >
-                <Icon className="h-5 w-5" strokeWidth={2.2} />
-                <span>{item.label}</span>
-              </NavLink>
+                {item.dynamic ? (
+                  <button
+                    type="button"
+                    onClick={handleMenuClick}
+                    className={`w-full flex flex-col items-center justify-center gap-1 text-xs font-sans transition-all duration-150 ${
+                      isMenuActive
+                        ? 'text-crayon -translate-y-1'
+                        : 'text-ink/40'
+                    }`}
+                  >
+                    <Icon className="h-5 w-5" strokeWidth={2.2} />
+                    <span>{item.label}</span>
+                  </button>
+                ) : (
+                  <NavLink
+                    to={item.path}
+                    className={({ isActive }) =>
+                      `flex flex-col items-center justify-center gap-1 text-xs font-sans transition-all duration-150 ${
+                        isActive
+                          ? 'text-crayon -translate-y-1'
+                          : 'text-ink/40'
+                      }`
+                    }
+                  >
+                    <Icon className="h-5 w-5" strokeWidth={2.2} />
+                    <span>{item.label}</span>
+                  </NavLink>
+                )}
               </li>
             );
           })}

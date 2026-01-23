@@ -33,4 +33,9 @@ public interface JpaOrderRepository extends JpaRepository<Order, UUID> {
     );
 
     List<Order> findByStoreIdAndUserId(Integer storeId, Integer userId);
+
+    /**
+     * userId로 모든 지점의 주문 내역 조회 (최신순 정렬)
+     */
+    List<Order> findByUserIdOrderByOrderTimeDesc(Integer userId);
 }
