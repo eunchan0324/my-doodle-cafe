@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Heart, Receipt, LogOut, ChevronRight } from 'lucide-react';
 import CustomerLayout from '../../layouts/CustomerLayout';
 
 export default function MyPage() {
@@ -26,16 +27,41 @@ export default function MyPage() {
         <h1 className="font-doodle text-3xl text-ink">
           마이 페이지
         </h1>
-        <div className="card p-6 space-y-4">
-          <p className="text-sm text-ink/60">
-            로그인한 계정으로 주문 내역과 찜 목록을 확인할 수 있어요.
-          </p>
+
+        <div className="space-y-3">
+          <button
+            type="button"
+            onClick={() => navigate('/customer/favorites')}
+            className="card p-4 w-full flex items-center justify-between"
+          >
+            <div className="flex items-center gap-3">
+              <Heart className="h-5 w-5 text-crayon" />
+              <span className="font-sans text-base text-ink">찜 목록</span>
+            </div>
+            <ChevronRight className="h-5 w-5 text-ink/40" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigate('/customer/history')}
+            className="card p-4 w-full flex items-center justify-between"
+          >
+            <div className="flex items-center gap-3">
+              <Receipt className="h-5 w-5 text-doodle-blue" />
+              <span className="font-sans text-base text-ink">주문 내역</span>
+            </div>
+            <ChevronRight className="h-5 w-5 text-ink/40" />
+          </button>
+        </div>
+
+        <div className="pt-4">
           <button
             type="button"
             onClick={handleLogout}
-            className="btn btn-danger w-full"
+            className="card p-4 w-full flex items-center gap-3 text-danger"
           >
-            로그아웃
+            <LogOut className="h-5 w-5" />
+            <span className="font-sans text-base">로그아웃</span>
           </button>
         </div>
       </div>

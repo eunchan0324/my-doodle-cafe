@@ -31,11 +31,11 @@
 
   html {
     @apply scroll-smooth;
-  }
+}
 
-  body {
+body {
     @apply text-ink font-sans;
-    margin: 0;
+  margin: 0;
     min-height: 100vh;
     background-image: url('/images/paper-texture.png');
     background-size: cover;
@@ -46,7 +46,7 @@
 
   /* 모바일 뷰포트 높이 이슈 해결 */
   body {
-    min-height: 100vh;
+  min-height: 100vh;
     min-height: -webkit-fill-available;
   }
 
@@ -61,7 +61,7 @@
   .btn {
     @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
     @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
-  }
+}
 
   /* 조합: 만화책 그림자 + 울퉁불퉁 모서리 (Best!) */
   .btn-primary {
@@ -96,12 +96,12 @@
     @apply transition-all duration-200;
     border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
     box-shadow: 4px 4px 0px 0px #18181B;
-  }
+}
   
   .btn-danger:hover {
     transform: translate(2px, 2px);
     box-shadow: none;
-  }
+}
 
   /* 카드 스타일 - Naive Design 느낌 */
   .card {
@@ -115,7 +115,7 @@
     @apply w-full px-4 py-2 border-2 border-ink rounded-lg bg-white;
     @apply focus:outline-none focus:ring-2 focus:ring-crayon focus:border-crayon;
     @apply transition-all duration-200;
-  }
+}
 }
 
 /* 커스텀 유틸리티 */

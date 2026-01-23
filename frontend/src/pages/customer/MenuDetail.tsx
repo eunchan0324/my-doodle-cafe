@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ChevronLeft, Heart } from 'lucide-react';
+import { AxiosError } from 'axios';
 import CustomerLayout from '../../layouts/CustomerLayout';
 import api from '../../api/axios';
 import { addToCart } from '../../utils/cart';
@@ -79,7 +80,11 @@ export default function MenuDetail() {
         setErrorMessage(null);
       } catch (error) {
         if (!isMounted) return;
-        setErrorMessage('메뉴 상세 정보를 불러오지 못했어요.');
+        if (error instanceof AxiosError && error.response?.status === 404) {
+          setErrorMessage('현재 지점에서는 판매하지 않는 메뉴입니다.');
+        } else {
+          setErrorMessage('메뉴 상세 정보를 불러오지 못했어요.');
+        }
       } finally {
         if (!isMounted) return;
         setLoading(false);
@@ -187,10 +192,17 @@ export default function MenuDetail() {
         )}
 
         {!loading && errorMessage && (
-          <div className="card p-6">
+          <div className="card p-6 space-y-4">
             <p className="font-sans text-center text-ink/60">
               {errorMessage}
             </p>
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="btn btn-primary w-full"
+            >
+              돌아가기
+            </button>
           </div>
         )}
 
