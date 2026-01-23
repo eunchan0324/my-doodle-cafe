@@ -212,19 +212,19 @@ public class OrderService {
     /**
      * 주문 관리 메뉴
      */
-    // READ : 특정 지점 주문 목록 조회 (COMPLETED 제외)
+    // READ : 특정 지점 주문 목록 조회 (COMPLETED 제외 + 오늘 날짜)
     public List<Order> findActiveOrderByStoreId(Integer storeId) {
         List<Order> allOrders = orderRepository.findByStoreId(storeId);
 
-        // COMPLETED 제외
-        List<Order> activeOrders = new ArrayList<>();
-        for (Order order : allOrders) {
-            if (!(order.getStatus() == OrderStatus.COMPLETED)) {
-                activeOrders.add(order);
-            }
-        }
+        // 오늘 날짜 추가
+        LocalDate today = LocalDate.now();
 
-        // Lazy Loading 강제 실행
+        List<Order> activeOrders = allOrders.stream()
+                .filter(order -> order.getStatus() != OrderStatus.COMPLETED)
+                .filter(order -> order.getOrderTime().toLocalDate().equals(today))
+                .toList();
+
+        // Lazy Loading 강제 실행 (items 접근)
         for (Order order : activeOrders) {
             if (order.getItems() != null) {
                 order.getItems().size();

@@ -47,7 +47,7 @@ export default function OrderHistory() {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      navigate('/customer/login');
+      navigate('/login');
       return;
     }
 

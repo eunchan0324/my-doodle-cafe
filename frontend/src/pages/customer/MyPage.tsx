@@ -9,7 +9,7 @@ export default function MyPage() {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      navigate('/customer/login');
+      navigate('/login');
     }
   }, [navigate]);
 
@@ -18,7 +18,7 @@ export default function MyPage() {
     sessionStorage.removeItem('selectedStoreId');
     sessionStorage.removeItem('selectedStoreName');
     sessionStorage.removeItem('customerActiveCategory');
-    navigate('/customer/login');
+    navigate('/login');
   };
 
   return (

@@ -1,6 +1,6 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/header :: commonHead('판매자 주문 관리')}"></head>
+<head th:replace="~{fragments/header :: commonHead('판매자 주문 관리', null)}"></head>
 <body>
     <h1>주문 관리 - <span th:text="${storeName}"></span></h1>
 
@@ -23,7 +23,7 @@
         <tbody>
             <tr th:each="o : ${orders}">
                 <td th:text="${o.waitingNumber}"></td>
-                <td th:text="${o.customerId}"></td>
+                <td th:text="${o.getUser().id}"></td>
                 <td th:text="${o.menuSummary}"></td>
                 <td th:text="${o.totalQuantity}"></td>
                 <td th:text="${o.status}"></td>

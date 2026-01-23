@@ -93,7 +93,7 @@ export default function Landing() {
         
         {/* 버튼 항상 노출 */}
         <button
-          onClick={() => navigate('/customer/login')}
+          onClick={() => navigate('/login')}
           className="w-full max-w-xs btn btn-crayon text-2xl py-3 font-normal animate-bounce-slow"
         >
           주문하기 →
@@ -111,7 +111,7 @@ export default function Landing() {
           img="/images/nala_welcome.png"
           title="입장하기"
           label="주문하러 가기"
-          path="/customer/login"
+          path="/login"
           isAccent={true}
         />
 
@@ -121,7 +121,7 @@ export default function Landing() {
           img="/images/simba_manager.png"
           title="입장하기"
           label="바리스타 모드"
-          path="/admin/login"
+          path="/login"
         />
 
         {/* 관리자 */}
@@ -130,7 +130,7 @@ export default function Landing() {
           img="/images/admin_duo.png"
           title="입장하기"
           label="매니저 오피스"
-          path="/admin/login"
+          path="/login"
         />
       </div>
 

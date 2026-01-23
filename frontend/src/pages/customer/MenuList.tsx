@@ -44,7 +44,7 @@ export default function MenuList() {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      navigate('/customer/login');
+      navigate('/login');
       return;
     }
     let isMounted = true;

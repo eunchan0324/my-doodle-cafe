@@ -25,6 +25,12 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    if (error.response?.status === 401) {
+      // 토큰 만료 또는 미인증 → 로그인 페이지로
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('userRole');
+      window.location.href = '/login';
+    }
     if (error.response?.status === 403) {
       window.location.href = '/forbidden';
     }
