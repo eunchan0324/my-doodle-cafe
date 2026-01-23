@@ -8,6 +8,7 @@ import MenuList from './pages/customer/MenuList';
 import MenuDetail from './pages/customer/MenuDetail';
 import CustomerLogin from './pages/customer/Login';
 import MyPage from './pages/customer/MyPage';
+import Forbidden from './pages/Forbidden';
 
 function App() {
   return (
@@ -29,6 +30,9 @@ function App() {
         {/* Admin 라우트 */}
         <Route path="/admin/login" element={<AdminLogin />} />
         {/* <Route path="/admin/dashboard" element={<AdminDashboard />} /> */}
+
+        {/* 403 권한 없음 페이지 */}
+        <Route path="/forbidden" element={<Forbidden />} />
 
         {/* 404 페이지 (나중에 추가) */}
         {/* <Route path="*" element={<NotFound />} /> */}

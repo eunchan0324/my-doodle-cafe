@@ -11,6 +11,7 @@ import com.cafe.order.global.security.dto.CustomUserDetails;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/stores/{storeId}/menus")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('CUSTOMER')")
 public class StoreMenuApiController {
 
     private final StoreService storeService;

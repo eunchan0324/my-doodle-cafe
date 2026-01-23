@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -24,6 +25,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -50,44 +52,18 @@ public class SecurityConfig {
                         UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeHttpRequests(auth -> auth
-                        // H2 콘솔 및 정적 리소스 허용
+                        // 완전 허용 (WhiteList) - H2 콘솔 및 정적 리소스 허용
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico", "/error").permitAll()
-
-                        // Health Check API 허용 (프론트 연결 테스트용)
-                        .requestMatchers("/api/health").permitAll()
-
-                        // [공통] 로그인 관련 경로 허용
                         .requestMatchers("/", "/login", "/users/signup", "/join", "/login-proc").permitAll()
-                        .requestMatchers("/api/v1/auth/**").permitAll() // JWT 로그인 api 허용
-
-                        // === [API 권한 설정] - JWT 토큰이 있으면 필터가 인증 처리해줌 ===
-
-                        // [StoreApiController] 가게 관리
-                        // 조회(GET)는 로그인한 누구나 (또는 구매자도) 가능하게? -> authenticated()로 퉁치거나 CUSTOMER 추가
-                        .requestMatchers(HttpMethod.GET, "/api/v1/stores/**").authenticated()
-
-                        // 가게 생성/삭제는 관리자만
-                        .requestMatchers(HttpMethod.POST, "/api/v1/stores").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/stores/*").hasRole("ADMIN")
-
-                        // 가게 정보 수정은 관리자와 판매자만
-                        .requestMatchers(HttpMethod.PUT, "/api/v1/stores/*").hasAnyRole("ADMIN", "SELLER")
-
-                        // [StoreMenuApiController] 메뉴판 & 찜하기
-                        // 메뉴판 보기와 찜하기는 구매자 전용 기능
-                        .requestMatchers("/api/v1/stores/*/menus/**").hasRole("CUSTOMER")
-
-
-                        .requestMatchers("/api/v1/customer/**").hasRole("CUSTOMER")
-                        .requestMatchers("/api/v1/seller/**").hasRole("SELLER")
-                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/auth/**", "/api/health").permitAll() // JWT 로그인, 프론트 테스트용
                         
-                        // [기존 웹 페이지 권한 설정]
+                        // 레거시(Thymeleaf) 페이지 권한
                         .requestMatchers("/customer/**").hasRole("CUSTOMER")
                         .requestMatchers("/seller/**").hasRole("SELLER")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 
+                        // 로그인 시 통과
                         .anyRequest().authenticated()
                 )
                 // 기존 폼 로그인 유지 (타임리프용)

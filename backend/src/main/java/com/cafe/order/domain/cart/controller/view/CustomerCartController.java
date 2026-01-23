@@ -1,4 +1,4 @@
-package com.cafe.order.domain.cart.ctrl;
+package com.cafe.order.domain.cart.controller.view;
 
 import com.cafe.order.domain.cart.dto.CustomerCartItem;
 import com.cafe.order.domain.cart.service.CartService;
