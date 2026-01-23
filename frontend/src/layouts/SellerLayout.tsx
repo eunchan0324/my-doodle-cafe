@@ -2,12 +2,11 @@
 // Seller용 태블릿 레이아웃 (POS 시스템 - 좌측 사이드바)
 
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { ClipboardList, Box, Coffee, BarChart3, LogOut } from 'lucide-react';
+import { ClipboardList, Coffee, BarChart3, LogOut } from 'lucide-react';
 
 const NAV_ITEMS = [
   { to: '/seller/orders', icon: ClipboardList, label: '주문 접수' },
-  { to: '/seller/inventory', icon: Box, label: '재고 관리' },
-  { to: '/seller/menus', icon: Coffee, label: '메뉴 설정' },
+  { to: '/seller/menus', icon: Coffee, label: '메뉴 관리' },
   { to: '/seller/sales', icon: BarChart3, label: '매출 조회' },
 ];
 

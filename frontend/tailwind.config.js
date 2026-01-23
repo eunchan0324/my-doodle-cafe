@@ -15,6 +15,10 @@ export default {
           hover: '#EA580C',      // 호버: 진한 오렌지
         },
         
+        // 상태 컬러
+        danger: '#EF4444',       // 삭제/품절 (빨강)
+        success: '#22C55E',      // 완료 (초록)
+        
         // 추가 컬러 (필요시 사용)
         doodle: {
           yellow: '#FDE047',     // 형광펜 노랑

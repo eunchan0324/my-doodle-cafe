@@ -14,6 +14,7 @@ import RecommendMenu from './pages/customer/RecommendMenu';
 import Favorites from './pages/customer/Favorites';
 import SellerLayout from './layouts/SellerLayout';
 import SellerOrders from './pages/seller/Orders';
+import SellerMenuManager from './pages/seller/MenuManager';
 import Forbidden from './pages/Forbidden';
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
         <Route path="/seller" element={<SellerLayout />}>
           <Route index element={<Navigate to="/seller/orders" replace />} />
           <Route path="orders" element={<SellerOrders />} />
+          <Route path="menus" element={<SellerMenuManager />} />
           {/* <Route path="sales" element={<SellerSales />} /> */}
         </Route>
 
