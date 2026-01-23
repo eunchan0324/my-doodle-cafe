@@ -42,6 +42,8 @@ public class OrderService {
 
     // ======= REST API =======
 
+    // ======= 구매자용 =======
+
     /**
      * 주문 생성 메서드 (Stateless)
      * - 클라이언트가 보낸 JSON 데이터를 기반으로 주문을 생성
@@ -151,6 +153,41 @@ public class OrderService {
                 .map(CustomerOrderSummary::new)
                 .toList();
     }
+
+    // ======= 판매자용 =======
+
+    /**
+     * 오늘의 매출 및 내역 조회
+     * - 특정 지점의 '오늘' 완료된 (COMPLETED) 주문들을 가져와 통계를 냄
+     */
+    public SellerDailySalesResponse getTodaySales(Integer storeId) {
+        // 1. 오늘 날짜 구하기
+        LocalDate today = LocalDate.now();
+
+        // 2. 해당 지점의 완료된 주문 리스트 가져오기
+        List<Order> allCompleteOrders = findCompleteOrdersByStoreId(storeId);
+
+        // 3. 오늘 날짜의 주문만 필터링
+        List<Order> todayOrders = allCompleteOrders.stream()
+                .filter(order -> order.getOrderTime().toLocalDate().equals(today))
+                .toList();
+
+        // 4. 통계 계산 (매출 합계, 주문 수)
+        long totalSales = todayOrders.stream()
+                .mapToLong(Order::getTotalPrice)
+                .sum();
+
+        int totalCount = todayOrders.size();
+
+        // 5. 상세 내역 DTO 변환
+        List<SellerOrderResponse> history = todayOrders.stream()
+                .map(SellerOrderResponse::new)
+                .toList();
+
+        // 6. 최종 결과 DTO 조립 및 반환
+        return new SellerDailySalesResponse(totalSales, totalCount, history);
+    }
+
 
 
     // ======= 관리자용 =======

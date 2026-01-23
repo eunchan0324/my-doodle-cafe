@@ -15,6 +15,7 @@ import Favorites from './pages/customer/Favorites';
 import SellerLayout from './layouts/SellerLayout';
 import SellerOrders from './pages/seller/Orders';
 import SellerMenuManager from './pages/seller/MenuManager';
+import SellerSales from './pages/seller/Sales';
 import Forbidden from './pages/Forbidden';
 
 function App() {
@@ -47,7 +48,7 @@ function App() {
           <Route index element={<Navigate to="/seller/orders" replace />} />
           <Route path="orders" element={<SellerOrders />} />
           <Route path="menus" element={<SellerMenuManager />} />
-          {/* <Route path="sales" element={<SellerSales />} /> */}
+          <Route path="sales" element={<SellerSales />} />
         </Route>
 
         {/* Admin 라우트 (나중에 추가) */}
