@@ -15,7 +15,7 @@
 
 ### 기본 컬러
 
-#### Paper (배경) - `#F8F4F0`
+#### Paper (배경) - `paper-textrue.png`
 ```css
 bg-paper
 ```
