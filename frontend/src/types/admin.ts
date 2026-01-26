@@ -23,3 +23,9 @@ export interface AdminMenuCreateRequest {
   category: Category;
   description: string;
 }
+
+export interface AdminSalesResponse {
+  storeName: string;
+  orderCount: number;
+  totalSales: number;
+}
