@@ -137,9 +137,17 @@ export default function Login() {
           </form>
 
           {/* 안내 문구 */}
-          <p className="text-xs text-center text-ink/40">
-            고객 · 바리스타 · 매니저 모두 이곳에서 로그인
-          </p>
+          <div className="text-center space-y-2">
+            <p className="text-xs text-ink/40">
+              고객 · 바리스타 · 매니저 모두 이곳에서 로그인
+            </p>
+            <div className="text-sm">
+              <span className="text-gray-500">아직 계정이 없으신가요? </span>
+              <a href="/signup" className="font-semibold text-crayon hover:underline" onClick={(e) => { e.preventDefault(); navigate('/signup'); }}>
+                회원가입
+              </a>
+            </div>
+          </div>
         </div>
 
         {/* 홈으로 돌아가기 */}
