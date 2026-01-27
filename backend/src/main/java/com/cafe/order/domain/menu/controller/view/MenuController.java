@@ -1,4 +1,4 @@
-package com.cafe.order.domain.menu.ctrl;
+package com.cafe.order.domain.menu.controller.view;
 
 import com.cafe.order.domain.menu.dto.Category;
 import com.cafe.order.domain.menu.entity.Menu;

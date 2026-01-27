@@ -17,7 +17,7 @@ type LoginResponse = {
 const ROLE_REDIRECT: Record<Role, string> = {
   CUSTOMER: '/customer/select_store',
   SELLER: '/seller/orders',
-  ADMIN: '/admin/dashboard',
+  ADMIN: '/admin/menus',
 };
 
 export default function Login() {
