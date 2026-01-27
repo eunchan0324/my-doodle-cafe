@@ -1,4 +1,4 @@
-package com.cafe.order.domain.user.ctrl;
+package com.cafe.order.domain.user.controller.view;
 
 import com.cafe.order.domain.store.entity.Store;
 import com.cafe.order.domain.store.service.StoreService;

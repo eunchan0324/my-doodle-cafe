@@ -134,6 +134,9 @@ public class UserService {
     // DELETE : 판매자 계정 삭제
     @Transactional
     public void delete(Integer id) {
+        if (!userRepository.existsById(id)) {
+            throw new IllegalArgumentException("해당 판매자를 찾을 수 없습니다. (ID: " + id + ")");
+        }
         userRepository.deleteById(id);
     }
 
