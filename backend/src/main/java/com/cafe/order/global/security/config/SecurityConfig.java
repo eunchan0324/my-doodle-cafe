@@ -91,8 +91,13 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // 프론트엔드 주소 허용 (포트 5173)
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://218.156.123.200:5173"));
+        // 프론트엔드 주소 허용
+        configuration.setAllowedOrigins(List.of(
+                "http://localhost:5173",
+                "http://218.156.123.200:5173",
+                "https://my-doodle-cafe-8yhhwrrna-eunchan0324s-projects.vercel.app",
+                "https://my-doodle-cafe.vercel.app"
+        ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 
         // 모든 헤더 허용
