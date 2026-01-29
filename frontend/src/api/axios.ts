@@ -2,8 +2,7 @@ import axios from 'axios';
 
 const api = axios.create({
   // 1. 벡앤드 주소
-  // baseURL: 'http://localhost:8080',
-  baseURL: 'http://218.156.123.200:8080',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 
   // 2. 요청 시 세션 쿠키를 자동으로 담아 보냄 (로그인 유지 필수 설정)
   withCredentials: true,
