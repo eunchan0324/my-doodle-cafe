@@ -2,6 +2,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
+import Signup from './pages/Signup';
 import './App.css';
 import SelectStore from './pages/customer/SelectStore';
 import MenuList from './pages/customer/MenuList';
@@ -32,6 +33,7 @@ function App() {
 
         {/* 통합 로그인 */}
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
 
         {/* 기존 로그인 경로 리다이렉트 (호환성) */}
         <Route path="/customer/login" element={<Navigate to="/login" replace />} />
