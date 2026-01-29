@@ -62,7 +62,7 @@ export default function Sales() {
     if (!storeId) return;
 
     try {
-      const response = await api.get<SellerDailySalesResponse>(`/api/v1/stores/${storeId}/sales/today`);
+      const response = await api.get<SellerDailySalesResponse>(`/api/v1/sales/stores/${storeId}/today`);
       setSalesData(response.data);
     } catch (error) {
       console.error('매출 조회 실패:', error);
@@ -108,9 +108,9 @@ export default function Sales() {
       <div className="mb-8">
         <h1 className="font-doodle text-4xl text-ink mb-3">오늘의 매출</h1>
         <p className="font-sans text-ink/60 text-base">
-          {new Date().toLocaleDateString('ko-KR', { 
-            year: 'numeric', 
-            month: 'long', 
+          {new Date().toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: 'long',
             day: 'numeric',
             weekday: 'short'
           })} 정산
@@ -119,10 +119,10 @@ export default function Sales() {
 
       {/* 메인 레이아웃: 좌측(성적표+심바) + 우측(내역) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100%-140px)]">
-        
+
         {/* 좌측: 요약 패널 + 심바 캐릭터 */}
         <div className="lg:col-span-1 flex flex-col gap-4">
-          
+
           {/* 요약 패널 - 흰색 카드로 변경 */}
           <div className="bg-white border-2 border-ink rounded-tl-2xl rounded-tr-3xl rounded-bl-2xl rounded-br-xl p-5 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] flex flex-col gap-4">
             <div className="flex items-center gap-2">
@@ -153,10 +153,10 @@ export default function Sales() {
           <div className="relative bg-white border-2 border-ink rounded-tl-3xl rounded-tr-2xl rounded-bl-xl rounded-br-2xl p-4 shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] flex flex-col items-center">
             {/* 마스킹 테이프 */}
             <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-20 h-5 bg-ink/20 border border-ink/30 rounded-sm rotate-1 shadow-sm"></div>
-            
-            <img 
-              src="/images/simba_cook.png" 
-              alt="심바 셰프" 
+
+            <img
+              src="/images/simba_cook.png"
+              alt="심바 셰프"
               className="w-32 h-32 object-contain mb-2 mt-1"
             />
             <p className="font-doodle text-base text-ink text-center">오늘도 고생했어!</p>
@@ -169,7 +169,7 @@ export default function Sales() {
         {/* 우측: 거래 내역 리스트 */}
         <div className="lg:col-span-2">
           <div className="bg-white border-2 border-ink rounded-tl-3xl rounded-tr-xl rounded-bl-2xl rounded-br-3xl shadow-[4px_4px_0px_0px_rgba(24,24,27,1)] h-full flex flex-col overflow-hidden">
-            
+
             {/* 영수증 헤더 */}
             <div className="bg-paper border-b-2 border-dashed border-ink/30 p-6">
               <div className="flex items-center gap-3 mb-2">
@@ -230,8 +230,8 @@ function OrderItem({
     <div
       className={`
         border-2 rounded-tl-xl rounded-tr-2xl rounded-bl-lg rounded-br-xl transition-all
-        ${isCanceled 
-          ? 'border-dashed border-danger/30 bg-danger/5' 
+        ${isCanceled
+          ? 'border-dashed border-danger/30 bg-danger/5'
           : 'border-ink/20 bg-white hover:bg-paper hover:border-ink/40'}
       `}
     >
@@ -252,8 +252,8 @@ function OrderItem({
         {/* 대기번호 */}
         <div className={`
           px-3 py-1 rounded-tl-lg rounded-tr-xl rounded-bl-md rounded-br-lg font-sans text-sm font-bold
-          ${isCanceled 
-            ? 'bg-danger/10 text-danger' 
+          ${isCanceled
+            ? 'bg-danger/10 text-danger'
             : 'bg-crayon/10 text-crayon'}
         `}>
           #{order.waitingNumber}
