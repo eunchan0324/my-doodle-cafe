@@ -14,4 +14,5 @@ FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# -Dspring.profiles.active=prod 옵션을 추가하여 컨테이너 실행 시 항상 운영 모드로 동작하게 합니다.
+ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "app.jar"]
