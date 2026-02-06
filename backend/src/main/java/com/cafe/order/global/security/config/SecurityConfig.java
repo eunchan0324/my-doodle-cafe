@@ -35,6 +35,8 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    // Redis 도우미 추가
+    private final com.cafe.order.global.security.service.RedisService redisService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -47,8 +49,8 @@ public class SecurityConfig {
                 .exceptionHandling(handler -> handler
                         .authenticationEntryPoint(jwtAuthenticationEntryPoint))
 
-                // 1. JWT 필터 등록
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userService),
+                // 1. JWT 필터 등록 (도우미인 redisService를 같이 넘겨줍니다)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userService, redisService),
                         UsernamePasswordAuthenticationFilter.class)
 
                 .authorizeHttpRequests(auth -> auth

@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  # 1. Redis 서버
+  redis:
+    image: redis:alpine
+    container_name: cafe-redis
+    ports:
+      - "6379:6379"  # 내 컴퓨터 6379 포트 <-> 컨테이너 6379 포트 연결
+    volumes:
+      - ./redis_data:/data  # 데이터를 껐다 켜도 사라지지 않게 내 컴퓨터(redis_data 폴더)에 저장
+    command: redis-server --appendonly yes # 데이터 지속성 옵션 켜기
+
+  # 2. Redis Insight (시각화 도구)
+  redis-insight:
+    image: redis/redisinsight:latest
+    container_name: cafe-redis-insight
+    ports:
+      - "5540:5540" # 웹 브라우저로 5540 포트에 접속하면 볼 수 있음
+    depends_on:
+      - redis # Redis가 켜져야 얘도 켜짐

@@ -77,4 +77,24 @@ public class JwtTokenProvider { ;
                 .getBody()
                 .getSubject();
     }
+
+    /**
+     * 토큰의 남은 유효 시간(ms)을 계산하여 반환
+     * - 로그아웃 시 블랙리스트에 저장할 유효 시간을 결정하기 위해 사용합니다.
+     */
+    public Long getExpiration(String token) {
+        // 1. 토큰을 열어서 만료 시간(Expiration) 정보를 가져옴
+        Date expiration = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
+        
+        // 2. 현재 시간 가져오기
+        long now = new Date().getTime();
+        
+        // 3. (만료 시간 - 현재 시간) = 남은 시간
+        return (expiration.getTime() - now);
+    }
 }

@@ -25,17 +25,27 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserService userService; // 사용자 정보를 DB에서 가져오기 위해 필요
+    private final UserService userService; 
+    // Redis 도우미 추가!
+    private final com.cafe.order.global.security.service.RedisService redisService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws SecurityException, IOException, ServletException {
 
-        // 1. 요청 헤더 (Header)에서 토큰 꺼내기
+        // 1. 요청 헤더에서 토큰 꺼내기
         String token = resolveToken(request);
 
-        // 2. 토큰이 있고, 그 토큰이 유효한지 검사
+        // 2. 토큰이 있고 유효한지 1차 검사
         if (token != null && jwtTokenProvider.validateToken(token)) {
+            
+            // [추가] 2차 검사: Redis 블랙리스트에 있는지 확인
+            if (redisService.hasKey(token)) {
+                log.info("[JWT 인증 실패] 로그아웃된 토큰입니다.");
+                // 블랙리스트에 있다면 다음 단계로 가지 않고 바로 종료
+                filterChain.doFilter(request, response);
+                return;
+            }
 
             // 3. 토큰에서 아이디 꺼내기
             String loginId = jwtTokenProvider.getLoginId(token);

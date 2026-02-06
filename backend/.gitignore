@@ -1,37 +1,22 @@
 HELP.md
-.gradle
+.gradle/
 build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
 bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
-### IntelliJ IDEA ###
-.idea
+out/
+.idea/
 *.iws
 *.iml
 *.ipr
-out/
-!**/src/main/**/out/
-!**/src/test/**/out/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# 컴파일된 클래스 파일들
+*.class
 
-### VS Code ###
-.vscode/
+# 로그 파일
+*.log
+
+# 운영체제 임시 파일
+.DS_Store
+Thumbs.db
+
+# Gradle 래퍼는 제외 (보통 포함시킴)
+!gradle/wrapper/gradle-wrapper.jar
