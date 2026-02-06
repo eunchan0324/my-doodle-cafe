@@ -53,7 +53,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         // 완전 허용 (WhiteList) - H2 콘솔 및 정적 리소스 허용
-                        // .requestMatchers(PathRequest.toH2Console()).permitAll() // MySQL 로 변경
+                        .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico", "/error").permitAll()
                         .requestMatchers("/", "/login", "/users/signup", "/join", "/login-proc").permitAll()
                         .requestMatchers("/api/v1/users/**").permitAll() // 회원가입
