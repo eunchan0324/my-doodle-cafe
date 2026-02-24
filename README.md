@@ -1,6 +1,8 @@
 # ☕ My Doodle Cafe
 > **골든 두들 강아지가 운영하는, 낙서 가득한 카페 주문 서비스**
 
+![My Doodle Cafe Main Roles](./images/main_roles.png)
+
 ---
 
 ## ✅ 핵심 기능 (Key Features)
